@@ -228,6 +228,239 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/02/06/emlog反垃圾评论插件sae版/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2013/02/06/emlog反垃圾评论插件sae版/" itemprop="url">emlog反垃圾评论插件sae版</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2013-02-06T14:30:39+08:00">
+                2013-02-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SAE新浪/" itemprop="url" rel="index">
+                    <span itemprop="name">SAE新浪</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>&nbsp; &nbsp; 最近几天忽然发现垃圾评论特别多，以前没有用sinaapp的时候反垃圾插件可以使用，但是用着sinaapp以后，使得反垃圾插件失效。用过sinaapp的人都知道，sinaapp是不能读写本地文件的，而我使用的反垃圾插件却又本地读写的代码流程，所以我做了写修改，以使用sinaapp的机制。</p>
+<p>修改前的反垃圾插件读写函数：</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">function asc_read($type = ’data’) {
+    $file = EMLOG_ROOT.’/content/plugins/anti_spam_comment/’.$type;
+    $data = unserialize(file_get_contents($file));
+    return $data;
+}
+function asc_write($data, $type = ’data’){
+    $file = EMLOG_ROOT.’/content/plugins/anti_spam_comment/’.$type;
+    @$fp = fopen($file, ’w’);
+    @$fw = fwrite($fp,serialize($data));
+    @fclose($fp);
+}</pre>
+
+<p>看见这个读写函数以后我得出了两个方案：</p>
+<p>1.使用mysql数据库</p>
+<p>2.使用nosql数据库</p>
+<p>显然此插件使用nosql更有优势，因为：</p>
+<p>1.此插件数据量小。</p>
+<p>2.数据都是k-v模式。</p>
+<p>3.读写效率高于mysql</p>
+<p>&nbsp;</p>
+<p>在简单分析了这个插件的代码之后，结合sae给的kvdb服务相关api，我对代码做了一下修改：</p>
+<p>1.替换读写函数为</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">// init kvdb at 12:31 2013-2-6 by L.N. begin
+function asc_read($key = ’asc_key_data’)
+{
+    $kv = asc_init_kvdb();
+    $ret = $kv-&gt;get($key);
+    $ret = unserialize($ret);
+    return $ret;
+}
+function asc_write($data, $key = ’asc_key_data’)
+{
+    $data = serialize($data);
+    $kv = asc_init_kvdb();
+    $ret = $kv-&gt;set($key,$data);
+    if($ret !== true)
+    {
+        ascMsg("写入数据失败!");
+    }
+}
+function asc_install()
+{
+    $kv = asc_init_kvdb();
+    $ret = $kv-&gt;add(’asc_key_data’,’a:7:{s:10:"time_limit";i:10;s:9:"blacklist";a:1:{i:0;s:0:"";}s:14:"auto_blacklist";i:1;s:11:"max_attempt";i:10;s:8:"keywords";s:39:"&lt;a href=&#42&gt;&#42&lt;/a&gt;|[url=&#42]&#42[/url]|asc_char";s:13:"name_keywords";s:0:"";s:12:"url_keywords";a:1:{i:0;s:0:"";}}’);
+    $ret1 = $kv-&gt;add(’asc_key_time’,’a:3:{s:2:"ip";a:0:{}s:4:"time";a:0:{}s:7:"attempt";a:0:{}}’);
+    if($ret !== true &amp;&amp; $ret1 !== true)
+    {
+        ascMsg("安装失败!");
+    }
+}
+function asc_uninstall()
+{
+    $kv = asc_init_kvdb();
+    $ret = $kv-&gt;delete(’asc_key_data’);
+    $ret1 = $kv-&gt;delete(’asc_key_time’);
+    if($ret !== true &amp;&amp; $ret1 !== true)
+    {
+        ascMsg("卸载失败!");
+    }
+}
+function asc_init_kvdb()
+{
+    $kv = new SaeKV();
+    // 初始化KV对象
+    $ret = $kv-&gt;init();
+    if($ret==true)
+    {
+        return $kv;
+    }
+    else
+    {
+        ascMsg("初始化KV对象失败,请检查是否开启KVDB服务!");
+    }
+}
+// init kvdb at 12:31 2013-2-6    end</pre>
+
+<p>&nbsp;</p>
+<p>2.修改插件中读写函数的相关实参</p>
+<p>3.检查插件中受否还有其他读写相干的代码并修改</p>
+<p>4.上传调试</p>
+<p>5.打包写博客和大家分享</p>
+<p>&nbsp;</p>
+<p>当然最后大家下载之后就可以放心在sae平台使用了，希望原作者看见我修改了你的插件不要见怪，版权依然是你，我只是简单修改方便大众。</p>
+<p>使用方法：</p>
+<p>1.解压压缩包</p>
+<p>2.上传压缩包里文件夹到plugin目录下，用svn上传</p>
+<p>3.在你博客后台激活插件就ok了</p>
+<p>4.注意不要忘了激活sae的kvdb服务</p>
+<p>&nbsp;</p>
+<p>最后，如果大家使用有什么bug请留言。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/02/06/phpcms最近的那些注入/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2003,161 +2236,6 @@ http://127.0.0.1//plus/feedback.php?validate=swep&amp;action=send&amp;comtype=co
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2012/10/27/写在今天/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2012/10/27/写在今天/" itemprop="url">写在今天</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Veröffentlicht am</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2012-10-27T21:51:23+08:00">
-                2012-10-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">in</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/琐碎杂事/" itemprop="url" rel="index">
-                    <span itemprop="name">琐碎杂事</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>&nbsp; &nbsp; 不知道怎么说了！时间到了今天，还有什么说的呢？建博客1年多了吧！想想初衷，好像是为了学习东西，记录我学过的东西，证明我没有偷懒，有学就有写！但是似乎和初衷有了很大的区别，有很多为了掩饰自己的无知而没有写进去的，到头来我真的无知了。</p>
-<p>&nbsp; &nbsp; 不谈遥远的过去，就谈当下吧！</p>
-<p>&nbsp; &nbsp; 当下的我，走进了我爱好的世界；</p>
-<p>&nbsp; &nbsp; 当下的我，开始我新的人生；</p>
-<p>&nbsp; &nbsp; 当下我的，有了太多的顾虑；</p>
-<p>&nbsp; &nbsp; 当下的我，对未来更加的迷茫；</p>
-<p>&nbsp; &nbsp; 当下的我，还记得以前的我吗；</p>
-<p>&nbsp; &nbsp; 当下的我，依旧是我；</p>
-<p>&nbsp; &nbsp; 当下的我，????????</p>
-<p>&nbsp; &nbsp; 我不知道当下的我是否是正确的我，但我却知道当下的我是我喜欢的我。</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;博客依旧，人也依旧，变的是心，变的是物。</p>
-<p>&nbsp; &nbsp; 上个月这个月还真没研究什么东西，无自己见解的博文，不是自己的博文。</p>
-<p>&nbsp; &nbsp; 写在当下，活在当下，面朝大海，春暖花开。</p>
-<p>&nbsp;&nbsp;</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2208,7 +2286,7 @@ http://127.0.0.1//plus/feedback.php?validate=swep&amp;action=send&amp;comtype=co
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-count">166</span>
                   <span class="site-state-item-name">Artikel</span>
                 </a>
               </div>

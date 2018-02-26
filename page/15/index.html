@@ -228,6 +228,181 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2011/10/05/解密一个php大马/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2011/10/05/解密一个php大马/" itemprop="url">解密一个php大马</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2011-10-05T00:41:47+08:00">
+                2011-10-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PHP-MYSQL学习/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP|MYSQL学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 群里朋友发来一个php大马好像是国外的！被一个人汉化了，但是同时也被他加密了！其实他用的加密方法很简单！</p>
+<p>就是base64+gzinflate压缩编码（加密），一般就是用&lt;?PHP eval(gzinflate(base64_decode(密文)));?&gt;方式书写;其实这个想看见他的源码很好办直接吧eval改echo就好了，但是今天遇到一个重复压缩加密的我也不知道他加了多少次，于是乎我到百度解密代码如下：</p>
+<p>&lt;?php </p>
+<p>$Code = ’这里填写要解密的编码’; // base64编码 </p>
+<p>$File = ’test.php’;//解码后保存的文件 </p>
+<p>$Temp = base64_decode($Code); </p>
+<p>$temp = gzinflate($Temp); </p>
+<p>$FP = fopen($File,”w”);</p>
+<p>&nbsp;fwrite($FP,$temp);</p>
+<p>&nbsp;fclose($FP); </p>
+<p>echo “解密成功！”;</p>
+<p>?&gt;</p>
+<p>&nbsp;</p>
+<p>改的重复解密代码：</p>
+<p>&lt;?php&nbsp; </p>
+<p>$b = ’密文’; //base64密文</p>
+<p>$c = ’decoded.php’; </p>
+<p>for($i=0;$i&lt;1;$i–)</p>
+<p>{</p>
+<p>$b=base64_decode($b);&nbsp; </p>
+<p>$b=trim(gzinflate($b));</p>
+<p>$b=trim(str_replace(“?&gt;&lt;?php”,””,$b));</p>
+<p>$b=trim(str_replace(“?&gt;&lt;?”,””,$b));</p>
+<p>$b=trim(str_replace(“eval(gzinflate(base64_decode(’”,””,$b));</p>
+<p>$b=trim(str_replace(“’)));”,””,$b));</p>
+<p>$d=substr($b,0,1);</p>
+<p>if(0==strcmp($d,””))</p>
+<p>{</p>
+<p>&nbsp;break;</p>
+<p>}</p>
+<p>file_put_contents($c,”&lt;?php”.”<br>“.$b.”?&gt;”);</p>
+<p>}&nbsp;&nbsp;&nbsp; </p>
+<p>echo “解密成功！”;&nbsp; </p>
+<p>?&gt;</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2011/09/28/PHP数组循环输出和排序/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1816,149 +1991,6 @@ echo "Peter is " . $ages[’Peter’] . " years old.";
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2011/08/20/今天干坏事了/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2011/08/20/今天干坏事了/" itemprop="url">今天干坏事了</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Veröffentlicht am</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2011-08-20T18:01:05+08:00">
-                2011-08-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">in</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/琐碎杂事/" itemprop="url" rel="index">
-                    <span itemprop="name">琐碎杂事</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="http://www.cnhonkerarmy.com/data/attachment/forum/201108/20/175205dff20gf02v6yefq9.jpg" alt=""></p>
-<p>&nbsp;ps：这个TNT也脱不了关系！</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2009,7 +2041,7 @@ echo "Peter is " . $ages[’Peter’] . " years old.";
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-count">166</span>
                   <span class="site-state-item-name">Artikel</span>
                 </a>
               </div>
