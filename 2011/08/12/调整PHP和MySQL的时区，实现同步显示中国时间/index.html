@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php,MYSQL," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="现在很多朋友购买国外主机，可是国外主机显示的是当地时间，如何设置成国内时间呢？所谓的时间问题归根结底也就是“时区”问题，我们首先要知道的是：1、美国时间和中国时间相差应该是8小时。2、PHP的时间和MySQL的时间不是相同的。所以，我们所要做的事情就是：1、把美国时间改成中国时间。2、并且要把PHP的时间和MySQL的时间统一。一、修改PHP时间听上去有点小复杂，其实很简单。首先我们来改PHP的时">
+<meta name="keywords" content="php,MYSQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="调整PHP和MySQL的时区，实现同步显示中国时间">
+<meta property="og:url" content="http://yoursite.com/2011/08/12/调整PHP和MySQL的时区，实现同步显示中国时间/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="现在很多朋友购买国外主机，可是国外主机显示的是当地时间，如何设置成国内时间呢？所谓的时间问题归根结底也就是“时区”问题，我们首先要知道的是：1、美国时间和中国时间相差应该是8小时。2、PHP的时间和MySQL的时间不是相同的。所以，我们所要做的事情就是：1、把美国时间改成中国时间。2、并且要把PHP的时间和MySQL的时间统一。一、修改PHP时间听上去有点小复杂，其实很简单。首先我们来改PHP的时">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.262Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="调整PHP和MySQL的时区，实现同步显示中国时间">
+<meta name="twitter:description" content="现在很多朋友购买国外主机，可是国外主机显示的是当地时间，如何设置成国内时间呢？所谓的时间问题归根结底也就是“时区”问题，我们首先要知道的是：1、美国时间和中国时间相差应该是8小时。2、PHP的时间和MySQL的时间不是相同的。所以，我们所要做的事情就是：1、把美国时间改成中国时间。2、并且要把PHP的时间和MySQL的时间统一。一、修改PHP时间听上去有点小复杂，其实很简单。首先我们来改PHP的时">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2011/08/12/调整PHP和MySQL的时区，实现同步显示中国时间/"/>
+
+
+
+
+
+  <title>调整PHP和MySQL的时区，实现同步显示中国时间 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2011/08/12/调整PHP和MySQL的时区，实现同步显示中国时间/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">调整PHP和MySQL的时区，实现同步显示中国时间</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2011-08-12T16:58:27+08:00">
+                2011-08-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PHP-MYSQL学习/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP|MYSQL学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="app-share-content"><br><br>现在很多朋友购买国外主机，可是国外主机显示的是当地时间，如何设置成国内时间呢？<br><br>所谓的时间问题归根结底也就是“时区”问题，我们首先要知道的是：<br><br>1、美国时间和中国时间相差应该是8小时。<br><br>2、PHP的时间和MySQL的时间不是相同的。<br><br>所以，我们所要做的事情就是：<br><br>1、把美国时间改成中国时间。<br><br>2、并且要把PHP的时间和MySQL的时间统一。<br><br>一、修改PHP时间<br><br>听上去有点小复杂，其实很简单。首先我们来改PHP的时间，将这句代码插入到PHP程序中，公共调用页的顶部(也就是要include_once，require_once到的脚本里，当然你不用_once我也没有意见)，确保需要用到时间的页面都必须调用到：复制内容到剪贴板代码:<br><br>date_default_timezone_set(’PRC’) or die(’时区设置失败，请联系管理员！’);现在测试下：复制内容到剪贴板代码:<br><br>echo date(’Y-m-d H:i:s’);怎么样？哇哈哈，正确显示中国时间了，当然你要说北京时间我也没意见。至于那个参数PRC是什么意思，我记得是某个神奇的土地之缩写，不用管它，照搬就行了，错不了的。成功了？NO，不要得意得太早，在MySQL里输入语句SELECT NOW();你会惊愕的发现，MySQL的时间还是美国时间。不急，我们继续下一步。<br><br>二、修改MySQL时间<br><br>如果你在写程序的时候，习惯了用类或者函数，那么恭喜你，这一步你同样只需要一次复制粘贴操作就能将它解决。如果你在写程序的从来不用类或者函数，那么我会祈祷耶稣和释迦牟尼一同保佑你，不会在改程序的时候累得很惨，同时希望你改掉这个不好的编程习惯。那么，就请在PHP程序有数据库连接的下一语句(只有1次，就加1句；若有无数次，就加无数次……这个编程习惯，还是重要啊)加入如下代码：复制内容到剪贴板代码:<br><br>mysql_query(“SET time_zone = ’+8:00’”) or die(’时区设置失败，请联系管理员！’);再去SELECT NOW();下，你会惊喜地发现，MySQL也是中国时间了。为什么是+8:00呢？前面我说过了，中国时间和美国时间差8小时，往那个那个貌似向东还是向西的方向来着？(不好意思我是路盲，我在怪地球是圆的)。OK，现在MySQL的时间也搞定了，我相信现在就会有比较严谨朋友问了：那你如何证明PHP的时间和MySQL的时间是同步呢？啊……这个人与人之间的信任，还是重要的，就像汇款，哈哈，那我们来做个测试吧：复制内容到剪贴板代码:<br><br>//这里是页面的开头，用于改PHP时间的代码。<br><br>date_default_timezone_set(’PRC’) or die(’时区设置失败，请联系管理员！’);<br><br>//————————————————————-<br><br>//<br><br>// 这里写数据库连接的代码，别懒，自己写。<br><br>//<br><br>//————————————————————-<br><br>//数据库一旦连接，紧跟着就是改MySQL时间的代码。<br><br>mysql_query(“SET time_zone = ’+8:00’”) or die(’时区设置失败，请联系管理员！’);<br><br>//显示PHP的时间<br><br>echo date(’Y-m-d H:i:s’);<br><br>echo<br><br>//显示MySQL的时间<br><br>$mysql_time = mysql_query(“SELECT NOW()”);<br><br>$mysql_rows = mysql_fetch_row($mysql_time);<br><br>echo $mysql_rows[0];<br><br>有用的东西就要果断复制粘贴回来，以备不时之需！<br><br>此文寒窗摘自百度，我摘自他的博客 （～～）<br><br></div>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php/" rel="tag"># php</a>
+          
+            <a href="/tags/MYSQL/" rel="tag"># MYSQL</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2011/08/12/PHP-获取系统信息，PHP-获取服务器详细信息『转载』/" rel="next" title="PHP 获取系统信息，PHP 获取服务器详细信息『转载』">
+                <i class="fa fa-chevron-left"></i> PHP 获取系统信息，PHP 获取服务器详细信息『转载』
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2011/08/13/32位win7系统支持4g内存办法/" rel="prev" title="32位win7系统支持4g内存办法">
+                32位win7系统支持4g内存办法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

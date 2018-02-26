@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="0x01 引言：&amp;nbsp; &amp;nbsp; 前段时间搞站遇到了TRS的系统里面涉及到了ws（Web Services简称）的相关技术，不久前玩一个xx酒店的时候又通过ws进入了它的数据库，后来接连遇到或看见一些app服务和物联网相关系统中出现XML相关漏洞，于是搜索相关资料做技术积累。如果文中出现错误，望指正。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="XML安全系列之Web Services">
+<meta property="og:url" content="http://yoursite.com/2015/03/28/xml-e5-ae-89-e5-85-a8-e7-b3-bb-e5-88-97-e4-b9-8bweb-services/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="0x01 引言：&amp;nbsp; &amp;nbsp; 前段时间搞站遇到了TRS的系统里面涉及到了ws（Web Services简称）的相关技术，不久前玩一个xx酒店的时候又通过ws进入了它的数据库，后来接连遇到或看见一些app服务和物联网相关系统中出现XML相关漏洞，于是搜索相关资料做技术积累。如果文中出现错误，望指正。">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/03/wpid-cd3f6976710697cb8bf28a6a89710bb2_a099b971-9121-4479-97df-9c0726a6cde7.png">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/03/wpid-cd3f6976710697cb8bf28a6a89710bb2_b70faeed-32eb-410e-a28d-a976d2be08b7.png">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/03/wpid-cd3f6976710697cb8bf28a6a89710bb2_246f447c-5398-4f4a-ab66-005584c5bb7c.png">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/03/wpid-cd3f6976710697cb8bf28a6a89710bb2_71bc3c3f-bddc-4132-b91f-2e0ef25245c2.png">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/03/wpid-cd3f6976710697cb8bf28a6a89710bb2_ff37e639-c494-4ce5-b2a7-aad4663139c2.png">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.271Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="XML安全系列之Web Services">
+<meta name="twitter:description" content="0x01 引言：&amp;nbsp; &amp;nbsp; 前段时间搞站遇到了TRS的系统里面涉及到了ws（Web Services简称）的相关技术，不久前玩一个xx酒店的时候又通过ws进入了它的数据库，后来接连遇到或看见一些app服务和物联网相关系统中出现XML相关漏洞，于是搜索相关资料做技术积累。如果文中出现错误，望指正。">
+<meta name="twitter:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/03/wpid-cd3f6976710697cb8bf28a6a89710bb2_a099b971-9121-4479-97df-9c0726a6cde7.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/03/28/xml-e5-ae-89-e5-85-a8-e7-b3-bb-e5-88-97-e4-b9-8bweb-services/"/>
+
+
+
+
+
+  <title>XML安全系列之Web Services | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/03/28/xml-e5-ae-89-e5-85-a8-e7-b3-bb-e5-88-97-e4-b9-8bweb-services/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">XML安全系列之Web Services</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-03-28T18:09:15+08:00">
+                2015-03-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术文章/" itemprop="url" rel="index">
+                    <span itemprop="name">技术文章</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>0x01 引言：<div><font face="Microsoft YaHei UI">&nbsp; &nbsp; 前段时间搞站遇到了TRS的系统里面涉及到了ws（Web Services简称）的相关技术，不久前玩一个xx酒店的时候又通过ws进入了它的数据库，后来接连遇到或看见一些app服务和物联网相关系统中出现XML相关漏洞，于是搜索相关资料做技术积累。如果文中出现错误，望指正。</font><a id="more"></a><br></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><font face="Microsoft YaHei UI"><br></font></div><div><font face="Microsoft YaHei UI">0x02 什么是WS：</font></div><div><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="color: rgb(51, 51, 51); font-family: arial, 宋体, sans-serif; line-height: 24px; text-indent: 28px; background-color: rgb(255, 255, 255);">Web Service是基于网络的、</span><a href="http://baike.baidu.com/view/402382.htm" target="_blank" rel="noopener">分布式</a><span style="color: rgb(51, 51, 51); font-family: arial, 宋体, sans-serif; line-height: 24px; text-indent: 28px; background-color: rgb(255, 255, 255);">的模块化组件，它执行特定的任务，遵守具体的技术规范，这些规范使得Web Service能与其他兼容的组件进行互操作。</span><span style="color: rgb(51, 51, 51); font-family: arial, 宋体, sans-serif; line-height: 24px; text-indent: 28px; background-color: rgb(255, 255, 255);">&nbsp;Web Services 利用 SOAP 和 XML对这些模型在通讯方面作了进一步的扩展以消除特殊对象模型的障碍。Web Services 主要利用 HTTP 和 SOAP 协议使业务数据在 Web 上传输，SOAP通过 HTTP 调用业务对象执行远程功能调用，Web 用户能够使用 SOAP 和 HTTP通过 Web 调用的方法来调用远程对象的。（来至百度百科）。</span></div><div><font face="arial">&nbsp; &nbsp; 简单的说WS就是http + XML，WS平台的元素有：SOAP、UDDI、WSDL。</font><span style="color: rgb(51, 51, 51); font-family: arial, 宋体, sans-serif; line-height: 24px; text-indent: 28px; background-color: rgb(255, 255, 255);"><br></span></div><div><font face="arial"><br></font></div><div><font face="arial">0x03 xml注入（soap注入）</font></div><div><font face="arial">&nbsp; &nbsp; 以下将介绍一些利用场景，漏洞是千变万化的肯定不全，也不是每种环境都适用。</font><font face="arial"><br></font></div><div><font face="arial">&nbsp; &nbsp; 情景1：</font><font face="arial"><br></font></div><div><font face="arial">&nbsp; &nbsp;&nbsp;</font><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp; 漏洞：</span><font face="arial"><br></font></div><div><font face="arial">&nbsp; &nbsp;&nbsp;</font><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;">&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;</span></div><div><font face="arial">&nbsp; &nbsp;&nbsp;</font><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;">&lt;USER role=”guest”&gt;attacker’s code&lt;/USER&gt;</span></div><div><font face="arial">&nbsp; &nbsp;&nbsp;</font><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;">poc:</span></div><div><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;">A&lt;/USER&gt;&lt;USER role=”admin”&gt;B</span></div><div><font face="arial">&nbsp; &nbsp;&nbsp;</font><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;">&nbsp;情景2：</span><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;"><br></span></div><div><font face="arial">&nbsp; &nbsp;&nbsp;</font><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp; 漏洞：</span><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;"><br></span></div><div><font face="arial">&nbsp; &nbsp;&nbsp;</font><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/03/wpid-cd3f6976710697cb8bf28a6a89710bb2_a099b971-9121-4479-97df-9c0726a6cde7.png" alt=""><span style="font-family: arial; font-size: 10.5pt; line-height: 1.5;"><br></span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp; 改变了&lt;lname&gt;&lt;lname&gt;为空，通过返回错误发现loginid作为登陆判断：</span><br></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/03/wpid-cd3f6976710697cb8bf28a6a89710bb2_b70faeed-32eb-410e-a28d-a976d2be08b7.png" alt=""><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;"><br></span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;poc:</span><br></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;</span><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/03/wpid-cd3f6976710697cb8bf28a6a89710bb2_246f447c-5398-4f4a-ab66-005584c5bb7c.png" alt=""><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;"><br></span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;结果bypass登陆：</span><br></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;</span><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/03/wpid-cd3f6976710697cb8bf28a6a89710bb2_71bc3c3f-bddc-4132-b91f-2e0ef25245c2.png" alt=""></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp; 情景3：</span><br></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp; &lt;transaction&gt;</span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp; &lt;total&gt;6000.00&lt;total&gt;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;"><br></span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp; &lt;credit_card_number&gt;12345&lt;/credit_card_number&gt; //12345可控,覆盖&lt;total&gt;标签</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;"><br></span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp; &lt;expiration&gt;01012008&lt;/expiration&gt;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;"><br></span></div><div><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&lt;/transaction&gt;</span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp; poc:</span><br></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp; 12345&lt;/credit_card_number&gt;&lt;total&gt;1.00&lt;/total&gt;&lt;credit_card_number&gt;12345</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;"><br></span></div><div><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;"><br></span></div><div><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">0x03 SQL注入和xpath注入:</span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp; 总所周知SQL注入，注入的是数据库，作为owasp top10的漏洞，存在相当的普遍，ws中也同样存在。wooyun上也同样存在案例<a href="http://www.wooyun.org/bugs/wooyun-2010-094720，这种ws上的sql注入漏洞也是非常容易被忽略的。" target="_blank" rel="noopener">http://www.wooyun.org/bugs/wooyun-2010-094720，这种ws上的sql注入漏洞也是非常容易被忽略的。</a></font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">至于sql注入的利用，不用多少，不同数据库不同注入手法，和我们常见的sql注入方法一样，并无区别。</span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp; xpath注入，在wooyun上谈论的很少，中文资料也不是很多。简单的形容如果xml作为数据库的话xpath讲究相当与sql语句，因此如果服务器是用xml格式来存储数据，我们用xpath来调用数据，当传入参数过滤不严的时候，就可能照成xpath注入，当然xpath注入还有很多技巧和函数的使用以及和xxe结合使用之类的技巧，在此不多说。</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;"><br></span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp; 举一ws注入xpath利用场景：</font><font face="Microsoft YaHei UI"><br></font></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp; &lt;sopaenv:Body&gt;</span><font face="Microsoft YaHei UI"><br></font></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&lt;web1:Login xmlns:web1=”<a href="http://ws.ws.com/&quot;&gt;" target="_blank" rel="noopener">http://ws.ws.com/“&gt;</a> </span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp; &lt;username&gt;abc&lt;/username&gt;</span><br></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp; &lt;password&gt;123&lt;/password&gt;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;"><br></span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp;&lt;/web1:Login&gt;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;"><br></span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp; &lt;/</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">sopaenv:Body</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&gt;</span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp; 假如正常的xpath查询：</font><span style="background-color: rgb(255, 255, 255); font-family: 'Maven Pro', Arial, sans-serif; line-height: 22.3999996185303px; font-size: 10.5pt;">string(//Employee[username/text()=’abc’ and password/text()=’123’]/account/text())</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;"><br></span></div><div><font face="Maven Pro">&nbsp; &nbsp; 我们控制可以控制username或者password，输入</font><span style="background-color: rgb(255, 255, 255); font-family: 'Maven Pro', Arial, sans-serif; line-height: 22.3999996185303px; font-size: 10.5pt;">‘ or ‘1’ = ‘1</span><span style="background-color: rgb(255, 255, 255); font-family: 'Maven Pro', Arial, sans-serif; line-height: 22.3999996185303px; font-size: 10.5pt;"><br></span></div><div><font face="Maven Pro">&nbsp; &nbsp; 最后xpath查询成为：</font><span style="background-color: rgb(255, 255, 255); font-family: 'Maven Pro', Arial, sans-serif; line-height: 22.390625px; font-size: 10.5pt;">string(//Employee[username/text()=’</span><span style="font-family: 'Maven Pro', Arial, sans-serif; line-height: 22.390625px; background-color: rgb(255, 255, 255);">‘ or ‘1’ = ‘1</span><span style="background-color: rgb(255, 255, 255); font-family: 'Maven Pro', Arial, sans-serif; line-height: 22.390625px; font-size: 10.5pt;">‘ and password/text()=’</span><span style="font-family: 'Maven Pro', Arial, sans-serif; line-height: 22.390625px; background-color: rgb(255, 255, 255);">‘ or ‘1’ = ‘1</span><span style="background-color: rgb(255, 255, 255); font-family: 'Maven Pro', Arial, sans-serif; line-height: 22.390625px; font-size: 10.5pt;">‘]/account/text())</span><span style="background-color: rgb(255, 255, 255); font-family: 'Maven Pro', Arial, sans-serif; line-height: 22.3999996185303px; font-size: 10.5pt;"><br></span></div><div><font face="Maven Pro">&nbsp; &nbsp; 绕过登陆，当让xpath的利用不知如此，比如使用doc()函数读取任意xml文件、使用doc()和xxe读取任意文件。</font><span style="background-color: rgb(255, 255, 255); font-family: 'Maven Pro', Arial, sans-serif; line-height: 22.390625px; font-size: 10.5pt;"><br></span></div><div><font face="Maven Pro"><br></font></div><div><font face="Maven Pro">0x04&nbsp;</font><span style="font-size: 10.5pt; line-height: 1.5;">DDOS和XXE</span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp; 为什么会有DDOS和XXE呢，前面已经说过了ws可以看成xml和http的结合，因此XML相关漏洞也是可能会出现在ws之中的，关于xml中的DDOS和XXE都是各位大牛都做了很多分析：</font><span style="font-size: 10.5pt; line-height: 1.5;"><br></span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp; DDOS上有：长数据DDOS、多标签DDOS</font><font face="Microsoft YaHei UI"><br></font></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp; 例如:</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&lt;transaction&gt;</span><font face="Microsoft YaHei UI"><br></font></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp; &lt;total&gt;6000.00&lt;total&gt;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;"><br></span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp; &lt;credit_card_number&gt;12345&lt;/credit_card_number&gt;</span></div><div><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&lt;credit_card_number&gt;qqqq&lt;/credit_card_number&gt;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp;</span></div><div><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&nbsp; &nbsp;&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&nbsp; &nbsp;&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&nbsp; &nbsp;&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&nbsp; &nbsp;&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&nbsp; &nbsp;&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&lt;credit_card_number&gt;qqqq&lt;/credit_card_number&gt;&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;"><br></span></div><div><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&nbsp; &nbsp;&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&nbsp; &nbsp;&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&nbsp; &nbsp;&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&nbsp; &nbsp;&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&nbsp; &nbsp;&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&lt;credit_card_number&gt;qqqq&lt;/credit_card_number&gt;&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';"><br></span></div><div><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&nbsp; &nbsp;&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&nbsp; &nbsp;&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&nbsp; &nbsp;&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&nbsp; &nbsp;&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&nbsp; &nbsp;&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&lt;credit_card_number&gt;qqqq&lt;/credit_card_number&gt;&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';">&nbsp;</span><span style="font-size: 10.5pt; line-height: 1.5; font-family: 'Microsoft YaHei UI';"><br></span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp; <code></code></span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp; &lt;expiration&gt;01012008&lt;/expiration&gt;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;"><br></span></div><div><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">&lt;/transaction&gt;</span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp; xxe漏洞drops上已有文章：<a href="http://drops.wooyun.org/tips/5290" target="_blank" rel="noopener">http://drops.wooyun.org/tips/5290</a>，以及利用xxe漏洞DDOS，利用xxe漏洞SSRF、命令执行</font></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp; 关于这连个漏洞推荐两篇文章：《Having Fun with XML hacking》</font>、《XML实体攻击-从内网探测到命令执行步步惊心》</div><div>0x05 上传漏洞</div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp; 这两个都是危害非常</font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;">大的漏洞：</span></div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp; 上传漏洞，ws是可以上传附件的，典型的例子就是trs上传漏洞<a href="http://www.wooyun.org/bugs/wooyun-2010-092138" target="_blank" rel="noopener">http://www.wooyun.org/bugs/wooyun-2010-092138</a></font></div><div><br></div><div>0x06 总结：</div><div><font face="Microsoft YaHei UI">&nbsp; &nbsp; 从上面的攻击方式不难看出分为两类：1.xml相关攻击技术；2.使用soap请求传输数据，数据进去其他程序引起的漏洞（sql注入），因此漏洞利用形式多种多样，不同场景会有不同利用方式结合使用或者是bypass，掌握基础的知识才能在遇到的时候灵活运用。</font><br></div><div><font face="Microsoft YaHei UI"><br></font></div><div><font face="Microsoft YaHei UI">0x07 引用：</font></div><div><a href="wiz://open_attachment?guid=4dcead89-fd21-4a3c-bb88-5352d4543179" target="_blank" rel="noopener"><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/03/wpid-cd3f6976710697cb8bf28a6a89710bb2_ff37e639-c494-4ce5-b2a7-aad4663139c2.png" alt=""></a><font face="Microsoft YaHei UI"><br></font></div><div><font face="Microsoft YaHei UI"> </font><span style="font-family: 'Microsoft YaHei UI'; font-size: 10.5pt; line-height: 1.5;"><br></span></div></p>
+<div><a href="http://www.wiz.cn/i/93198460" title="来自为知笔记(Wiz)" target="_blank" rel="noopener">来自为知笔记(Wiz)</a></div>
+
+<div><br><br>### 附件列表<br><br>*   <a href="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/03/wpid-cd3f6976710697cb8bf28a6a89710bb2_XML安全之Web-Services.zip" target="_blank" rel="noopener">XML安全之Web Services.zip</a></div>
+
+<p>&nbsp;</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/03/18/esc-sql-doh-wordpress-sql-injection-vulnerability/" rel="next" title="esc_sql Doh! WordPress SQL Injection Vulnerability">
+                <i class="fa fa-chevron-left"></i> esc_sql Doh! WordPress SQL Injection Vulnerability
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/03/30/006bdbdbef35aa1e6bf2b3245c973c5a/" rel="prev" title="读《使用Hash直接登录Windows》">
+                读《使用Hash直接登录Windows》 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

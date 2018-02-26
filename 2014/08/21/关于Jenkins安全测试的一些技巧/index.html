@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Jenkins,安全测试," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;nbsp; &amp;nbsp; 今天mickey牛发来一篇关于hacking Jenkins的文章，受益匪浅，虽然不是很高深的东西，看完几篇相关文章之后记录下要点，为以后做安全测试留下笔记。 &amp;nbsp; &amp;nbsp; 文章链接： &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;http://www.labofapenetrationtester.com">
+<meta name="keywords" content="Jenkins,安全测试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于Jenkins安全测试的一些技巧">
+<meta property="og:url" content="http://yoursite.com/2014/08/21/关于Jenkins安全测试的一些技巧/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="&amp;nbsp; &amp;nbsp; 今天mickey牛发来一篇关于hacking Jenkins的文章，受益匪浅，虽然不是很高深的东西，看完几篇相关文章之后记录下要点，为以后做安全测试留下笔记。 &amp;nbsp; &amp;nbsp; 文章链接： &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;http://www.labofapenetrationtester.com">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.270Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于Jenkins安全测试的一些技巧">
+<meta name="twitter:description" content="&amp;nbsp; &amp;nbsp; 今天mickey牛发来一篇关于hacking Jenkins的文章，受益匪浅，虽然不是很高深的东西，看完几篇相关文章之后记录下要点，为以后做安全测试留下笔记。 &amp;nbsp; &amp;nbsp; 文章链接： &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;http://www.labofapenetrationtester.com">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2014/08/21/关于Jenkins安全测试的一些技巧/"/>
+
+
+
+
+
+  <title>关于Jenkins安全测试的一些技巧 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/08/21/关于Jenkins安全测试的一些技巧/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">关于Jenkins安全测试的一些技巧</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2014-08-21T13:33:37+08:00">
+                2014-08-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术文章/" itemprop="url" rel="index">
+                    <span itemprop="name">技术文章</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&nbsp; &nbsp; 今天mickey牛发来一篇关于<a href="http://www.labofapenetrationtester.com/2014/08/script-execution-and-privilege-esc-jenkins.html" target="_blank" rel="noopener">hacking Jenkins</a>的文章，受益匪浅，虽然不是很高深的东西，看完几篇相关文章之后记录下要点，为以后做安全测试留下笔记。</p>
+<p>&nbsp; &nbsp; 文章链接：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.labofapenetrationtester.com/2014/08/script-execution-and-privilege-esc-jenkins.html" target="_blank" rel="noopener">http://www.labofapenetrationtester.com/2014/08/script-execution-and-privilege-esc-jenkins.html</a></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <a href="http://www.labofapenetrationtester.com/2014/06/hacking-jenkins-servers.html" target="_blank" rel="noopener">http://www.labofapenetrationtester.com/2014/06/hacking-jenkins-servers.html</a></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.pentestgeek.com/2014/06/13/hacking-jenkins-servers-with-no-password/" target="_blank" rel="noopener">https://www.pentestgeek.com/2014/06/13/hacking-jenkins-servers-with-no-password/</a></p>
+<p>&nbsp; &nbsp; 工具链接：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://wiki.jenkins-ci.org/display/JENKINS/Terminal+Plugin" target="_blank" rel="noopener">https://wiki.jenkins-ci.org/display/JENKINS/Terminal+Plugin</a></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/samratashok/nishang" target="_blank" rel="noopener">https://github.com/samratashok/nishang</a></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.rapid7.com/db/modules/exploit/multi/http/jenkins_script_console" target="_blank" rel="noopener">http://www.rapid7.com/db/modules/exploit/multi/http/jenkins_script_console</a></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://wiki.skullsecurity.org/Passwords" target="_blank" rel="noopener">https://wiki.skullsecurity.org/Passwords</a></p>
+<p>&nbsp; &nbsp; 文章要点：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 看了几篇文章说道了一下几个东西：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 1.通过自带的groovy script的解析器可以执行命令</p>
+<div id="crayon-53f579c676647" class="crayon-syntax crayon-theme-tomorrow-night crayon-font-monaco crayon-os-pc print-yes" data-settings=" minimize scroll-mouseover" style="font-family:Monaco, MonacoRegular, ’Courier New’, monospace;margin:12px 0px;padding:0px;vertical-align:baseline;direction:ltr;width:598px;color:#999999;float:none;clear:both;height:auto;line-height:15px !important;overflow:hidden !important;position:relative !important;border:1px solid #000000 !important;text-shadow:none !important;background:#27292c !important;"><div class="crayon-plain-wrap" style="font-style:inherit;font-variant:inherit;font-weight:inherit;line-height:inherit;vertical-align:baseline;border:none;margin:0px !important;padding:0px !important;height:auto !important;background:none;"><textarea wrap="off" class="crayon-plain print-no" data-settings="dblclick" readonly style="border-top-left-radius:0px;border-top-right-radius:0px;border-bottom-right-radius:0px;border-bottom-left-radius:0px;padding-top:0px;padding-right:5px;padding-left:5px;margin:0px;border:none;-webkit-box-shadow:none;box-shadow:none;color:#000000;width:598px;overflow:hidden;height:75px;position:absolute;opacity:0;white-space:pre;word-wrap:normal;resize:none;tab-size:4;z-index:0;line-height:15px !important;font-family:Monaco, MonacoRegular, ’Courier New’, monospace !important;background-image:initial;background-attachment:initial;background-size:initial;background-origin:initial;background-clip:initial;background-position:initial;background-repeat:initial;"></textarea></div><br><div class="crayon-main" style="font-style:inherit;font-variant:inherit;font-weight:inherit;line-height:inherit;margin:0px;padding:0px;vertical-align:baseline;border:none;width:598px;overflow:hidden;position:relative;z-index:1;background:none;"><table class="crayon-table ke-zeroborder" style="font-style:inherit;font-variant:inherit;font-weight:inherit;line-height:inherit;font-size:12px;margin-left:0px;vertical-align:baseline;margin-top:0px !important;margin-right:0px !important;margin-bottom:0px !important;padding:0px !important;border-spacing:0px !important;border:none !important;width:auto !important;background:none !important;"><tbody style="font-style:inherit;font-variant:inherit;font-weight:inherit;line-height:inherit;margin:0px;padding:0px;vertical-align:baseline;"><tr class="crayon-row" style="font-style:inherit;font-variant:inherit;font-weight:inherit;line-height:inherit;margin:0px !important;padding:0px !important;vertical-align:top !important;border:none !important;background:none;"><td class="crayon-nums " data-settings="show" style="font-style:inherit;font-variant:inherit;font-weight:inherit;font-family:Monaco, MonacoRegular, ’Courier New’, monospace !important;line-height:15px !important;margin:0px !important;padding:0px !important;vertical-align:top !important;border-style:none !important;border-right-width:1px !important;color:#898989 !important;background:#4b4d4f !important;"><div class="crayon-nums-content" style="font-style:inherit;font-variant:inherit;font-weight:inherit;line-height:inherit;margin:0px;padding:0px;vertical-align:baseline;border:none;background:none;"><div class="crayon-num" data-line="crayon-53f579c676647-1" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px 5px;vertical-align:baseline;border:none;text-align:center;background:none;">1</div><br><div class="crayon-num crayon-striped-num" data-line="crayon-53f579c676647-2" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px 5px;vertical-align:baseline;border:none;text-align:center;color:#979797 !important;background:#3a3c3d !important;">2</div><br><div class="crayon-num" data-line="crayon-53f579c676647-3" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px 5px;vertical-align:baseline;border:none;text-align:center;background:none;">3</div><br><div class="crayon-num crayon-striped-num" data-line="crayon-53f579c676647-4" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px 5px;vertical-align:baseline;border:none;text-align:center;color:#979797 !important;background:#3a3c3d !important;">4</div><br><div class="crayon-num" data-line="crayon-53f579c676647-5" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px 5px;vertical-align:baseline;border:none;text-align:center;background:none;">5</div><br></div><br></td><br><td class="crayon-code" style="font-style:inherit;font-variant:inherit;font-weight:inherit;line-height:inherit;width:581px;font-family:Monaco, MonacoRegular, ’Courier New’, monospace !important;margin:0px !important;padding:0px !important;vertical-align:top !important;border:none !important;background:none;"><div class="crayon-pre" style="font-style:inherit;font-variant:inherit;font-weight:inherit;margin:0px;padding:0px;vertical-align:baseline;white-space:pre;overflow:visible;border:none !important;background:none !important;"><div class="crayon-line" id="crayon-53f579c676647-1" style="font-family:inherit;font-style:inherit;font-variant:inherit;margin:0px;padding:0px 5px;vertical-align:baseline;border:none;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;background:none;"><span class="r" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#92afc1 !important;display:inline-block;zoom:1;">def</span><span class="h" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#006fe0 !important;display:inline-block;zoom:1;"> </span><span class="v" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#d87c7b !important;display:inline-block;zoom:1;">sout</span><span class="h" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#006fe0 !important;display:inline-block;zoom:1;"> </span><span class="o" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#99c9c4 !important;display:inline-block;zoom:1;">=</span><span class="h" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#006fe0 !important;display:inline-block;zoom:1;"> </span><span class="k " style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#92afc1 !important;display:inline-block;zoom:1;">new</span><span class="h" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#006fe0 !important;display:inline-block;zoom:1;"> </span><span class="e" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#e8ce91 !important;display:inline-block;zoom:1;">StringBuffer</span><span class="sy" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c9d2d1 !important;display:inline-block;zoom:1;">(</span><span class="sy" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c9d2d1 !important;display:inline-block;zoom:1;">)</span><span class="sy" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c9d2d1 !important;display:inline-block;zoom:1;">,</span><span class="h" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#006fe0 !important;display:inline-block;zoom:1;"> </span><span class="v" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#d87c7b !important;display:inline-block;zoom:1;">serr</span><span class="h" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#006fe0 !important;display:inline-block;zoom:1;"> </span><span class="o" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#99c9c4 !important;display:inline-block;zoom:1;">=</span><span class="h" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#006fe0 !important;display:inline-block;zoom:1;"> </span><span class="k " style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#92afc1 !important;display:inline-block;zoom:1;">new</span><span class="h" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#006fe0 !important;display:inline-block;zoom:1;"> </span><span class="e" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#e8ce91 !important;display:inline-block;zoom:1;">StringBuffer</span><span class="sy" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c9d2d1 !important;display:inline-block;zoom:1;">(</span><span class="sy" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c9d2d1 !important;display:inline-block;zoom:1;">)</span></div><br><div class="crayon-line crayon-striped-line" id="crayon-53f579c676647-2" style="font-family:inherit;font-style:inherit;font-variant:inherit;margin:0px;padding:0px 5px;vertical-align:baseline;border:none;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;background:#202326 !important;"><span class="r" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#92afc1 !important;display:inline-block;zoom:1;">def</span><span class="h" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#006fe0 !important;display:inline-block;zoom:1;"> </span><span class="v" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#d87c7b !important;display:inline-block;zoom:1;">proc</span><span class="h" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#006fe0 !important;display:inline-block;zoom:1;"> </span><span class="o" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#99c9c4 !important;display:inline-block;zoom:1;">=</span><span class="h" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#006fe0 !important;display:inline-block;zoom:1;"> </span><span class="s" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#b2af75 !important;display:inline-block;zoom:1;">’[INSERT COMMAND]’</span><span class="sy" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c9d2d1 !important;display:inline-block;zoom:1;">.</span><span class="e" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#e8ce91 !important;display:inline-block;zoom:1;">execute</span><span class="sy" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c9d2d1 !important;display:inline-block;zoom:1;">(</span><span class="sy" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c9d2d1 !important;display:inline-block;zoom:1;">)</span></div><br><div class="crayon-line" id="crayon-53f579c676647-3" style="font-family:inherit;font-style:inherit;font-variant:inherit;margin:0px;padding:0px 5px;vertical-align:baseline;border:none;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;background:none;"><span class="i" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c7c7c7 !important;display:inline-block;zoom:1;">proc</span><span class="sy" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c9d2d1 !important;display:inline-block;zoom:1;">.</span><span class="e" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#e8ce91 !important;display:inline-block;zoom:1;">consumeProcessOutput</span><span class="sy" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c9d2d1 !important;display:inline-block;zoom:1;">(</span><span class="i" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c7c7c7 !important;display:inline-block;zoom:1;">sout</span><span class="sy" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c9d2d1 !important;display:inline-block;zoom:1;">,</span><span class="h" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#006fe0 !important;display:inline-block;zoom:1;"> </span><span class="i" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c7c7c7 !important;display:inline-block;zoom:1;">serr</span><span class="sy" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c9d2d1 !important;display:inline-block;zoom:1;">)</span></div><br><div class="crayon-line crayon-striped-line" id="crayon-53f579c676647-4" style="font-family:inherit;font-style:inherit;font-variant:inherit;margin:0px;padding:0px 5px;vertical-align:baseline;border:none;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;background:#202326 !important;"><span class="i" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c7c7c7 !important;display:inline-block;zoom:1;">proc</span><span class="sy" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c9d2d1 !important;display:inline-block;zoom:1;">.</span><span class="e" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#e8ce91 !important;display:inline-block;zoom:1;">waitForOrKill</span><span class="sy" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c9d2d1 !important;display:inline-block;zoom:1;">(</span><span class="cn" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#e7a37a !important;display:inline-block;zoom:1;">1000</span><span class="sy" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c9d2d1 !important;display:inline-block;zoom:1;">)</span></div><br><div class="crayon-line" id="crayon-53f579c676647-5" style="font-family:inherit;font-style:inherit;font-variant:inherit;margin:0px;padding:0px 5px;vertical-align:baseline;border:none;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;background:none;"><span class="i" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#c7c7c7 !important;display:inline-block;zoom:1;">println</span><span class="h" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#006fe0 !important;display:inline-block;zoom:1;"> </span><span class="s" style="font-family:inherit;font-style:inherit;font-variant:inherit;font-weight:inherit !important;line-height:inherit !important;font-size:inherit !important;margin:0px;padding:0px;vertical-align:baseline;color:#b2af75 !important;display:inline-block;zoom:1;">“out&gt; $sout err&gt; $serr”</span></div><br></div><br></td><br></tr><br></tbody><br></table><br></div><br></div>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:#000000;">&nbsp; 2.使用强大的powershell脚本，nishang是一个powershell脚本集</span></p>
+<p><span style="color:#000000;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 3.当我们没有办法进入console script界面执行脚本的时候可以采用以下方法</span></p>
+<p></p>
+<p><span style="color:#000000;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; a.Jenkins的一下目录泄漏了一写开发用户信息</span></p>
+<p><span style="color:#000000;font-family:OpenSansRegular, Tahoma, sans-serif;font-size:13px;line-height:20px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="font-family:’OpenSansRegular, Tahoma, sans-serif’;font-size:x-small;"><span style="line-height:20px;">List of users:</span></span></p>
+<p><span style="font-family:’OpenSansRegular, Tahoma, sans-serif’;font-size:x-small;"><span style="line-height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://[jenkinsurl]/asynchPeople/</span></span></p>
+<p><span style="font-family:’OpenSansRegular, Tahoma, sans-serif’;font-size:x-small;"><span style="line-height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List of all builds:&nbsp;</span></span></p>
+<p><span style="font-family:’OpenSansRegular, Tahoma, sans-serif’;font-size:x-small;"><span style="line-height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;http://[jenkinsurl]/view/All/builds</span></span></p>
+<p><span style="font-family:’OpenSansRegular, Tahoma, sans-serif’;font-size:x-small;"><span style="line-height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;(Seems to be fixed in the latest version 1.575)&nbsp;</span></span></p>
+<p><span style="font-family:’OpenSansRegular, Tahoma, sans-serif’;font-size:x-small;"><span style="line-height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List publilcy available content:</span></span></p>
+<p><span style="font-family:’OpenSansRegular, Tahoma, sans-serif’;font-size:x-small;"><span style="line-height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://[jenkinsurl]/userContent/</span></span></p>
+<p><span style="font-family:’OpenSansRegular, Tahoma, sans-serif’;font-size:x-small;"><span style="line-height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Type of the Operating System:&nbsp;</span></span></p>
+<p><span style="font-family:’OpenSansRegular, Tahoma, sans-serif’;font-size:x-small;"><span style="line-height:20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://[jenkinsurl]/computer/&nbsp;</span></span><span style="color:#000000;font-family:OpenSansRegular, Tahoma, sans-serif;font-size:13px;line-height:20px;">&nbsp;&nbsp;&nbsp;</span></p>
+<p></p>
+<p><span style="color:#000000;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; b.通过泄漏的用户名爆破得到一些有build job权限的用户，</span><span style="color:#000000;">然后执行相关命令</span></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Jenkins/" rel="tag"># Jenkins</a>
+          
+            <a href="/tags/安全测试/" rel="tag"># 安全测试</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2014/06/09/随笔/" rel="next" title="随笔">
+                <i class="fa fa-chevron-left"></i> 随笔
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2014/09/26/记录一些反弹shell代码/" rel="prev" title="记录一些反弹shell代码">
+                记录一些反弹shell代码 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

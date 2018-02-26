@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="sae,移植,微博通插件," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;nbsp; &amp;nbsp; 刚好放假有点时间，于是乎把自己博客优化下，emlog移植到Sae平台，虽然基本功能可以使用，但是还是有很多地方移植的不是很好。 &amp;nbsp; &amp;nbsp; 前段时间移植一个微博同步插件，一直不成功，今天跑官网一看，我那个去啊，那个插件api已经失效了，真是悲剧。 &amp;nbsp; &amp;nbsp; 于是乎我重新下载了一个微博通的插件做移植。 &amp;nbsp; &amp;nbsp; 移植的思">
+<meta name="keywords" content="sae,移植,微博通插件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="emlog微博通插件Sae版">
+<meta property="og:url" content="http://yoursite.com/2013/02/06/emlog微博通插件Sae版/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="&amp;nbsp; &amp;nbsp; 刚好放假有点时间，于是乎把自己博客优化下，emlog移植到Sae平台，虽然基本功能可以使用，但是还是有很多地方移植的不是很好。 &amp;nbsp; &amp;nbsp; 前段时间移植一个微博同步插件，一直不成功，今天跑官网一看，我那个去啊，那个插件api已经失效了，真是悲剧。 &amp;nbsp; &amp;nbsp; 于是乎我重新下载了一个微博通的插件做移植。 &amp;nbsp; &amp;nbsp; 移植的思">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.269Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="emlog微博通插件Sae版">
+<meta name="twitter:description" content="&amp;nbsp; &amp;nbsp; 刚好放假有点时间，于是乎把自己博客优化下，emlog移植到Sae平台，虽然基本功能可以使用，但是还是有很多地方移植的不是很好。 &amp;nbsp; &amp;nbsp; 前段时间移植一个微博同步插件，一直不成功，今天跑官网一看，我那个去啊，那个插件api已经失效了，真是悲剧。 &amp;nbsp; &amp;nbsp; 于是乎我重新下载了一个微博通的插件做移植。 &amp;nbsp; &amp;nbsp; 移植的思">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/02/06/emlog微博通插件Sae版/"/>
+
+
+
+
+
+  <title>emlog微博通插件Sae版 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/02/06/emlog微博通插件Sae版/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">emlog微博通插件Sae版</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2013-02-06T17:13:22+08:00">
+                2013-02-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SAE新浪/" itemprop="url" rel="index">
+                    <span itemprop="name">SAE新浪</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&nbsp; &nbsp; 刚好放假有点时间，于是乎把自己博客优化下，emlog移植到Sae平台，虽然基本功能可以使用，但是还是有很多地方移植的不是很好。</p>
+<p>&nbsp; &nbsp; 前段时间移植一个微博同步插件，一直不成功，今天跑官网一看，我那个去啊，那个插件api已经失效了，真是悲剧。</p>
+<p>&nbsp; &nbsp; 于是乎我重新下载了一个微博通的插件做移植。</p>
+<p>&nbsp; &nbsp; 移植的思路和我移植的反垃圾评论思路差不多，具体思路可以参考：<a href="/saecloud/126.html">http://lanu.sinaapp.com/saecloud/126.html</a></p>
+<p>&nbsp; &nbsp; 下面说下我的修改：</p>
+<p>1.删除了wbto_config.php和wbto_profile.php两个文件</p>
+<p>&nbsp;</p>
+<p>2.增加了wbto_kvdb.php文件</p>
+<p>&nbsp; &nbsp; 这个文件里面写的是kvdb服务的一些功能函数</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">  &lt;?php
+// init kvdb at 12:31 2013-2-6 by L.N. begin
+function wbto_read($key)
+{
+    $kv = wbto_init_kvdb();
+    $ret = $kv-&gt;get($key);
+    return $ret;
+}
+function wbto_write($data, $key)
+{
+    $kv = wbto_init_kvdb();
+    $ret = $kv-&gt;set($key,$data);
+    if($ret !== true)
+    {
+        wbtoMsg("写入数据失败!");
+    }
+}
+function wbto_install()
+{
+    $kv = wbto_init_kvdb();
+    $ret = $kv-&gt;add(’WBTO_API_KEY’, ’emlog’);
+    $ret1 = $kv-&gt;add(’WBTO_API_DOMAIN’, ’wbto.cn’);
+    $ret2 = $kv-&gt;add(’WBTO_API_POST_PATH’, ’/api/update.json’);
+    $ret3 = $kv-&gt;add(’WBTO_API_POST_IMAGE_PATH’, ’/api/upload.json’);
+    $ret4 = $kv-&gt;add(’WBTO_USER_NAME’,’test’);
+    $ret5 = $kv-&gt;add(’WBTO_USER_PASSWD’,’123456’);
+    $ret6 = $kv-&gt;add(’WBTO_SYNC’,’1’);
+    $ret7 = $kv-&gt;add(’WBTO_TFROM’,’5’);
+    if($ret !== true &amp;&amp; $ret1 !== true &amp;&amp; $ret2 !== true &amp;&amp; $ret3 !== true &amp;&amp; $ret4 !== true &amp;&amp; $ret5 !== true &amp;&amp; $ret6 !== true &amp;&amp; $ret7 !== true)
+    {
+        wbtoMsg("安装失败!");
+    }
+}
+function wbto_uninstall()
+{
+    $kv = wbto_init_kvdb();
+    $ret = $kv-&gt;delete(’WBTO_API_KEY’);
+    $ret1 = $kv-&gt;delete(’WBTO_API_DOMAIN’);
+    $ret2 = $kv-&gt;delete(’WBTO_API_POST_PATH’);
+    $ret3 = $kv-&gt;delete(’WBTO_API_POST_IMAGE_PATH’);
+    $ret4 = $kv-&gt;delete(’WBTO_USER_NAME’);
+    $ret5 = $kv-&gt;delete(’WBTO_USER_PASSWD’);
+    $ret6 = $kv-&gt;delete(’WBTO_SYNC’);
+    $ret7 = $kv-&gt;delete(’WBTO_TFROM’);
+    if($ret !== true &amp;&amp; $ret1 !== true &amp;&amp; $ret2 !== true &amp;&amp; $ret3 !== true &amp;&amp; $ret4 !== true &amp;&amp; $ret5 !== true &amp;&amp; $ret6 !== true &amp;&amp; $ret7 !== true)
+    {
+        wbtoMsg("卸载失败!");
+    }
+}
+function wbto_init_kvdb()
+{
+    $kv = new SaeKV();
+    // 初始化KV对象
+    $ret = $kv-&gt;init();
+    if($ret==true)
+    {
+        return $kv;
+    }
+    else
+    {
+        wbtoMsg("初始化KV对象失败,请检查是否开启KVDB服务!");
+    }
+}
+function wbtoMsg($msg, $url = ’javwbtoript:history.back(-1);’) {
+    if(isset($_GET[’gid’])) {
+        define (’TEMPLATE_PATH’, EMLOG_ROOT . ’/m/view/’);
+        $url = BLOG_URL . ’m/?post=’. intval($_GET[’gid’]);
+        include View::getView(’header’);
+        include View::getView(’msg’);
+        include View::getView(’footer’);
+        View::output();
+        exit;
+    } else {
+        emMsg($msg,$url);
+    }
+}
+// init kvdb at 12:31 2013-2-6    end
+?&gt;</pre>
+
+<p>&nbsp;</p>
+<p>3.增加初始化文件wbto_callback.php</p>
+<p>&nbsp; &nbsp; 文件中主要是安装和卸载插件时候需要初始化和卸载的一些数据，代码如下：</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">    &lt;?php
+// init kvdb at 12:31 2013-2-6 by L.N. begin
+if(!defined(’EMLOG_ROOT’)) {exit(’error!’);}
+require_once EMLOG_ROOT.’/content/plugins/wbto/wbto.php’;
+function callback_init()
+{
+    wbto_install();
+}
+function callback_rm()
+{
+    wbto_uninstall();
+}
+?&gt;</pre>
+
+<p>&nbsp;</p>
+<p>4.修改wbto.php文件</p>
+<p>&nbsp; &nbsp; 在其开头增加如下代码：</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">!defined(’EMLOG_ROOT’) &amp;&amp; exit(’access deined!’);
+/&#42 by L.N.
+require_once ’wbto_profile.php’;
+require_once ’wbto_config.php’;
+&#42/
+require_once ’wbto_kvdb.php’;
+define(’WBTO_API_KEY’, wbto_read(’WBTO_API_KEY’));
+define(’WBTO_API_DOMAIN’, wbto_read(’WBTO_API_DOMAIN’));
+define(’WBTO_API_POST_PATH’, wbto_read(’WBTO_API_POST_PATH’));
+define(’WBTO_API_POST_IMAGE_PATH’, wbto_read(’WBTO_API_POST_IMAGE_PATH’));
+define(’WBTO_USER_NAME’, wbto_read(’WBTO_USER_NAME’));
+define(’WBTO_USER_PASSWD’, wbto_read(’WBTO_USER_PASSWD’));
+define(’WBTO_SYNC’, wbto_read(’WBTO_SYNC’));
+define(’WBTO_TFROM’, wbto_read(’WBTO_TFROM’));</pre>
+
+<p>&nbsp;</p>
+<p>5.修改wbto_setting.php文件中的plugin_setting()函数</p>
+<p>&nbsp; &nbsp; 代码如下：</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">function plugin_setting(){
+    //$profile = EMLOG_ROOT.’/content/plugins/wbto/wbto_profile.php’;
+
+    $wbto_user = htmlspecialchars($_POST[’user’], ENT_QUOTES);
+    $wbto_pwd = htmlspecialchars($_POST[’pwd’], ENT_QUOTES);
+    $wbto_sync = htmlspecialchars($_POST[’sync’], ENT_QUOTES);
+    $wbto_tfrom = htmlspecialchars($_POST[’tfrom’], ENT_QUOTES);
+
+    //$wbto_new_profile = "&lt;?php
+define(’WBTO_USER_NAME’,’$wbto_user’);
+define(’WBTO_USER_PASSWD’,’$wbto_pwd’);
+define(’WBTO_SYNC’,’$wbto_sync’);
+define(’WBTO_TFROM’,’$wbto_tfrom’);
+";
+    /&#42
+    $fp = @fopen($profile,’wb’);
+    if(!$fp) {
+        return false;
+    }
+    fwrite($fp,$wbto_new_profile);
+    fclose($fp);
+    &#42/
+    wbto_write($wbto_user, ’WBTO_USER_NAME’);
+    wbto_write($wbto_pwd, ’WBTO_USER_PASSWD’);
+    wbto_write($wbto_sync, ’WBTO_SYNC’);
+    wbto_write($wbto_tfrom, ’WBTO_TFROM’);
+}</pre>
+
+<p>&nbsp;</p>
+<p>以上就是我的相关修改，如果bug请留言。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/sae/" rel="tag"># sae</a>
+          
+            <a href="/tags/移植/" rel="tag"># 移植</a>
+          
+            <a href="/tags/微博通插件/" rel="tag"># 微博通插件</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/02/06/emlog反垃圾评论插件sae版/" rel="next" title="emlog反垃圾评论插件sae版">
+                <i class="fa fa-chevron-left"></i> emlog反垃圾评论插件sae版
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/02/07/emlog跑马灯公告插件Sae版/" rel="prev" title="emlog跑马灯公告插件Sae版">
+                emlog跑马灯公告插件Sae版 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

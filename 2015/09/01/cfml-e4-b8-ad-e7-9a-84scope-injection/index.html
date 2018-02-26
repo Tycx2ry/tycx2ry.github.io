@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="0x00 前言 早上按例看mickey牛发的每日新知识，其中有一篇关于CFML中的ScopeInjection，我不知道怎么翻译这个次比较好，是叫“范围注入”还是叫“变量覆盖”？话不多说，在文中我就写“Scope注入”了。  0x01 什么是CFML 1.  &amp;lt;span class=&amp;quot;pln&amp;quot;&amp;gt;“CFML的全称是ColdFusion Markup Language，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CFML中的Scope Injection">
+<meta property="og:url" content="http://yoursite.com/2015/09/01/cfml-e4-b8-ad-e7-9a-84scope-injection/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="0x00 前言 早上按例看mickey牛发的每日新知识，其中有一篇关于CFML中的ScopeInjection，我不知道怎么翻译这个次比较好，是叫“范围注入”还是叫“变量覆盖”？话不多说，在文中我就写“Scope注入”了。  0x01 什么是CFML 1.  &amp;lt;span class=&amp;quot;pln&amp;quot;&amp;gt;“CFML的全称是ColdFusion Markup Language，">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/09/wpid-b7a27ea98576d6ce879b190f0b031cae_clip_image00194eee1c0-eef5-4d98-baf0-a478e82c3577.png">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/09/wpid-b7a27ea98576d6ce879b190f0b031cae_clip_image00257574c75-f097-4858-b336-075dc21ebb05.png">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/09/wpid-b7a27ea98576d6ce879b190f0b031cae_clip_image003cbfd73ab-4bc8-47de-b60a-788ce2f4d914.png">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/09/wpid-b7a27ea98576d6ce879b190f0b031cae_clip_image0041f410cb1-2f4c-418b-96c0-21b96eeaf1a9.png">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/09/wpid-b7a27ea98576d6ce879b190f0b031cae_clip_image005b2ca2283-6ecc-46ef-8966-333a280b0f19.png">
+<meta property="og:updated_time" content="2018-02-26T06:01:32.398Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CFML中的Scope Injection">
+<meta name="twitter:description" content="0x00 前言 早上按例看mickey牛发的每日新知识，其中有一篇关于CFML中的ScopeInjection，我不知道怎么翻译这个次比较好，是叫“范围注入”还是叫“变量覆盖”？话不多说，在文中我就写“Scope注入”了。  0x01 什么是CFML 1.  &amp;lt;span class=&amp;quot;pln&amp;quot;&amp;gt;“CFML的全称是ColdFusion Markup Language，">
+<meta name="twitter:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/09/wpid-b7a27ea98576d6ce879b190f0b031cae_clip_image00194eee1c0-eef5-4d98-baf0-a478e82c3577.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/09/01/cfml-e4-b8-ad-e7-9a-84scope-injection/"/>
+
+
+
+
+
+  <title>CFML中的Scope Injection | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/09/01/cfml-e4-b8-ad-e7-9a-84scope-injection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CFML中的Scope Injection</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-09-01T16:32:59+08:00">
+                2015-09-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术文章/" itemprop="url" rel="index">
+                    <span itemprop="name">技术文章</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><span style="font-family:Calibri" lang="en-US">0x00 </span><span style="font-family:SimSun" lang="zh-CN">前言</span></p>
+<p><span style="font-family:SimSun" lang="zh-CN">早上按例看</span><span style="font-family:
+Calibri" lang="en-US">mickey</span><span style="font-family:SimSun" lang="zh-CN">牛发的每日新知识，其中有一篇关于</span><span style="font-family:Calibri" lang="en-US">CFML</span><span style="font-family:
+SimSun" lang="zh-CN">中的</span><span style="font-family:Calibri" lang="zh-CN">Scope<br>Injection</span><span style="font-family:SimSun" lang="zh-CN">，我不知道怎么翻译这个次比较好，是叫“范围注入”还是叫“变量覆盖”？话不多说，在文中我就写“</span><span style="font-family:Calibri" lang="zh-CN">Scope</span><span style="font-family:
+SimSun" lang="zh-CN">注入”了。</span></p>
+<p><span style="font-family:
+SimSun" lang="zh-CN"><br></span></p>
+<p><span style="font-family:Calibri" lang="en-US">0x01 </span><span style="font-family:SimSun" lang="zh-CN">什么是</span><span style="font-family:Calibri" lang="en-US">CFML</span></p>
+<div><pre class="prettyprint linenums prettyprinted"><br><br>1.  <code>&lt;span class=&quot;pln&quot;&gt;“CFML的全称是ColdFusion Markup Language，是一种特别适于用来编写互联网应用程序的语言。CFML看上去和传统的编程语言并不太一样，更接近HTML，因此和HTML一样非常的易学易用。CFML可以在ColdFusion应用程序服务器上运行，也可以在其它一些应用程序服务器运行。”    ---百度百科&lt;/span&gt;</code></pre></div>
+
+<p><span style="font-family:SimSun" lang="zh-CN">简而言之，</span><span style="font-family:
+Calibri" lang="en-US">CFML</span><span style="font-family:SimSun" lang="zh-CN">就是一种开发语言，所用于</span><span style="font-family:Calibri" lang="en-US">web</span><span style="font-family:SimSun" lang="zh-CN">开发。</span></p>
+<p><span style="font-family:Calibri" lang="en-US">0x02 SCOPE</span><span style="font-family:SimSun" lang="zh-CN">注入</span></p>
+<p>假设这是一段权限控制代码，通过session.isAdmin判断用户是不是管理员：</p>
+<p>&lt;cfif<br>session.isAdmin&gt;</p>
+<p>&nbsp;&nbsp;&nbsp; Do something only an admin can do…</p>
+<p>&lt;/cfif&gt;</p>
+<p><span style="font-family:SimSun" lang="zh-CN">如果isAdmin没有被定义在</span><span style="font-family:Calibri" lang="en-US">session</span><span style="font-family:
+SimSun" lang="zh-CN">中，也就是说</span><span style="font-family:Calibri" lang="en-US">isAdmin</span><span style="font-family:SimSun" lang="zh-CN">没有被初始化，那么我们像如下来发送一个</span><span style="font-family:Calibri" lang="en-US">GET</span><span style="font-family:SimSun" lang="zh-CN">请求会发生什么呢？</span></p>
+<p>/admin/something.cfm?session.isAdmin=1</p>
+<div><pre class="prettyprint linenums prettyprinted"><br><br>1.  <code>&lt;span class=&quot;pun&quot;&gt;执行流程：&lt;/span&gt;</code><br>2.  <code>&lt;span class=&quot;lit&quot;&gt;1.&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;首先检测&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;isAdmin&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;是否被定义在&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;域中&lt;/span&gt;</code><br>3.  <code>&lt;span class=&quot;lit&quot;&gt;2.&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;如果没有被定义在&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;中，程序将到别的域中搜索，比如&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;域&lt;/span&gt;</code><br>4.  <code>&lt;span class=&quot;lit&quot;&gt;3.&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;如果在&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;域中有&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;isAdmin&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;，并且为&lt;/span&gt;&lt;span class=&quot;kwd&quot;&gt;true&lt;/span&gt;</code><br>5.  <code>&lt;span class=&quot;lit&quot;&gt;4.&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;上面代码的权限控制就被绕过了&lt;/span&gt;</code></pre></div>
+
+<p><span style="font-family:宋体" lang="zh-CN">通过上面的描述，有没有感觉有点像</span><span style="font-family:Calibri" lang="en-US">php</span><span style="font-family:宋体" lang="zh-CN">中的</span><span style="font-family:Calibri" lang="zh-CN">register_globals</span><span lang="zh-CN"><font face="宋体">.</font></span></p>
+<p><span lang="zh-CN"><font face="宋体"><br></font></span></p>
+<p><span style="font-family:Calibri" lang="en-US">0x03 </span><span style="font-family:宋体" lang="zh-CN">实际测试</span></p>
+<p>测试代码是Joseph<br>Lamoree写的</p>
+<p><a href="https://github.com/ecivis/miniapp" target="_blank" rel="noopener">https://github.com/ecivis/miniapp</a></p>
+<p><span style="font-family:宋体" lang="zh-CN">测试环境：</span><span style="font-family:Calibri" lang="en-US">windows7+</span><span style="font-family:Calibri" lang="zh-CN">Adobe<br>ColdFusion </span><span style="font-family:Calibri" lang="en-US">9</span><span style="font-family:宋体" lang="zh-CN">（</span><span style="font-family:Calibri" lang="en-US">Ps:</span><span style="font-family:宋体" lang="zh-CN">只找到了这个）</span><span style="font-family: 宋体; font-size: 10.5pt; line-height: 1.5;">&nbsp;</span></p>
+<p>测试代码主要片段：</p>
+<div><pre class="prettyprint linenums prettyprinted"><br><br>1.  <code>&lt;span class=&quot;tag&quot;&gt;&amp;lt;cfsilent&amp;gt;&lt;/span&gt;</code><br>2.  <code>&lt;span class=&quot;tag&quot;&gt;&amp;lt;cfset&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;atn&quot;&gt;pageScope&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;atv&quot;&gt;structNew()&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;/&amp;gt;&lt;/span&gt;</code><br>3.  <code>&lt;span class=&quot;tag&quot;&gt;&amp;lt;cfset&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;atn&quot;&gt;pageScope&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;atn&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;atv&quot;&gt;&quot;You are a regular user.&quot;&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;/&amp;gt;&lt;/span&gt;</code><br>4.  <code>&lt;span class=&quot;pln&quot;&gt;&amp;nbsp;&lt;/span&gt;</code><br>5.  <code>&lt;span class=&quot;com&quot;&gt;&amp;lt;!--- Make sure the user is not isAdmin ---&amp;gt;&lt;/span&gt;</code><br>6.  <code>&lt;span class=&quot;tag&quot;&gt;&amp;lt;cfif&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;atn&quot;&gt;structKeyExists&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;atn&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;atv&quot;&gt;&quot;isAdmin&quot;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;&amp;gt;&lt;/span&gt;</code><br>7.  <code>&lt;span class=&quot;tag&quot;&gt;&amp;lt;cfset&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;atn&quot;&gt;structDelete&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;atn&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;atv&quot;&gt;&quot;isAdmin&quot;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;/&amp;gt;&lt;/span&gt;</code><br>8.  <code>&lt;span class=&quot;tag&quot;&gt;&amp;lt;/cfif&amp;gt;&lt;/span&gt;</code><br>9.  <code>&lt;span class=&quot;pln&quot;&gt;&amp;nbsp;&lt;/span&gt;</code><br>10.  <code>&lt;span class=&quot;com&quot;&gt;&amp;lt;!--- See if scope cascade finds this in the url scope ---&amp;gt;&lt;/span&gt;</code><br>11.  <code>&lt;span class=&quot;tag&quot;&gt;&amp;lt;cftry&amp;gt;&lt;/span&gt;</code><br>12.  <code>&lt;span class=&quot;tag&quot;&gt;&amp;lt;cfif&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;atn&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;atn&quot;&gt;isAdmin&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;atn&quot;&gt;eq&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; 1&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;&amp;gt;&lt;/span&gt;</code><br>13.  <code>&lt;span class=&quot;tag&quot;&gt;&amp;lt;cfset&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;atn&quot;&gt;pageScope&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;atn&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;atv&quot;&gt;&quot;You are an administrator due to scope shenanigans.&quot;&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;/&amp;gt;&lt;/span&gt;</code><br>14.  <code>&lt;span class=&quot;tag&quot;&gt;&amp;lt;/cfif&amp;gt;&lt;/span&gt;</code><br>15.  <code>&lt;span class=&quot;tag&quot;&gt;&amp;lt;cfcatch&amp;gt;&lt;/span&gt;</code><br>16.  <code>&lt;span class=&quot;com&quot;&gt;&amp;lt;!---&lt;/span&gt;</code><br>17.  <code>&lt;span class=&quot;com&quot;&gt;The lookup for session.isAdmin was invalid.&lt;/span&gt;</code><br>18.  <code>&lt;span class=&quot;com&quot;&gt;This is the behavior we would expect from a reasonable from a CFML engine.&lt;/span&gt;</code><br>19.  <code>&lt;span class=&quot;com&quot;&gt;&amp;nbsp;---&amp;gt;&lt;/span&gt;</code><br>20.  <code>&lt;span class=&quot;tag&quot;&gt;&amp;lt;/cfcatch&amp;gt;&lt;/span&gt;</code><br>21.  <code>&lt;span class=&quot;tag&quot;&gt;&amp;lt;/cftry&amp;gt;&lt;/span&gt;</code><br>22.  <code>&lt;span class=&quot;tag&quot;&gt;&amp;lt;/cfsilent&amp;gt;&lt;/span&gt;</code></pre></div>
+
+<p><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/09/wpid-b7a27ea98576d6ce879b190f0b031cae_clip_image00194eee1c0-eef5-4d98-baf0-a478e82c3577.png" alt="计算机生成了可选文字: .1二i人p.:Te,tScopel幻ectio。一甘iodo,,IoteroetExplore二
+O窗，
+奋收藏夹
+君。in:App
+习，回http:/J,127.0.0.,8500/:cope一‘nject"></p>
+<p>发送请求：</p>
+<p><a href="http://127.0.0.1:8500/scope-injection.cfm?session.isAdmin=1" target="_blank" rel="noopener">http://127.0.0.1:8500/scope-injection.cfm?session.isAdmin=1</a></p>
+<p><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/09/wpid-b7a27ea98576d6ce879b190f0b031cae_clip_image00257574c75-f097-4858-b336-075dc21ebb05.png" alt="计算机生成了可选文字: ／、．ini助p:TestScopel幻eetion一份i皿do,5Inter皿etE二plorer
+g④
+文件健）
+它收藏夹
+。旦j不苟面丽芯赢基二二二二蔽二二不甚r一一一
+__,_―山－_
+编辑但）查看仪〕收藏夹达〕工具江〕帮助逛）
+｝协卜建议网站，琶网贝l厌讯库，
+燮且．启M"></p>
+<p>&nbsp;</p>
+<p><span style="font-family:Calibri" lang="en-US">0x04 </span><span style="font-family:宋体" lang="zh-CN">避免方案</span></p>
+<p><span style="font-family:Calibri" lang="en-US">1.</span><span style="font-family:宋体" lang="zh-CN">变量初始化再使用</span></p>
+<p>如上文提到代码，在Application.cfc中加入初始化：</p>
+<div><pre class="prettyprint linenums prettyprinted"><br><br>1.  <code>&lt;span class=&quot;pun&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;cffunction name&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;onSessionStart&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;&amp;gt;&lt;/span&gt;</code><br>2.  <code>&lt;span class=&quot;pln&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;cfset session&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;isAdmin &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kwd&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;&amp;gt;&lt;/span&gt;</code><br>3.  <code>&lt;span class=&quot;pun&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;cffunction&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;&amp;gt;&lt;/span&gt;</code></pre></div>
+
+<p><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/09/wpid-b7a27ea98576d6ce879b190f0b031cae_clip_image003cbfd73ab-4bc8-47de-b60a-788ce2f4d914.png" alt="计算机生成了可选文字: 鱿几n工APp二Ie昌tscopeIn
+今C…口127.0.0.
+、丫翻口口口口口口口口口口口口口口
+1:8500/scope一injection.cfm?session.isA面in二1
+MiniApp
+:TestScopeInjection
+Youarearegular
+Try1oadingthispage啊ith
+USer。
+SOme
+上1二工飞三"></p>
+<p><span style="font-family:宋体" lang="zh-CN">当然了测试的时候不要忘记删除上边代码中的</span><span style="font-family:Calibri" lang="en-US">:</span></p>
+<div><pre class="prettyprint linenums prettyprinted"><br><br>1.  <code>&lt;span class=&quot;pun&quot;&gt;&amp;lt;!---&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;Make&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; sure the user is not isAdmin &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;---&amp;gt;&lt;/span&gt;</code><br>2.  <code>&lt;span class=&quot;pun&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;cfif structKeyExists&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;isAdmin&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)&amp;gt;&lt;/span&gt;</code><br>3.  <code>&lt;span class=&quot;pun&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;cfset structDelete&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;isAdmin&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)/&amp;gt;&lt;/span&gt;</code><br>4.  <code>&lt;span class=&quot;pun&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;cfif&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;&amp;gt;&lt;/span&gt;</code></pre></div>
+
+<p>&nbsp;</p>
+<p><span style="font-family:Calibri" lang="en-US">2.</span><span style="font-family:宋体" lang="zh-CN">检测权限时候使用StructKeyExists检测变量是否存在</span></p>
+<div><pre class="prettyprint linenums prettyprinted"><br><br>1.  <code>&lt;span class=&quot;pun&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;cfif &lt;/span&gt;&lt;span class=&quot;typ&quot;&gt;StructKeyExists&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;isAdmin&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; AND session&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;isAdmin&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;&amp;gt;&lt;/span&gt;</code><br>2.  <code>&lt;span class=&quot;pln&quot;&gt;&amp;nbsp; &lt;/span&gt;&lt;span class=&quot;kwd&quot;&gt;do&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; admin stuff&lt;/span&gt;</code><br>3.  <code>&lt;span class=&quot;pun&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;cfif&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;&amp;gt;&lt;/span&gt;</code></pre></div>
+
+<p>修改上边代码测试</p>
+<p><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/09/wpid-b7a27ea98576d6ce879b190f0b031cae_clip_image0041f410cb1-2f4c-418b-96c0-21b96eeaf1a9.png" alt="计算机生成了可选文字: &lt;cftry&gt;
+&lt;cf浦fStructKeyEx浦sts(sess浦on,”浦sAdm浦n&quot;)
+&lt;cfsetpagescope.message=&quot;Youarean
+ANDSeSS嘴on。嘴SAdm浦n
+adm嘴n浦Stratordue
+eql&gt;
+toscopeshenan嘴gans.&quot;I&gt;
+&lt;/cfif&gt;"></p>
+<p>&nbsp;</p>
+<p>测试结果</p>
+<p><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/09/wpid-b7a27ea98576d6ce879b190f0b031cae_clip_image005b2ca2283-6ecc-46ef-8966-333a280b0f19.png" alt="计算机生成了可选文字: 尸口
+令
+x"></p>
+<p><span style="font-family:Calibri" lang="en-US">0x05 </span><span style="font-family:宋体" lang="zh-CN">引用</span></p>
+<p><a href="http://www.petefreitag.com/item/834.cfm" target="_blank" rel="noopener">http://www.petefreitag.com/item/834.cfm</a></p>
+<p><a href="https://github.com/ecivis/miniapp" target="_blank" rel="noopener">https://github.com/ecivis/miniapp</a></p>
+<p><a href="http://www.ed2000.com/ShowFile.asp?FileID=175781" target="_blank" rel="noopener">http://www.ed2000.com/ShowFile.asp?FileID=175781</a></p>
+<div><a href="http://www.wiz.cn/i/93198460" title="来自为知笔记(Wiz)" target="_blank" rel="noopener">来自为知笔记(Wiz)</a></div>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/08/28/e5-88-a9-e7-94-a8-e7-99-bd-e5-90-8d-e5-8d-95-e5-ba-94-e7-94-a8-e7-bb-95-e8-bf-87-e9-98-b2-e6-8a-a4/" rel="next" title="利用白名单应用绕过防护">
+                <i class="fa fa-chevron-left"></i> 利用白名单应用绕过防护
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/09/06/ruby-e5-85-a5-e9-97-a8-e5-ad-a6-e4-b9-a0/" rel="prev" title="ruby入门学习">
+                ruby入门学习 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

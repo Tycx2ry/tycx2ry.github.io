@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="首先感谢各位大牛捧场，从评论中@ca1n牛首先注入到了version(),但没有找到flag，@loopx9最先搞定flag。经联系各位牛，最后发现解题思路为2种，一种是出题者思路，第二种是@loopx9牛的思路。 源码如下：&amp;amp;lt;?php include &amp;#39;config.php&amp;#39;; foreach(array(&amp;#39;_GET&amp;#39;,&amp;#39;_POST&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="stripcslashes反序列和条件竞争“暴力”注入writeup">
+<meta property="og:url" content="http://yoursite.com/2015/11/25/stripcslashes-e5-8f-8d-e5-ba-8f-e5-88-97-e5-92-8c-e6-9d-a1-e4-bb-b6-e7-ab-9e-e4-ba-89-e6-9a-b4-e5-8a-9b-e6-b3-a8-e5-85-a5writeup/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="首先感谢各位大牛捧场，从评论中@ca1n牛首先注入到了version(),但没有找到flag，@loopx9最先搞定flag。经联系各位牛，最后发现解题思路为2种，一种是出题者思路，第二种是@loopx9牛的思路。 源码如下：&amp;amp;lt;?php include &amp;#39;config.php&amp;#39;; foreach(array(&amp;#39;_GET&amp;#39;,&amp;#39;_POST&amp;">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/11/51de8128-64c2-4b3e-89ef-5934c9bce1d7-300x180.png">
+<meta property="og:image" content="file:///C:/Users/duyihan-xy/Documents/My%20Knowledge/temp/8ea3dbfe-df7a-4d3e-8ac3-fdcd3a730d7f_128_files/51de8128-64c2-4b3e-89ef-5934c9bce1d7.png">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/11/ddf9eb5b-40b2-47bc-8819-b48c25da3149-300x59.png">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.272Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="stripcslashes反序列和条件竞争“暴力”注入writeup">
+<meta name="twitter:description" content="首先感谢各位大牛捧场，从评论中@ca1n牛首先注入到了version(),但没有找到flag，@loopx9最先搞定flag。经联系各位牛，最后发现解题思路为2种，一种是出题者思路，第二种是@loopx9牛的思路。 源码如下：&amp;amp;lt;?php include &amp;#39;config.php&amp;#39;; foreach(array(&amp;#39;_GET&amp;#39;,&amp;#39;_POST&amp;">
+<meta name="twitter:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/11/51de8128-64c2-4b3e-89ef-5934c9bce1d7-300x180.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/11/25/stripcslashes-e5-8f-8d-e5-ba-8f-e5-88-97-e5-92-8c-e6-9d-a1-e4-bb-b6-e7-ab-9e-e4-ba-89-e6-9a-b4-e5-8a-9b-e6-b3-a8-e5-85-a5writeup/"/>
+
+
+
+
+
+  <title>stripcslashes反序列和条件竞争“暴力”注入writeup | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/11/25/stripcslashes-e5-8f-8d-e5-ba-8f-e5-88-97-e5-92-8c-e6-9d-a1-e4-bb-b6-e7-ab-9e-e4-ba-89-e6-9a-b4-e5-8a-9b-e6-b3-a8-e5-85-a5writeup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">stripcslashes反序列和条件竞争“暴力”注入writeup</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-11-25T19:38:53+08:00">
+                2015-11-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术文章/" itemprop="url" rel="index">
+                    <span itemprop="name">技术文章</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><span style="font-family: Verdana;">    </span>首先感谢各位大牛捧场，从评论中@ca1n牛首先注入到了version(),但没有找到flag，@<a href="http://zone.wooyun.org/user/loopx9" target="_blank" rel="noopener">loopx9</a>最先搞定flag。经联系各位牛，最后发现解题思路为2种，一种是出题者思路，第二种是@<a href="http://zone.wooyun.org/user/loopx9" target="_blank" rel="noopener">loopx9</a>牛的思路。</p>
+<div>源码如下：<br><code>&amp;lt;?php
+include &#39;config.php&#39;;
+foreach(array(&#39;_GET&#39;,&#39;_POST&#39;,&#39;_COOKIE&#39;) as $key){
+foreach($$key as $k =&amp;gt; $v){
+if(is_array($v)){
+errorBox(&quot;hello,sangebaimao!&quot;);
+}else{
+$k[0] !=&#39;_&#39;?$$k = addslashes($v):$$k = &quot;&quot;;
+}
+}
+}
+
+if(!empty($message)){
+if(preg_match(&quot;/\b(select|insert|update|delete)\b/i&quot;,$message)){
+die(&quot;hello,sangebaimao!&quot;);
+}
+if(filter($message) !== $message){
+die(&quot;hello,sangebaimao!&quot;);
+}
+$sql=&quot;insert guestbook(</code>message<code>) value(&#39;$message&#39;);&quot;;
+mysql_query($sql);
+$sql = &quot;select &amp;#42 from guestbook order by id limit 0,5;&quot;;
+$result = mysql_query($sql);
+if($result){
+while($row = mysql_fetch_array($result)){
+$id = $row[&#39;id&#39;];
+$message = $row[&#39;message&#39;];
+echo &quot;|$id|=&amp;gt;|$message|&amp;lt;br/&amp;gt;&quot;;
+}
+
+}
+$message = stripcslashes($message);
+$sql = &quot;delete from guestbook where id=$id or message =&#39;$message&#39;;&quot;;
+if(!mysql_query($sql)){
+print(mysql_error());
+$sql = &quot;delete from guestbook where id=$id&quot;;
+mysql_query($sql);
+};
+}
+function filter($str){
+$rstr = &quot;&quot;;
+for($i=0;$i&amp;lt;strlen($str);$i++){
+if(ord($str[$i])&amp;gt;31 &amp;amp;&amp;amp; ord($str[$i])&amp;lt;127){
+$rstr = $rstr.$str[$i];
+}
+}
+$rstr = str_replace(&#39;\&#39;&#39;,&#39;&#39;,$rstr);
+return $rstr;
+}
+?&amp;gt;</code><br>首先我们分析代码，代码整体逻辑就是一个伪留言功能：<br><code>insert留言--&amp;gt;select留言--&amp;gt;delete留言</code><br>在留言的过滤上使用了3道防护：<br><code>第一道**addslashes**转义，第二道：**preg_match(&quot;/\b(select|insert|update|delete)\b/i&quot;,$message)**关键字匹配，第三道：**function filter($str)**删除不可见字符和单引号。</code><br><strong>0x01 stripcslashes反序列\x27绕过</strong><br>首先我们看下stripcslashes函数功能，手册中写道<strong>“可识别类似 C 语言的 \n，\r，… 八进制以及十六进制的描述”</strong>，我们再翻翻stripcslashes的实现，如图所示：<strong>\x27 =&gt; ‘</strong></div><br><div><a href="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/11/51de8128-64c2-4b3e-89ef-5934c9bce1d7.png" target="_blank" rel="noopener"><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/11/51de8128-64c2-4b3e-89ef-5934c9bce1d7-300x180.png" alt="" title="51de8128-64c2-4b3e-89ef-5934c9bce1d7"></a><br><a href="http://static.wooyun.org/upload/image/201511/2015112022412139369.png" title="BE1A09A2-D62B-44ED-B3A9-08E5768553E8.png" target="_blank" rel="noopener"><img src="file:///C:/Users/duyihan-xy/Documents/My%20Knowledge/temp/8ea3dbfe-df7a-4d3e-8ac3-fdcd3a730d7f_128_files/51de8128-64c2-4b3e-89ef-5934c9bce1d7.png" alt="BE1A09A2-D62B-44ED-B3A9-08E5768553E8.png"></a><br>我们首先insert “<strong>test\x27</strong>“进入数据库，再select取出经过stripcslashes反转义\x27 =&gt; ‘,形成完整sql语句为:<br><code>delete from guestbook where id=$id or message =&#39;**test&#39;**&#39;</code><br><br>初步搞定第一道防御和第三道防御，第二道防御关键字过滤，熟悉审计的同学看见这个正则匹配可否似曾相识：<a href="http://www.wooyun.org/bugs/wooyun-2013-018431" target="_blank" rel="noopener">WooYun: PHPCMS补丁绕过真正方法</a><br><strong>/&amp;#42!50000select&amp;#42/</strong>绕过第二道防御。<br>最终exp：<code>test\x27 and updatexml(0,concat(0x3a,(/&amp;#42!50000select&amp;#42/load_file(0x2f746d702f666c6167))),0)%23</code><br><a href="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/11/ddf9eb5b-40b2-47bc-8819-b48c25da3149.png" target="_blank" rel="noopener"><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/11/ddf9eb5b-40b2-47bc-8819-b48c25da3149-300x59.png" alt="" title="ddf9eb5b-40b2-47bc-8819-b48c25da3149"></a><br><strong>0x02 条件竞争“暴力”注入</strong>@<a href="http://zone.wooyun.org/user/loopx9" target="_blank" rel="noopener">loopx9</a><br>此思路贡献者是@<a href="http://zone.wooyun.org/user/loopx9" target="_blank" rel="noopener">loopx9</a>牛，首先感谢@<a href="http://zone.wooyun.org/user/loopx9" target="_blank" rel="noopener">loopx9</a>牛屌炸天的思路，良辰我表示服了。<br>首先我们来捋一捋几个sql语句的执行顺序：<br>insert message -&gt; select id -&gt;delete id or message<br>当多线程跑起来的时候：<br>线程1：insert -&gt; select -&gt; delete<br>线程2:  insert -&gt; select -&gt; delete<br><strong>当线程1该执行delete的时候，线程2已经执行了insert，此时数据库中新插入数据为2条。在这两条数据的message字段一样的情况下，线程1继续执行delete的时候就会删除2条数据，此时线程2再执行select语句和delete语句，这样原本数据库中最后一条数据就会被删除。</strong><br>利用这样一个条件竞争漏洞删除数据库中所有数据。<br>当数据库中所有数据被删除，同样的条件竞争下：<br><code>$sql = &quot;select &amp;#42 from guestbook order by id limit 0,5;&quot;;
+$result = mysql_query($sql);
+if($result){
+while($row = mysql_fetch_array($result)){
+$id = $row[&#39;id&#39;];
+$message = $row[&#39;message&#39;];
+echo &quot;|$id|=&amp;gt;|$message|&amp;lt;br/&amp;gt;&quot;;
+}
+
+}</code><br>代码中select不出数据导致$id变量不能被赋值，$id变量就变成了未初始化变量。<br>接下来执行<strong>$sql = “delete from guestbook where id=$id or message =’$message’;”;</strong>的时候，$id未初始化变量被攻击者自定义值，进入sql语句导致注入漏洞形成。<br>最终exp：<strong>?message=1&amp;id=1 and 1=updatexml(0,concat(0x3a,(load_file(0x2f746d702f666c6167))),0)%23</strong><br>放入burp，说句咒语“比卡丘去吧”，只需等待flag。<br>最后感谢@<a href="http://zone.wooyun.org/user/loopx9" target="_blank" rel="noopener">loopx9</a>@牛肉包子 @<a href="http://zone.wooyun.org/user/%E7%8E%89%E6%9E%97%E5%98%8E" target="_blank" rel="noopener">玉林嘎</a> @′  雨。 等各位牛的细心指导。<br><small><small> </small></small></div>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/19/dz6-0-uc-key-getshell/" rel="next" title="Dz6.0 uc_key getshell">
+                <i class="fa fa-chevron-left"></i> Dz6.0 uc_key getshell
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/12/24/e5-a4-9a-e7-ba-bf-e7-a8-8bhttp-banner-e6-89-ab-e6-8f-8f-e5-b7-a5-e5-85-b7/" rel="prev" title="多线程HTTP banner扫描工具">
+                多线程HTTP banner扫描工具 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

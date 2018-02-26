@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="怎样用树莓派和Kali Linux构建便携式黑客工作站&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt; 0x01工欲善其事，必先利其器 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1.树莓派（B+或2）&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2.5V充电宝一枚&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="怎样用树莓派和Kali Linux构建便携式黑客工作站">
+<meta property="og:url" content="http://yoursite.com/2015/11/03/e6-80-8e-e6-a0-b7-e7-94-a8-e6-a0-91-e8-8e-93-e6-b4-be-e5-92-8ckali-linux-e6-9e-84-e5-bb-ba-e4-be-bf-e6-90-ba-e5-bc-8f-e9-bb-91-e5-ae-a2-e5-b7-a5-e4-bd-9c-e7-ab-99/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="怎样用树莓派和Kali Linux构建便携式黑客工作站&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt; 0x01工欲善其事，必先利其器 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1.树莓派（B+或2）&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2.5V充电宝一枚&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;">
+<meta property="og:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/11/wpid-2000ee704385794db98912cd02056c2e_37cdb303-bab1-4239-9f13-4e3885fa65bc.png">
+<meta property="og:updated_time" content="2018-02-26T06:03:06.148Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="怎样用树莓派和Kali Linux构建便携式黑客工作站">
+<meta name="twitter:description" content="怎样用树莓派和Kali Linux构建便携式黑客工作站&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt; 0x01工欲善其事，必先利其器 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1.树莓派（B+或2）&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;2.5V充电宝一枚&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;">
+<meta name="twitter:image" content="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/11/wpid-2000ee704385794db98912cd02056c2e_37cdb303-bab1-4239-9f13-4e3885fa65bc.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/11/03/e6-80-8e-e6-a0-b7-e7-94-a8-e6-a0-91-e8-8e-93-e6-b4-be-e5-92-8ckali-linux-e6-9e-84-e5-bb-ba-e4-be-bf-e6-90-ba-e5-bc-8f-e9-bb-91-e5-ae-a2-e5-b7-a5-e4-bd-9c-e7-ab-99/"/>
+
+
+
+
+
+  <title>怎样用树莓派和Kali Linux构建便携式黑客工作站 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/11/03/e6-80-8e-e6-a0-b7-e7-94-a8-e6-a0-91-e8-8e-93-e6-b4-be-e5-92-8ckali-linux-e6-9e-84-e5-bb-ba-e4-be-bf-e6-90-ba-e5-bc-8f-e9-bb-91-e5-ae-a2-e5-b7-a5-e4-bd-9c-e7-ab-99/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">怎样用树莓派和Kali Linux构建便携式黑客工作站</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-11-03T14:10:00+08:00">
+                2015-11-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术文章/" itemprop="url" rel="index">
+                    <span itemprop="name">技术文章</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <!--StartFragment-->
+<p><strong><span style="font-size:16.0pt">怎样用树莓派和<span lang="EN-US">Kali Linux</span>构建便携式黑客工作站<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></strong></p>
+<p><span lang="EN-US">0x01</span>工欲善其事，必先利其器</p>
+<!--[if !supportLists]--><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;1.<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->树莓派（<span lang="EN-US">B+</span>或<span lang="EN-US">2</span>）<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;2.<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]--><span lang="EN-US">5V</span>充电宝一枚<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;3.<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]--><span lang="EN-US">WIFI</span>模块<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;4.<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]--><span lang="EN-US">8g SD</span>卡<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;5.<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]--><span lang="EN-US">PiTFT</span>触屏<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;6.<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->键盘<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;7.<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->保护壳<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;8.<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->桌面电脑（平台初始化安装工作）<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span lang="EN-US">0x02 </span>在树莓派上安装<span lang="EN-US">kali</span><br><br><!--[if !supportLists]--><span lang="EN-US">1.<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->详细安装流程<span lang="EN-US">: &lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span lang="EN-US"><a href="http://lifehacker.com/5976912/a-beginners-guide-to-diying-with-the-raspberry-pi#_ga=1.265570311.968941705.1436971740" target="_blank" rel="noopener">http://lifehacker.com/5976912/a-beginners-guide-to-diying-with-the-raspberry-pi#_ga=1.265570311.968941705.1436971740</a>&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">2.<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->怎样用<span lang="EN-US">windows</span>安装<span lang="EN-US">kali</span>到你的<span lang="EN-US">SD</span>卡（简略版）<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">a)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->下载<span lang="EN-US"><a href="https://www.offensive-security.com/kali-linux-vmware-arm-image-download/" target="_blank" rel="noopener">Kali<br>Linux Raspberry TFT image</a></span>并解压获得里面的<span lang="EN-US">.img</span>文件。<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br>注意：加入你没有触屏，请下载<span lang="EN-US"><a href="https://www.offensive-security.com/kali-linux-vmware-arm-image-download/" target="_blank" rel="noopener">regular</a></span>版本。<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">b)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->下载<span lang="EN-US"><a href="https://launchpad.net/win32-image-writer/+download" target="_blank" rel="noopener">Win32DiskImager</a></span>并解压获得安装文件<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">c)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->用读卡器插你的<span lang="EN-US">SD</span>卡进<span lang="EN-US">PC&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">d)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->打开<span lang="EN-US">Win32DiskImager.exe</span>（<span lang="EN-US">win7</span>和<span lang="EN-US">win8</span>等请用管理员权限打开）<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">e)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->加入<span lang="EN-US">SD</span>卡没有被识别，可以点击菜单栏中的<span lang="EN-US">Device</span>选项选择<span lang="EN-US">SD</span>卡<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">f)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->在工具的镜像文件选择区，选择你下载的<span lang="EN-US">.img</span>镜像<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">g)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->点击<span lang="EN-US">write</span>按钮，写入镜像<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">3.<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->在<span lang="EN-US">OS X</span>系统上安装<span lang="EN-US">kali</span>进<span lang="EN-US">SD</span>卡<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">a)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->下载<span lang="EN-US"><a href="https://www.offensive-security.com/kali-linux-vmware-arm-image-download/" target="_blank" rel="noopener">Pi<br>TFT</a></span>镜像并解压获得<span lang="EN-US">.img</span>文件，同理如果没有屏幕请下载<span lang="EN-US"><a href="https://www.offensive-security.com/kali-linux-vmware-arm-image-download/" target="_blank" rel="noopener">regular</a></span>镜像<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">b)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->下载<span lang="EN-US"><a href="http://alltheware.wordpress.com/2012/12/11/easiest-way-sd-card-setup" target="_blank" rel="noopener">RPi-sd<br>card builder</a></span>并解压<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">c)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->插<span lang="EN-US">SD</span>卡到你额<span lang="EN-US">Mac&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">d)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->打开<span lang="EN-US">RPi-SD</span>并加载<span lang="EN-US">.img</span>镜像<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">e)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->检测<span lang="EN-US">SD</span>卡是否被加载，输入管理员密码（加载<span lang="EN-US">SD</span>卡得时候有弹框需要输入）<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">f)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->双击挂在盘，弹出盘，别直接拔掉<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">g)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->然后插入到树莓派<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">4.<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->安装显示屏<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span lang="EN-US"><!--[if gte vml 1]><v:shapetype
+ id="_x0000_t75" coordsize="21600,21600" o:spt="75" o:preferrelative="t"
+ path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f">
+ <v:stroke joinstyle="miter"/>
+ <v:formulas>
+  <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+  <v:f eqn="sum @0 1 0"/>
+  <v:f eqn="sum 0 0 @1"/>
+  <v:f eqn="prod @2 1 2"/>
+  <v:f eqn="prod @3 21600 pixelWidth"/>
+  <v:f eqn="prod @3 21600 pixelHeight"/>
+  <v:f eqn="sum @0 0 1"/>
+  <v:f eqn="prod @6 1 2"/>
+  <v:f eqn="prod @7 21600 pixelWidth"/>
+  <v:f eqn="sum @8 21600 0"/>
+  <v:f eqn="prod @7 21600 pixelHeight"/>
+  <v:f eqn="sum @10 21600 0"/>
+ </v:formulas>
+ <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+ <o:lock v:ext="edit" aspectratio="t"/>
+</v:shapetype><v:shape id="图片_x0020_1" o:spid="_x0000_i1025" type="#_x0000_t75"
+ style='width:415pt;height:234pt;visibility:visible;mso-wrap-style:square'>
+ <v:imagedata src="file://localhost/Users/ln/Library/Group%20Containers/UBF8T346G9.Office/msoclip1/01/clip_image001.png"
+  o:title=""/>
+</v:shape><![endif]--><!--[if !vml]--></span><br><div><img src="http://k1p4ss-wordpress.stor.sinaapp.com/uploads/2015/11/wpid-2000ee704385794db98912cd02056c2e_37cdb303-bab1-4239-9f13-4e3885fa65bc.png" alt=""></div><br><br>显示屏安装特别方便，由于树莓派有<span lang="EN-US">GPIO</span>（通用输入输出）针脚，直接插上就好。<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">5.<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->插上<span lang="EN-US">wifi</span>、键盘并通电<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br>固定好显示器以后，我们接上其他的几个硬件（<span lang="EN-US">wifi</span>、键盘、充电宝）。由于树莓派提供了<span lang="EN-US">4</span>个<span lang="EN-US">usb</span>接口，因此插上<span lang="EN-US">wifi</span>和键盘完全没有问题。<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br>然后就等待启动，树莓派期待有点慢，耐心等待，成功期待会停留在一个登陆界面。<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">6.<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->开启<span lang="EN-US">wifi&lt;o:p&gt;&lt;/o:p&gt;</span><br><br>现在我们登陆系统，开启<span lang="EN-US">wifi</span>，这样就能很好的使用<span lang="EN-US">kali</span>里面的工具了，<span lang="EN-US">kali</span>将自动识别<span lang="EN-US">wifi</span>模块，然后你连接你自己的<span lang="EN-US">wifi</span>热点。首先，我们需要在<span lang="EN-US">kali</span>上确认几件事：<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">a)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->你的用户和密码是<span lang="EN-US">root</span>和<span lang="EN-US">toor&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">b)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->你可以使用键盘和显示屏超控你的树莓派了，并打开一个命令行<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">c)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->然后设置<span lang="EN-US">wifi</span>，用<span lang="EN-US">nano</span>工具打开<span lang="EN-US">/etc/network/interfaces&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">d)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->增加如下文本：<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span lang="EN-US">auto wlan0 iface<br>wlan0 inet dhcp wpa-ssid “your network name” wpa-psk “the network password”&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>编辑完成使用<span lang="EN-US">Ctrl+X</span>保存，现在你的<span lang="EN-US">wifi</span>应该可以正常工作了（如果不能工作你可以重启一下）<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">7.<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->改变密码<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br>在你使用它之前请确保你是修改了密码（虽然很少有人有同样的<span lang="EN-US">hack</span>能力，但如果遇到了，被搞了就不好了）。<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">a)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->在命令行下输入<span lang="EN-US">passwd</span>，并按<span lang="EN-US">enter</span>键<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">b)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->输入新密码并确认<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">c)<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->输入<span lang="EN-US">dpkg-reconfigure<br>openssh-server</span>并按<span lang="EN-US">Enter&lt;o:p&gt;&lt;/o:p&gt;</span><br><br>现在你的小型便携式系统设置加固完成<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span lang="EN-US">8.<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span><!--[endif]-->你能用这个设备干什么<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br>至此你的小型便携式黑客工作站就设置完成了，你可以使用它安装你想要的程序，如果你不知道怎么使用它，下面有一些好的使用案例：<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><!--[if !supportLists]--><span class="MsoHyperlink"><span lang="EN-US" style="font-family: Wingdings;">l<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span></span><!--[endif]--><span lang="EN-US"><a href="https://www.raspberrypi.org/documentation/remote-access/ssh/" target="_blank" rel="noopener"><span lang="ZH-CN">用</span>ssh<span lang="ZH-CN">连接树莓派</span>&lt;o:p&gt;&lt;/o:p&gt;</a></span><br><br><!--[if !supportLists]--><span class="MsoHyperlink"><span lang="EN-US" style="font-family: Wingdings;">l<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span></span><!--[endif]--><span lang="EN-US"><a href="http://lifehacker.com/5633909/who-needs-a-mouse-learn-to-use-the-command-line-for-almost-anything" target="_blank" rel="noopener"><span lang="ZH-CN">学习基础命令行</span>&lt;o:p&gt;&lt;/o:p&gt;</a></span><br><br><!--[if !supportLists]--><span class="MsoHyperlink"><span lang="EN-US" style="font-family: Wingdings;">l<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span></span><!--[endif]--><span lang="EN-US"><a href="http://www.lifehacker.co.uk/2014/10/25/hack-network-beef-security-kali-linux" target="_blank" rel="noopener"><span lang="ZH-CN">破解</span>wifi<span lang="ZH-CN">密码，常见钓鱼热点，和流量劫持</span>&lt;o:p&gt;&lt;/o:p&gt;</a></span><br><br><!--[if !supportLists]--><span class="MsoHyperlink"><span lang="EN-US" style="font-family: Wingdings;">l<span style="font-size: 7pt; font-family: 'Times New Roman';"></span></span></span><!--[endif]--><span lang="EN-US"><a href="http://www.lifehacker.co.uk/2014/10/25/tap-network-see-everything-happens" target="_blank" rel="noopener"><span lang="ZH-CN">监视网络中得流量</span>&lt;o:p&gt;&lt;/o:p&gt;</a></span><br><br><!--[if !supportLists]--><span lang="EN-US" style="font-family:Wingdings;mso-fareast-font-family:Wingdings;
+mso-bidi-font-family:Wingdings">l<span style="font-size: 7pt; font-family: 'Times New Roman';">&nbsp;&nbsp; </span></span><!--[endif]--><span lang="EN-US"><a href="http://go.redirectingat.com/?id=92X1507373&amp;site=lifehacker.co.uk&amp;xs=1&amp;isjs=1&amp;url=http%3A%2F%2Fwww.kalitutorials.net%2F2013%2F08%2Fkali-linux.html&amp;xguid=&amp;xuuid=cefa8f66bac5461928201109d2e8145f&amp;xsessid=&amp;xcreo=0&amp;xed=0&amp;sref=http%3A%2F%2Fwww.lifehacker" target="_blank" rel="noopener"><span lang="ZH-CN">更多的</span>kali<span lang="ZH-CN">指导</span></a>&lt;o:p&gt;&lt;/o:p&gt;</span><br><br><span lang="EN-US">“</span><span lang="EN-US" style="color: rgb(51, 51, 51); background-position: initial initial; background-repeat: initial initial;">The world is your oyster.<br>Hack responsibly, everyone.</span><span lang="EN-US">”</span><span lang="EN-US" style="font-family:&quot;Times New Roman&quot;;mso-fareast-font-family:&quot;Times New Roman&quot;;
+mso-font-kerning:0pt">&lt;o:p&gt;&lt;/o:p&gt;</span><br><!--EndFragment-->
+<div><a href="http://www.wiz.cn/i/93198460" title="来自为知笔记(Wiz)" target="_blank" rel="noopener">来自为知笔记(Wiz)</a></div>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/19/e5-a6-82-e4-bd-95-e6-90-ad-e5-bb-ba-e4-b8-aa-e4-ba-ba-e6-9c-8d-e5-8a-a1-e5-99-a8/" rel="next" title="如何搭建个人服务器">
+                <i class="fa fa-chevron-left"></i> 如何搭建个人服务器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/19/dz6-0-uc-key-getshell/" rel="prev" title="Dz6.0 uc_key getshell">
+                Dz6.0 uc_key getshell <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

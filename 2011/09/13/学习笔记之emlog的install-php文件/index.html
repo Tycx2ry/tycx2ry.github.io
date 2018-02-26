@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="php,学习笔记," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 今天看了emlog的安装文件，在读代码中学习！把学习到的函数，算法记下来！  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; $act = isset($_GET[’action’])? $_GET[’action’] : ’’;&amp;nbsp; //isset()判断变量是否存在,此时action还没有值，所以$">
+<meta name="keywords" content="php,学习笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习笔记之emlog的install.php文件">
+<meta property="og:url" content="http://yoursite.com/2011/09/13/学习笔记之emlog的install-php文件/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 今天看了emlog的安装文件，在读代码中学习！把学习到的函数，算法记下来！  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; $act = isset($_GET[’action’])? $_GET[’action’] : ’’;&amp;nbsp; //isset()判断变量是否存在,此时action还没有值，所以$">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.263Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="学习笔记之emlog的install.php文件">
+<meta name="twitter:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 今天看了emlog的安装文件，在读代码中学习！把学习到的函数，算法记下来！  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; $act = isset($_GET[’action’])? $_GET[’action’] : ’’;&amp;nbsp; //isset()判断变量是否存在,此时action还没有值，所以$">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2011/09/13/学习笔记之emlog的install-php文件/"/>
+
+
+
+
+
+  <title>学习笔记之emlog的install.php文件 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2011/09/13/学习笔记之emlog的install-php文件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">学习笔记之emlog的install.php文件</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2011-09-13T18:27:14+08:00">
+                2011-09-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PHP-MYSQL学习/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP|MYSQL学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 今天看了emlog的安装文件，在读代码中学习！把学习到的函数，算法记下来！</p>
+<hr>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $act = isset($_GET[’action’])? $_GET[’action’] : ’’;&nbsp; //isset()判断变量是否存在,此时action还没有值，所以$act值为空.</p>
+<p>&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;form name=”form1” method=”post” action=”install.php?action=install”&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 跳转到install.php，并且$_GET[’action’]=install</p>
+<p>&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $db_host = isset($_POST[’hostname’]) ? addslashes(trim($_POST[’hostname’])) : ’’;&nbsp;&nbsp; //addslashes() 函数在指定的预定义字符前添加反斜杠(预定义字符: ’ “  NULL);</p>
+<p>&nbsp;</p>
+<p><table id="src_table_0"></table></p>
+<p><tbody></tbody></p>
+<p><tr id="sl_svn1766_308"></tr></p>
+<p><td class="source"><span class="com"><span style="color:#880000;">/&amp;#42&amp;#42&nbsp;</span></span></td></p>
+<p><br></p>
+<p><tr id="sl_svn1766_309"></tr></p>
+<p><td class="source"><span class="com"><span style="color:#880000;">&nbsp;&amp;#42 生成一个随机的字符串&nbsp;</span></span></td></p>
+<p><br></p>
+<p><tr id="sl_svn1766_310"></tr></p>
+<p><td class="source"><span class="com"><span style="color:#880000;">&nbsp;&amp;#42&nbsp;</span></span></td></p>
+<p><br></p>
+<p><tr id="sl_svn1766_311"></tr></p>
+<p><td class="source"><span class="com"><span style="color:#880000;">&nbsp;&amp;#42 @param int $length&nbsp;</span></span></td></p>
+<p><br></p>
+<p><tr id="sl_svn1766_312"></tr></p>
+<p><td class="source"><span class="com"><span style="color:#880000;">&nbsp;&amp;#42 @param boolean $special_chars&nbsp;</span></span></td></p>
+<p><br></p>
+<p><tr id="sl_svn1766_313"></tr></p>
+<p><td class="source"><span class="com"><span style="color:#880000;">&nbsp;&amp;#42 @return string&nbsp;</span></span></td></p>
+<p><br></p>
+<p><tr id="sl_svn1766_314"></tr></p>
+<p><td class="source"><span class="com"><span style="color:#880000;">&nbsp;&amp;#42/</span></span><span class="pln">&nbsp;</span></td></p>
+<p><br></p>
+<p><tr id="sl_svn1766_315"></tr></p>
+<p><td class="source"><span class="kwd"><span style="color:#000088;">function</span></span><span class="pln"> getRandStr</span><span class="pun"><span style="color:#666600;">(</span></span><span class="pln">$length </span><span class="pun"><span style="color:#666600;">=</span></span><span class="pln"> </span><span class="lit"><span style="color:#006666;">12</span></span><span class="pun"><span style="color:#666600;">,</span></span><span class="pln"> $special_chars </span><span class="pun"><span style="color:#666600;">=</span></span><span class="pln"> </span><span class="kwd"><span style="color:#000088;">true</span></span><span class="pun"><span style="color:#666600;">){</span></span><span class="pln">&nbsp;</span></td></p>
+<p><br></p>
+<p><tr id="sl_svn1766_316"></tr></p>
+<p><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; &nbsp; $chars </span><span class="pun"><span style="color:#666600;">=</span></span><span class="pln"> </span><span class="str"><span style="color:#008800;">’abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789’</span></span><span class="pun"><span style="color:#666600;">;</span></span><span class="pln">&nbsp;</span></td></p>
+<p><br></p>
+<p><tr id="sl_svn1766_317"></tr></p>
+<p><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="kwd"><span style="color:#000088;">if</span></span><span class="pln"> </span><span class="pun"><span style="color:#666600;">(</span></span><span class="pln"> $special_chars </span><span class="pun"><span style="color:#666600;">){</span></span><span class="pln">&nbsp;</span></td></p>
+<p><br></p>
+<p><tr id="sl_svn1766_318"></tr></p>
+<p><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $chars </span><span class="pun"><span style="color:#666600;">.=</span></span><span class="pln"> </span><span class="str"><span style="color:#008800;">’!@#$%^&amp;&amp;#42()’</span></span><span class="pun"><span style="color:#666600;">;</span></span><span class="pln">&nbsp;</span></td></p>
+<p><br></p>
+<p><tr id="sl_svn1766_319"></tr></p>
+<p><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="pun"><span style="color:#666600;">}</span></span><span class="pln">&nbsp;</span></td></p>
+<p><br></p>
+<p><tr id="sl_svn1766_320"></tr></p>
+<p><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; &nbsp; $randStr </span><span class="pun"><span style="color:#666600;">=</span></span><span class="pln"> </span><span class="str"><span style="color:#008800;">’’</span></span><span class="pun"><span style="color:#666600;">;</span></span><span class="pln">&nbsp;</span></td></p>
+<p><br></p>
+<p><tr id="sl_svn1766_321"></tr></p>
+<p><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="kwd"><span style="color:#000088;">for</span></span><span class="pln"> </span><span class="pun"><span style="color:#666600;">(</span></span><span class="pln"> $i </span><span class="pun"><span style="color:#666600;">=</span></span><span class="pln"> </span><span class="lit"><span style="color:#006666;">0</span></span><span class="pun"><span style="color:#666600;">;</span></span><span class="pln"> $i </span><span class="pun"><span style="color:#666600;">&lt;</span></span><span class="pln"> $length</span><span class="pun"><span style="color:#666600;">;</span></span><span class="pln"> $i</span><span class="pun"><span style="color:#666600;">++</span></span><span class="pln"> </span><span class="pun"><span style="color:#666600;">){</span></span><span class="pln">&nbsp;</span></td></p>
+<p><br></p>
+<p><tr id="sl_svn1766_322"></tr></p>
+<p><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; $randStr </span><span class="pun"><span style="color:#666600;">.=</span></span><span class="pln"> substr</span><span class="pun"><span style="color:#666600;">(</span></span><span class="pln">$chars</span><span class="pun"><span style="color:#666600;">,</span></span><span class="pln"> mt_rand</span><span class="pun"><span style="color:#666600;">(</span></span><span class="lit"><span style="color:#006666;">0</span></span><span class="pun"><span style="color:#666600;">,</span></span><span class="pln"> strlen</span><span class="pun"><span style="color:#666600;">(</span></span><span class="pln">$chars</span><span class="pun"><span style="color:#666600;">)</span></span><span class="pln"> </span><span class="pun"><span style="color:#666600;">-</span></span><span class="pln"> </span><span class="lit"><span style="color:#006666;">1</span></span><span class="pun"><span style="color:#666600;">),</span></span><span class="pln"> </span><span class="lit"><span style="color:#006666;">1</span></span><span class="pun"><span style="color:#666600;">);</span></span><span class="pln">&nbsp;</span></td></p>
+<p><br></p>
+<p><tr id="sl_svn1766_323"></tr></p>
+<p><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="pun"><span style="color:#666600;">}</span></span><span class="pln">&nbsp;</span></td></p>
+<p><br></p>
+<p><tr id="sl_svn1766_324"></tr></p>
+<p><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="kwd"><span style="color:#000088;">return</span></span><span class="pln"> $randStr</span><span class="pun"><span style="color:#666600;">;</span></span><span class="pln">&nbsp;</span></td></p>
+<p><br></p>
+<p><tr id="sl_svn1766_325"></tr></p>
+<p><td class="source"></td></p>
+<p><span class="pun"><span style="color:#666600;">}</span></span><span class="pln">&nbsp;<br><br>————————————————————————————</span><br><br><span class="pln"><br><br>substr() 函数返回字符串的一部分。<br><br>### 语法<br><br><pre>substr(<em>string</em>,<em>start</em>,<em>length</em>)</pre><pre>——————–</pre></span><span class="pln"><br><br>mt_rand() 使用 Mersenne Twister 算法返回随机整数。<br><br>### 语法<br><br><pre>mt_rand(min,max)</pre></span><br><br>&nbsp;<br><br><br><br><br><br></p>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php/" rel="tag"># php</a>
+          
+            <a href="/tags/学习笔记/" rel="tag"># 学习笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2011/09/10/mysql-num-rows-函数错误解决/" rel="next" title="mysql_num_rows() 函数错误解决">
+                <i class="fa fa-chevron-left"></i> mysql_num_rows() 函数错误解决
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2011/09/18/emlog千脑插件/" rel="prev" title="emlog千脑插件">
+                emlog千脑插件 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

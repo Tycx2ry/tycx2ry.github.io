@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="0x00 前言 &amp;nbsp; &amp;nbsp;今天看见mickey发的一个连接，关于字母js的构造，想起前端时间ctf中的jsfuck，于是写翻译以下，写出来和大家分享。0x01 jsfuckjsfuck大家应该都很熟悉了，在ctf中经常出现。在线转平台：http://utf-8.jp/public/jsfuck.html&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;n">
+<meta property="og:type" content="article">
+<meta property="og:title" content="无字母的xss vector构造">
+<meta property="og:url" content="http://yoursite.com/2015/10/13/e6-97-a0-e5-ad-97-e6-af-8d-e7-9a-84xss-vector-e6-9e-84-e9-80-a0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="0x00 前言 &amp;nbsp; &amp;nbsp;今天看见mickey发的一个连接，关于字母js的构造，想起前端时间ctf中的jsfuck，于是写翻译以下，写出来和大家分享。0x01 jsfuckjsfuck大家应该都很熟悉了，在ctf中经常出现。在线转平台：http://utf-8.jp/public/jsfuck.html&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;n">
+<meta property="og:updated_time" content="2018-02-26T06:03:29.644Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="无字母的xss vector构造">
+<meta name="twitter:description" content="0x00 前言 &amp;nbsp; &amp;nbsp;今天看见mickey发的一个连接，关于字母js的构造，想起前端时间ctf中的jsfuck，于是写翻译以下，写出来和大家分享。0x01 jsfuckjsfuck大家应该都很熟悉了，在ctf中经常出现。在线转平台：http://utf-8.jp/public/jsfuck.html&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;n">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/10/13/e6-97-a0-e5-ad-97-e6-af-8d-e7-9a-84xss-vector-e6-9e-84-e9-80-a0/"/>
+
+
+
+
+
+  <title>无字母的xss vector构造 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/10/13/e6-97-a0-e5-ad-97-e6-af-8d-e7-9a-84xss-vector-e6-9e-84-e9-80-a0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">无字母的xss vector构造</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-10-13T15:51:17+08:00">
+                2015-10-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术文章/" itemprop="url" rel="index">
+                    <span itemprop="name">技术文章</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><font face="微软雅黑">0x00 前言 &nbsp; &nbsp;</font><div><font face="微软雅黑">今天看见mickey发的一个连接，关于字母js的构造，想起前端时间ctf中的jsfuck，于是写翻译以下，写出来和大家分享。</font></div><div><font face="微软雅黑"><br></font></div><div><font face="微软雅黑">0x01 jsfuck</font></div><div><font face="微软雅黑">jsfuck大家应该都很熟悉了，在ctf中经常出现。</font></div><div><font face="微软雅黑">在线转平台：<a href="http://utf-8.jp/public/jsfuck.html" target="_blank" rel="noopener">http://utf-8.jp/public/jsfuck.html</a></font></div><div><font face="微软雅黑">&nbsp; &nbsp;&nbsp;</font><span style="font-family: 微软雅黑; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 微软雅黑; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 微软雅黑; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 微软雅黑; font-size: 10.5pt; line-height: 1.5;">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 微软雅黑; font-size: 10.5pt; line-height: 1.5;">&nbsp;</span><font face="微软雅黑"><a href="http://www.jsfuck.com/" target="_blank" rel="noopener">http://www.jsfuck.com/</a></font></div><div><font face="微软雅黑"> </font><br></div><div>编码规则：</div><div><pre class="prettyprint linenums prettyprinted"></pre></div></p>
+<ol>
+<li><code>&lt;span class=&quot;kwd&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;       &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;![]&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;kwd&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;        &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;!![]&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;undefined   &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[][[]]&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;typ&quot;&gt;NaN&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;         &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+[![]]&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;           &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+[]&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;lit&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;           &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+!+[]&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;lit&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;           &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;!+[]+!+[]&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;lit&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;          &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[+!+[]]+[+[]]&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;typ&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;       &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[]&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;typ&quot;&gt;Number&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;      &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+[]&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;typ&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;      &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[]+[]&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;typ&quot;&gt;Boolean&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;![]&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;typ&quot;&gt;Function&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[][&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;filter&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;eval        &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[][&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;filter&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;constructor&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;](&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; CODE &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)()&lt;/span&gt;</code></li>
+<li><p><code>&lt;span class=&quot;pln&quot;&gt;window      &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[][&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;filter&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;constructor&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;](&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;return this&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)()&lt;/span&gt;</code><div><br></div><div><div style="widows: 1;"><font face="monospace"><span style="line-height: 19.59375px; white-space: pre;">0x02 新规则</span></font></div></div><div style="widows: 1;"><font face="monospace">&nbsp; &nbsp; 在<a href="https://inventropy.us/blog/constructing-an-xss-vector-using-no-letters" target="_blank" rel="noopener">《constructing-an-xss-vector-using-no-letters</a></font><span style="font-family: monospace; font-size: 10.5pt; line-height: 1.5;"><a href="https://inventropy.us/blog/constructing-an-xss-vector-using-no-letters" target="_blank" rel="noopener">》</a>篇文章中有几个新规则比较有意思，和大家分析下。</span></div><div style="widows: 1;"><span style="font-family: monospace; font-size: 10.5pt; line-height: 1.5;">我们分析下面这段代码：</span></div><div><pre class="prettyprint linenums prettyprinted"></pre></div></p>
+</li>
+<li><p><code>&lt;span class=&quot;str&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[(!&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(!&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39;&#39;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+{})[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]][(&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39;&#39;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+{})[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39;&#39;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+{})[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+((&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[(!&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(!&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39;&#39;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+{})[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]])+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(!&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39;&#39;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(!&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39;&#39;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(!&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39;&#39;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(!&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39;&#39;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39;&#39;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+{})[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(!&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39;&#39;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39;&#39;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+{})[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(!&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39;&#39;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]](((!&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(!&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(!&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(!&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(!&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;])+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;(1)&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)()&lt;/span&gt;</code><div>我们分片分析这个xss vector</div><div><pre class="p1" style="widows: 1;"><div style="line-height: normal;"><pre class="prettyprint linenums prettyprinted"></pre></div></pre></div></p>
+</li>
+<li><p><code>&lt;span class=&quot;pun&quot;&gt;(!&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(!&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]+(&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39;&#39;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+{})[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]&lt;/span&gt;</code><div><span style="line-height: normal;">false =&gt;!1+””</span></div><div><span style="line-height: normal;">true =&gt; !0+””</span></div><div>[object Object] =&gt; ‘’+{}</div><div><br></div><div>通过这3个基础向量，我们可以构造一个””[“sub”]出来function</div><div>function sub() { [native code] }  =&gt; (“”[(!1+””)[3]+(!0+””)[2]+(‘’+{})[2]])+””<br></div><div><br></div><div>“”[“sub”][“constructor”]这个结构相当于function(),我们调用它能够定义一个函数用仅仅一个字符串<br></div><div><br></div><div>因此，最上面的那段代码就是””[“sub”]<a href="&quot;alert(1">“constructor”</a>“)()，这段代码相当于function anonymous() {alert(1)}();<span style="line-height: 1.5;"></span></div><div><br></div><div>0x03 总结</div><div>    看到这篇文章仅仅觉得有意思，所以翻译并分析给大家看看，实际场景的利用还需思考。</div><div><br></div><div>原文连接：<a href="https://inventropy.us/blog/constructing-an-xss-vector-using-no-letters" target="_blank" rel="noopener">https://inventropy.us/blog/constructing-an-xss-vector-using-no-letters</a></div><div><br></div></p>
+</li>
+</ol>
+<div><a href="http://www.wiz.cn/i/93198460" title="来自为知笔记(Wiz)" target="_blank" rel="noopener">来自为知笔记(Wiz)</a></div>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/09/24/e4-ba-8c-e7-ba-a7-e5-9f-9f-e5-90-8d-e6-9f-a5-e8-af-a2-e5-a4-84-e7-90-86/" rel="next" title="二级域名查询处理">
+                <i class="fa fa-chevron-left"></i> 二级域名查询处理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/19/e5-a6-82-e4-bd-95-e6-90-ad-e5-bb-ba-e4-b8-aa-e4-ba-ba-e6-9c-8d-e5-8a-a1-e5-99-a8/" rel="prev" title="如何搭建个人服务器">
+                如何搭建个人服务器 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

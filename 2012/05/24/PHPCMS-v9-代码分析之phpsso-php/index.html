@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="phpcms v9,phpsso.php,代码分析," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;昨天读了一天的phpcms v9的代码，他一些心得写下来，以后忘了可以复习。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 文件路径： /api/phpsso.php 文件描述： /&amp;amp;#42 &amp;nbsp;&amp;amp;#42 客户端被动接收phpsso服务端通">
+<meta name="keywords" content="phpcms v9,phpsso.php,代码分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHPCMS v9 代码分析之phpsso.php">
+<meta property="og:url" content="http://yoursite.com/2012/05/24/PHPCMS-v9-代码分析之phpsso-php/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;昨天读了一天的phpcms v9的代码，他一些心得写下来，以后忘了可以复习。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 文件路径： /api/phpsso.php 文件描述： /&amp;amp;#42 &amp;nbsp;&amp;amp;#42 客户端被动接收phpsso服务端通">
+<meta property="og:updated_time" content="2018-02-26T06:00:05.632Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PHPCMS v9 代码分析之phpsso.php">
+<meta name="twitter:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;昨天读了一天的phpcms v9的代码，他一些心得写下来，以后忘了可以复习。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 文件路径： /api/phpsso.php 文件描述： /&amp;amp;#42 &amp;nbsp;&amp;amp;#42 客户端被动接收phpsso服务端通">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2012/05/24/PHPCMS-v9-代码分析之phpsso-php/"/>
+
+
+
+
+
+  <title>PHPCMS v9 代码分析之phpsso.php | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2012/05/24/PHPCMS-v9-代码分析之phpsso-php/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PHPCMS v9 代码分析之phpsso.php</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2012-05-24T08:32:04+08:00">
+                2012-05-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PHP-MYSQL学习/" itemprop="url" rel="index">
+                    <span itemprop="name">PHP|MYSQL学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;昨天读了一天的phpcms v9的代码，他一些心得写下来，以后忘了可以复习。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>文件路径：</p>
+<p>/api/phpsso.php</p>
+<p>文件描述：</p>
+<p>/&amp;#42</p>
+<p>&nbsp;&amp;#42 客户端被动接收phpsso服务端通知</p>
+<p>&nbsp;&amp;#42 服务端通知内容:同步登陆、退出，同步积分设置、对换比率，同步添加、删除用户、修改用户密码，测试通信状态</p>
+<p>&nbsp;&amp;#42 </p>
+<p>&nbsp;&amp;#42/</p>
+<p>代码分析：</p>
+<pre class="brush:php; toolbar: true; auto-links: true;">defined(’IN_PHPCMS’) or exit(’No permission resources.’); 
+
+//禁止直接读取文件
+
+//需要使用api入口访问：www.xxxx.com/api.php?phpsso
+
+$db = pc_base::load_model(’member_model’);
+//调用/phpsso_server/phpcms/model/member_model.class.php文件 
+ $system = pc_base::load_config(’system’);//读取配置文件
+ define(’APPID’, $system[’phpsso_appid’]);//定义常量
+ $ps_api_url =$system[’phpsso_api_url’]; //接口地址
+ $ps_auth_key = $system[’phpsso_auth_key’]; //加密密钥
+ $ps_version = $system[’phpsso_version’];
+//上边的三个，是进行赋值 
+ pc_base::load_app_class(’client’, ’member’, 0);//调用/phpcms/modules/member/classes/client.class.php
+ $client = new client($ps_api_url, $ps_auth_key);//实例化一个类
+ $code = $_REQUEST[’code’];//调用参数，这儿我们可以传入任意参数</pre><pre class="brush:php; toolbar: true; auto-links: true;">根据下面的代码我测试了，如果我们传入一些恶意的值会发上什么呢？</pre><pre class="brush:php; toolbar: true; auto-links: true;">事实是我可以控制下面定义的所有对v9_member表的操作，但是问题来了下面的sys_auth函数里面的$key是我的想法泡汤了！
+ //$SQL = "uid=20&amp;password=63999fa1698f9192416cb6d1aa6cef7d&amp;random=6wGXsC&amp;username=11111&amp;action=member_add";
+ //echo $code=$client-&gt;sys_auth($SQL, ’ENCODE’,"");
+ //$code="a0acVQUCAFEFVAQHBAIDBFZXB1VVBwUAAQEAUl0QClANVxYVVEFDFloWUAoCAwwKXFRSUAEPD1daBwpWUVRVV1JTVFRUUwYCUAIDUxJCVF0BXV5cAUFwaRB1FQUGEQpbXlhdAFhQVRNqAVBeQA";
+ parse_str($client-&gt;sys_auth($code, ’DECODE’), $arr);//解密$code变量，然后数组话
+sys_auth函数：
+    /&#42&#42
+    &#42 字符串加密、解密函数
+    &#42
+    &#42
+    &#42 @param    string    $txt        字符串
+    &#42 @param    string    $operation    ENCODE为加密，DECODE为解密，可选参数，默认为ENCODE，
+    &#42 @param    string    $key        密钥：数字、字母、下划线
+    &#42 @param    string    $expiry        过期时间
+    &#42 @return    string
+    &#42/
+    function sys_auth($string, $operation = ’ENCODE’, $key = ’’, $expiry = 0) {
+        $key_length = 4;
+        $key = md5($key != ’’ ? $key : $this-&gt;ps_auth_key
+//$key的取值，如果实参$key存在且不为空，就使用实参，否则就是用$ps_auth_key = $system[’phpsso_auth_key’];  
+//$key然而这个$key是不受我们控制的，是在cachesconfigssystem.php中的
+//’phpsso’ =&gt; ’1’,&nbsp;//是否使用phpsso
+//’phpsso_appid’ =&gt; ’1’,&nbsp;//应用id&nbsp;
+//’phpsso_api_url’ =&gt; ’phpsso_server’,&nbsp;//接口地址
+//’phpsso_auth_key’ =&gt; ’dS8hKGug82YN9Wg92pv11TV1q7AbBQUp’, //加密密钥
+//’phpsso_version’ =&gt; ’1’, //phpsso版本
+        $fixedkey = hash(’md5’, $key);
+        $egiskeys = md5(substr($fixedkey, 16, 16));
+        $runtokey = $key_length ? ($operation == ’ENCODE’ ? substr(hash(’md5’, microtime(true)), -$key_length) : substr($string, 0, $key_length)) : ’’; 
+        $keys = hash(’md5’, substr($runtokey, 0, 16) . substr($fixedkey, 0, 16) . substr($runtokey, 16) . substr($fixedkey, 16));
+        $string = $operation == ’ENCODE’ ? sprintf(’%010d’, $expiry ? $expiry + time() : 0).substr(md5($string.$egiskeys), 0, 16) . $string : base64_decode(substr($string, $key_length));
+
+        $i = 0; $result = ’’;
+        $string_length = strlen($string);
+        for ($i = 0; $i &lt; $string_length; $i++){
+            $result .= chr(ord($string{$i}) ^ ord($keys{$i % 32}));
+        }
+        if($operation == ’ENCODE’) {
+            return $runtokey . str_replace(’=’, ’’, base64_encode($result));
+        } else {
+            if((substr($result, 0, 10) == 0 || substr($result, 0, 10) - time() &gt; 0) &amp;&amp; substr($result, 10, 16) == substr(md5(substr($result, 26).$egiskeys), 0, 16)) {
+                return substr($result, 26);
+            } else {
+                return ’’;
+            }
+        }
+    }
+//print_r($arr);
+//下面这个是判断使用哪个操作
+if(isset($arr[’action’])) {
+  $action = $arr[’action’];
+ } else {
+  exit(’0’);
+ }
+
+ /&#42&#42
+  &#42 测试通信状态
+  &#42/
+ if ($action == ’check_status’) exit(’1’);
+
+ /&#42&#42
+  &#42 添加用户
+  &#42/
+ if ($action == ’member_add’) {
+  $userinfo = array();
+  $userinfo[’phpssouid’] = isset($arr[’uid’]) ? $arr[’uid’] : exit(’0’);
+  $userinfo[’encrypt’] = isset($arr[’random’]) ? $arr[’random’] : exit(’0’);
+  $userinfo[’username’] = isset($arr[’username’]) ? $arr[’username’] : exit(’0’);
+  $userinfo[’password’] = isset($arr[’password’]) ? $arr[’password’] : exit(’0’);
+  $userinfo[’email’] = isset($arr[’email’]) ? $arr[’email’] : ’’;
+  $userinfo[’regip’] = isset($arr[’regip’]) ? $arr[’regip’] : ’’;
+  $userinfo[’regdate’] = $userinfo[’lastdate’] = SYS_TIME;
+  $userinfo[’modelid’] = 10;
+  $userinfo[’groupid’] = 6;
+
+  $userid = $db-&gt;insert($userinfo, 1);
+  if($userid) {
+   exit(’1’);
+  } else {
+   exit(’0’);
+  }
+ }
+
+ /&#42&#42
+  &#42 删除用户
+  &#42/
+ if ($action == ’member_delete’) {
+  $uidarr = $arr[’uids’];
+  $where = to_sqls($uidarr, ’’, ’phpssouid’);
+
+  $status = $db-&gt;delete($where);
+  if($status) {
+   exit(’1’);
+  } else {
+   exit(’0’);
+  }
+
+ }
+
+ /&#42&#42
+  &#42 编辑用户
+  &#42/
+ if ($action == ’member_edit’) {
+  if(!isset($arr[’uid’])) exit(’0’);
+  $userinfo = array();
+  if(isset($arr[’password’])) {
+   echo $userinfo[’password’] = $arr[’password’];
+   echo $userinfo[’encrypt’] = $arr[’random’];
+  }
+  if(isset($arr[’email’]) &amp;&amp; !empty($arr[’email’])) {
+   $userinfo[’email’] = $arr[’email’];
+  }
+  if(empty($userinfo)) exit(’1’);
+  echo $status = $db-&gt;update($userinfo, array(’phpssouid’=&gt; $arr[’uid’]));
+  if($status) {
+   exit(’1’);
+  } else {
+   exit(’0’);
+  }
+ }
+
+ /&#42&#42
+  &#42 应用积分列表
+  &#42/
+ if ($action == ’credit_list’) {
+  $credit_list = pc_base::load_config(’credit’);
+  echo $client-&gt;array2string($credit_list);
+  exit;
+ }
+
+ /&#42&#42
+  &#42 更新积分兑换规则
+  &#42/
+ if ($action == ’credit_update’) {
+  setcache(’creditchange’, $arr, ’member’);
+  exit(’1’);
+ }
+
+ /&#42&#42
+  &#42 同步登陆
+  &#42/
+ if ($action == ’synlogin’) {
+
+  if(!isset($arr[’uid’])) exit(’0’);
+
+  $phpssouid = $arr[’uid’];
+  $userinfo = $db-&gt;get_one(array(’phpssouid’=&gt;$phpssouid));
+
+  if (!$userinfo) {
+   //插入会员
+   exit;
+   $ps_userinfo = $client-&gt;ps_get_member_info($userid);
+   $ps_userinfo = unserialize($ps_userinfo);
+
+   if ($ps_userinfo[’uid’] &gt; 0) {
+    require_once MOD_ROOT.’api/member_api.class.php’;
+    $member_api = new member_api();
+    $arr_member[’touserid’] = $ps_userinfo[’uid’];
+    $arr_member[’registertime’] = TIME;
+    $arr_member[’lastlogintime’] = TIME;
+    $arr_member[’username’] = $ps_userinfo[’username’];
+    $arr_member[’password’] = md5(PASSWORD_KEY.$password) ;
+    $arr_member[’email’] = $ps_userinfo[’email’];
+    $arr_member[’modelid’] = 10;
+    $member_api-&gt;add($arr_member);
+    $userid = $member-&gt;get_userid($arr[’username’]);
+    $userinfo = $member-&gt;get($userid);
+   }
+
+   $username = $ps_userinfo[’username’];
+  } else {
+   $username = $userinfo[’username’];
+  }
+  //执行本系统登陆操作
+  $userid = $userinfo[’userid’];
+  $groupid = $userinfo[’groupid’];
+  $username = $userinfo[’username’];
+  $password = $userinfo[’password’];
+  $nickname = $userinfo[’nickname’];
+  $db-&gt;update(array(’lastip’=&gt;ip(), ’lastdate’=&gt;SYS_TIME), array(’userid’=&gt;$userid));
+  pc_base::load_sys_class(’param’, ’’, 0);
+
+  if(!$cookietime) $get_cookietime = param::get_cookie(’cookietime’);
+  $_cookietime = $cookietime ? intval($cookietime) : ($get_cookietime ? $get_cookietime : 0);
+  $cookietime = $_cookietime ? TIME + $_cookietime : 0;
+
+  $phpcms_auth_key = md5(pc_base::load_config(’system’, ’auth_key’).$_SERVER[’HTTP_USER_AGENT’]);
+  $phpcms_auth = sys_auth($userid."    ".$password, ’ENCODE’, $phpcms_auth_key);
+  header(’P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"’); 
+  param::set_cookie(’auth’, $phpcms_auth, $cookietime);
+  param::set_cookie(’_userid’, $userid, $cookietime);
+  param::set_cookie(’_username’, $username, $cookietime);
+  param::set_cookie(’_nickname’, $nickname, $cookietime);
+  param::set_cookie(’_groupid’, $groupid, $cookietime);
+  param::set_cookie(’cookietime’, $_cookietime, $cookietime);
+  exit(’1’);
+ }
+
+ /&#42&#42
+  &#42 同步退出
+  &#42/
+ if ($action == ’synlogout’) {
+  header(’P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"’);
+  pc_base::load_sys_class(’param’, ’’, 0);
+  param::set_cookie(’auth’, ’’);
+  param::set_cookie(’_userid’, ’’);
+  param::set_cookie(’_username’, ’’);
+  param::set_cookie(’_nickname’, ’’);
+  param::set_cookie(’_groupid’, ’’);
+  param::set_cookie(’cookietime’, ’’);
+  exit(’1’);
+  //执行本系统退出操作
+ }
+
+-------------------------------------------------------</pre><pre class="brush:php; toolbar: true; auto-links: true;">如果我们有办法读取system.php的文件，就可以操控会员表</pre>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/phpcms-v9/" rel="tag"># phpcms v9</a>
+          
+            <a href="/tags/phpsso-php/" rel="tag"># phpsso.php</a>
+          
+            <a href="/tags/代码分析/" rel="tag"># 代码分析</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2012/05/24/转-一个xss利用脚本/" rel="next" title="[转]一个xss利用脚本">
+                <i class="fa fa-chevron-left"></i> [转]一个xss利用脚本
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2012/05/26/转-PHP-5-4-5-4-3-Code-Execution-Win32/" rel="prev" title="[转]PHP 5.4 (5.4.3) Code Execution (Win32)">
+                [转]PHP 5.4 (5.4.3) Code Execution (Win32) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

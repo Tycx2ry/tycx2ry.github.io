@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="内网,提权,渗透," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;nbsp; 一日群里童鞋发来一个站，是xx大学二级站点，问我可不可以拿下，于是乎群里同学们群情激动，一阵过后，有位同学发现了个前辈留下的shell，一看是落叶牛的shell，默认密码admin，进去了！于是乎那位童鞋把shell给了我，说给大家演示下提权和内网渗透！ &amp;nbsp;&amp;nbsp;&amp;nbsp; 我一看组件基本都在，目录权限也大，脚本asp php aspx都支持，mssql mysql">
+<meta name="keywords" content="内网,提权,渗透">
+<meta property="og:type" content="article">
+<meta property="og:title" content="渗透xx网站服务器到内网渗透">
+<meta property="og:url" content="http://yoursite.com/2012/01/30/渗透xx网站服务器到内网渗透/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="&amp;nbsp; 一日群里童鞋发来一个站，是xx大学二级站点，问我可不可以拿下，于是乎群里同学们群情激动，一阵过后，有位同学发现了个前辈留下的shell，一看是落叶牛的shell，默认密码admin，进去了！于是乎那位童鞋把shell给了我，说给大家演示下提权和内网渗透！ &amp;nbsp;&amp;nbsp;&amp;nbsp; 我一看组件基本都在，目录权限也大，脚本asp php aspx都支持，mssql mysql">
+<meta property="og:image" content="http://img.90sec.org/forumid_9/12012210461c5bb20d2480e29d.jpg">
+<meta property="og:image" content="http://img.90sec.org/forumid_9/1201221053bbeed01b659a0879.png">
+<meta property="og:image" content="http://img.90sec.org/forumid_9/120122110228721518d5e22b73.png">
+<meta property="og:image" content="http://img.90sec.org/forumid_9/12012211081e664e89740cd099.png">
+<meta property="og:image" content="http://img.90sec.org/forumid_9/1201221243297801d00e0ce075.png">
+<meta property="og:image" content="http://img.90sec.org/forumid_9/120122113917716007ac7e8e7b.jpg">
+<meta property="og:image" content="http://img.90sec.org/forumid_9/12012211448e7bcb566ce2a52f.jpg">
+<meta property="og:image" content="http://img.90sec.org/forumid_9/1201221217630d82c69b3a4000.jpg">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.265Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="渗透xx网站服务器到内网渗透">
+<meta name="twitter:description" content="&amp;nbsp; 一日群里童鞋发来一个站，是xx大学二级站点，问我可不可以拿下，于是乎群里同学们群情激动，一阵过后，有位同学发现了个前辈留下的shell，一看是落叶牛的shell，默认密码admin，进去了！于是乎那位童鞋把shell给了我，说给大家演示下提权和内网渗透！ &amp;nbsp;&amp;nbsp;&amp;nbsp; 我一看组件基本都在，目录权限也大，脚本asp php aspx都支持，mssql mysql">
+<meta name="twitter:image" content="http://img.90sec.org/forumid_9/12012210461c5bb20d2480e29d.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2012/01/30/渗透xx网站服务器到内网渗透/"/>
+
+
+
+
+
+  <title>渗透xx网站服务器到内网渗透 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2012/01/30/渗透xx网站服务器到内网渗透/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">渗透xx网站服务器到内网渗透</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2012-01-30T09:51:45+08:00">
+                2012-01-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术文章/" itemprop="url" rel="index">
+                    <span itemprop="name">技术文章</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="/admin/ http:/www.letao.com/lianmeng/manage/linkImage.aspx?wh=728&amp;ht=90&amp;wid=79&amp;sid=duyihan"></a>&nbsp;</p>
+<p>一日群里童鞋发来一个站，是xx大学二级站点，问我可不可以拿下，于是乎群里同学们群情激动，一阵过后，有位同学发现了个前辈留下的shell，一看是落叶牛的shell，默认密码admin，进去了！于是乎那位童鞋把shell给了我，说给大家演示下提权和内网渗透！</p>
+<p>&nbsp;&nbsp;&nbsp; 我一看组件基本都在，目录权限也大，脚本asp php aspx都支持，mssql mysql都有！心想这个估计很容易！于是乎答应了！</p>
+<p><img src="http://img.90sec.org/forumid_9/12012210461c5bb20d2480e29d.jpg" alt=""></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 穿了个cmd上去，执行whoami</p>
+<p><img src="http://img.90sec.org/forumid_9/1201221053bbeed01b659a0879.png" alt=""></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 在执行systeminfo看看补丁情况，这个图就不截了，补丁打的比较全，我是没有什么独门的本地溢出！转向数据库提权</p>
+<p>&nbsp;&nbsp;&nbsp; 先查看了下一些数据库连接文件，找到了sa，但是网站和数据库是分离的！先把这个sa留着，内网渗透用！</p>
+<p>&nbsp;&nbsp;&nbsp; 于是乎我再执行了下tasklist /svc</p>
+<p><img src="http://img.90sec.org/forumid_9/120122110228721518d5e22b73.png" alt=""></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 里面有filezilla nginx RemotelyAnywhere.exe mysqld-nt.exe</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 执行sc getkeyname “MySQL”</p>
+<p><img src="http://img.90sec.org/forumid_9/12012211081e664e89740cd099.png" alt=""></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; 执行sc qc MySQL</p>
+<p><img src="http://img.90sec.org/forumid_9/1201221243297801d00e0ce075.png" alt=""></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; 转到此目录，可读，于是乎下载user表，拿到了root密码</p>
+<p>&nbsp;&nbsp; 这个时候有了root就需要php提权脚本了！但是asp 和aspx网站所在的目录不支持php，因为iis没有配置php模块，上面已经看见了，他有nginx，查看mysql路径的时候也看见了NPMserv，这个是一个nginx php mysql的集成环境，于是乎查看nginx配置文件d:NPMserv<br>ginxconfvhost.conf里面有域名 路径等信息，有三个php的我网站，一个是外联的别的服务器网站不在此服务器，一个网站是坏的，最后一个可以！于是乎上php大马！权限很大啊！administrators权限，直接开3389</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; 执行REG ADD HKLMSYSTEMCurrentControlSetControlTerminal” “Server /v fDenyTSConnections /t REG_DWORD /d 0 /f</p>
+<p>&nbsp;&nbsp;&nbsp; 问题来了这个是内网啊！怎么3389当去呢？用lcx是最常见的了，但是不成功！这个后面再说！于是乎我就使用aspx的木马上面的端口转发</p>
+<p>&nbsp;&nbsp; 先本地监听lcx -listen 7788 6677</p>
+<p><img src="http://img.90sec.org/forumid_9/120122113917716007ac7e8e7b.jpg" alt=""></p>
+<p>&nbsp;&nbsp;&nbsp; 然后用本机的mstsc远程连接，但是一连接就断开了！不成功！于是乎用终端加强版连接127.0.0.1:6677</p>
+<p>&nbsp;&nbsp;&nbsp; 成功</p>
+<p>&nbsp;&nbsp; 这个web服务器就这么拿下了</p>
+<p><img src="http://img.90sec.org/forumid_9/12012211448e7bcb566ce2a52f.jpg" alt=""></p>
+<p>&nbsp;&nbsp;&nbsp; 内网渗透开始（其中是各种请教啊！萝莉同学，fans同学。。。。。）</p>
+<p>&nbsp; 有一台web服务器，于是乎加隐藏帐号，gethash，分析网络拓扑结构，交换机连接内网的6台（至少是6台），在接入路由器，没有设置域控制！</p>
+<p>&nbsp; 用web服务器连接db服务器，当然我用sa权限已经开了3389，但是连接总是超时，加强版也不行，于是乎了hd反弹sock5代理，悲剧的没法，lcx转发也不行，反正只要是软件级的程序和其他电脑连接都不行，我猜测是交换机做了端口的限制（猜测），既然这样那我就用脚本级的代码reDuh的80端口来！但是是不行的！一样是超时！为什么呢？因为他的数据传输还是用web服务器的连接db服务器始终会使用到web的mstsc，看个图就清楚了</p>
+<p><img src="http://img.90sec.org/forumid_9/1201221217630d82c69b3a4000.jpg" alt=""></p>
+<p>80端口穿防火墙！但是这儿内网也是不能用，所以我猜测是交换机到的鬼！这个穿透的是我的电脑和web服务器，而不是web服务器和数据可服务器！</p>
+<p>&nbsp;&nbsp; 于是乎我有测试了ipc$ ftp都是不行的，狗日的估计就开了个80和89，应为89是连接mssql的数据库端口！既然web-&gt;db不行那我db-&gt;web试试！结果也是一样的！</p>
+<p>&nbsp;&nbsp; db服务器没有web环境所以reDuh也是没有办法的！fans同学说用mssql写vbs执行，但是想往db服务器下载东西vbs也需要ftp！即使种了木马进去，估计没法连接！</p>
+<p>&nbsp;&nbsp; 既然db没法，库mssql也脱不掉，那换一个其中有一个服务器与web服务器有共享但是需要密码！我查看过db服务器帐号，发现db和web有同一帐号，这个应该密码是一样的，于是忙着个大网站的解密，无果，彩虹表也无果（我就两个小的表，没有7.5g的，或者更大的）！</p>
+<hr>
+<p>我翻目录查到了serv-u这个东西但是我想修改配置文件，用echo命令不能输入|这个管道符，我有用</p>
+<p>echo “xxx|xxx” &gt;&gt;xxxx.txt这样这个双引号也被加进去了！</p>
+<p>然后 夜叉 同学帮忙写了个去引号的批处理，但是批处理里面有&gt;&gt;所以我也写不进去！</p>
+<hr>
+<p>时间过去了很久，随着知识的积累现在想想还是有很多办法突破的！！！！</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/内网/" rel="tag"># 内网</a>
+          
+            <a href="/tags/提权/" rel="tag"># 提权</a>
+          
+            <a href="/tags/渗透/" rel="tag"># 渗透</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2011/12/31/就这么到了2012了/" rel="next" title="就这么到了2012了">
+                <i class="fa fa-chevron-left"></i> 就这么到了2012了
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2012/02/07/90sec-org的wve修改版/" rel="prev" title="90sec.org的wve修改版">
+                90sec.org的wve修改版 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

