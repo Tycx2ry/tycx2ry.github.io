@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Blog,L.N.,渗透测试,APT,代码审计,程序开发,网络安全,信息安全" />
+  <meta name="keywords" content="RCE,discuz!,memcached,未授权访问," />
 
 
 
@@ -80,6 +80,7 @@
 
 
 <meta name="description" content="一、前言 ​        这个漏洞大家一定不陌生，在16年的时候关于discuz! + ssrf +memcached的RCE漏洞让大家都很惊艳，一年过去了这个漏洞的修复情况又是怎样的呢？ 二、漏洞简述 ​        这个漏洞大致利用过程是这样的：利用discuz!的ssrf漏洞，利用gopher协议写入payload到memcached，然后请求特定链接导致代码执行漏洞。 可以看出漏洞利用">
+<meta name="keywords" content="RCE,discuz!,memcached,未授权访问">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Discuz!因memcached未授权访问导致的RCE">
 <meta property="og:url" content="https://tycx2ry.github.io/2018/02/26/Discuz-因memcached未授权访问导致的RCE/index.html">
@@ -97,7 +98,7 @@
 <meta property="og:image" content="https://tycx2ry.github.io/2018/02/26/Discuz-因memcached未授权访问导致的RCE/8.png">
 <meta property="og:image" content="https://tycx2ry.github.io/2018/02/26/Discuz-因memcached未授权访问导致的RCE/9.png">
 <meta property="og:image" content="https://tycx2ry.github.io/2018/02/26/Discuz-因memcached未授权访问导致的RCE/10.png">
-<meta property="og:updated_time" content="2018-02-26T10:50:18.106Z">
+<meta property="og:updated_time" content="2018-02-26T14:23:09.956Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Discuz!因memcached未授权访问导致的RCE">
 <meta name="twitter:description" content="一、前言 ​        这个漏洞大家一定不陌生，在16年的时候关于discuz! + ssrf +memcached的RCE漏洞让大家都很惊艳，一年过去了这个漏洞的修复情况又是怎样的呢？ 二、漏洞简述 ​        这个漏洞大致利用过程是这样的：利用discuz!的ssrf漏洞，利用gopher协议写入payload到memcached，然后请求特定链接导致代码执行漏洞。 可以看出漏洞利用">
@@ -289,7 +290,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-02-26T18:50:18+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2018-02-26T22:23:09+08:00">
                 2018-02-26
               </time>
             
@@ -444,6 +445,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/RCE-discuz-memcached-未授权访问/" rel="tag"># RCE,discuz!,memcached,未授权访问</a>
+          
+        </div>
+      
 
       
       
@@ -551,7 +558,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">182</span>
+                  <span class="site-state-item-count">183</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
