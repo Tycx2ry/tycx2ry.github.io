@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://tycx2ry.github.io/"/>
-  <updated>2018-02-26T14:23:09.956Z</updated>
+  <updated>2018-03-03T08:36:48.486Z</updated>
   <id>https://tycx2ry.github.io/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>EvilOSX一个Mac平台的远程管理工具</title>
+    <link href="https://tycx2ry.github.io/2018/03/03/EvilOSX%E4%B8%80%E4%B8%AAMac%E5%B9%B3%E5%8F%B0%E7%9A%84%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/"/>
+    <id>https://tycx2ry.github.io/2018/03/03/EvilOSX一个Mac平台的远程管理工具/</id>
+    <published>2018-03-03T07:40:11.000Z</published>
+    <updated>2018-03-03T08:36:48.486Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/2018/03/03/EvilOSX一个Mac平台的远程管理工具/1.png" alt="1"></p><h3 id="0x00-工具简述"><a href="#0x00-工具简述" class="headerlink" title="0x00 工具简述"></a>0x00 工具简述</h3><p>EvilOSX 是一个还算好用的Mac平台的远程管理工具。测试了下有一些小bug，我修复了bug并提交代码给作者。</p><p><em>下载地址</em>：<a href="https://github.com/Marten4n6/EvilOSX" target="_blank" rel="noopener">https://github.com/Marten4n6/EvilOSX</a></p><h3 id="0x01-功能简介"><a href="#0x01-功能简介" class="headerlink" title="0x01 功能简介"></a>0x01 功能简介</h3><ul><li>简单命令终端</li><li>免杀 (OpenSSL <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" target="_blank" rel="noopener">AES-256</a> 加密 payloads, <a href="https://en.wikipedia.org/wiki/HTTPS" target="_blank" rel="noopener">HTTPS</a> 传输)</li><li>多线程</li><li>client端无依耐库 (原生python)</li><li>持久化</li><li>功能模块化</li><li>Chrome密码偷取</li><li>iCloud tokens 和 contacts偷取</li><li>通过 iTunes钓鱼获取icloud密码</li><li>文件下载上传</li><li>摄像头拍照</li><li>枚举iTunes iOS 备份</li><li>浏览器历史偷取(Chrome and Safari)</li><li>尝试本地提权漏洞获取root权限</li><li>闲时休眠功能(没有命令传输时候client进入60s休眠)</li></ul><p>###0x03 使用简介</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 urwid (required for the server GUI)</span></span><br><span class="line">$ sudo pip install urwid</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载工具</span></span><br><span class="line">$ git <span class="built_in">clone</span> https://github.com/Marten4n6/EvilOSX</span><br><span class="line"></span><br><span class="line"><span class="comment"># Go into the repository</span></span><br><span class="line">$ <span class="built_in">cd</span> EvilOSX</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成client</span></span><br><span class="line">$ python builder.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动监听</span></span><br><span class="line">$ python server/server.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># 最后在client端电脑上运行生成的程序</span></span><br></pre></td></tr></table></figure><p><img src="/2018/03/03/EvilOSX一个Mac平台的远程管理工具/2.png" alt=""></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;img src=&quot;/2018/03/03/EvilOSX一个Mac平台的远程管理工具/1.png&quot; alt=&quot;1&quot;&gt;&lt;/p&gt;
+&lt;h3 id=&quot;0x00-工具简述&quot;&gt;&lt;a href=&quot;#0x00-工具简述&quot; class=&quot;headerlink&quot; title=&quot;0x00 工具
+      
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>Discuz!因memcached未授权访问导致的RCE</title>
@@ -452,29 +474,6 @@
     </summary>
     
       <category term="技术文章" scheme="https://tycx2ry.github.io/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>我也成了上班族</title>
-    <link href="https://tycx2ry.github.io/2015/07/16/e6-88-91-e4-b9-9f-e6-88-90-e4-ba-86-e4-b8-8a-e7-8f-ad-e6-97-8f/"/>
-    <id>https://tycx2ry.github.io/2015/07/16/e6-88-91-e4-b9-9f-e6-88-90-e4-ba-86-e4-b8-8a-e7-8f-ad-e6-97-8f/</id>
-    <published>2015-07-16T15:53:52.000Z</published>
-    <updated>2018-02-26T06:03:21.821Z</updated>
-    
-    <content type="html"><![CDATA[<p>大学生活已经结束了，我加入了360攻防实验室，做安全研究。入职360的并没有让我去自己的岗位，而是参加了入职前的培训“飞扬培训营”，说实话，作为入职培训，本来我不是很抗拒的，课程也让我受益匪浅，但那些所谓的游戏环节，所谓的融合环节，本来让我还算可以接受，但那些游戏过后，leader无脑的洗脑讲话让我倍感厌恶。作为一个成年人，我很清楚我的未来，我的职业规划，以及我的人生，并不需要你所谓的开导引路。《第一份工作，请干满5年》你叫我写读后感，说实话，我真心没有想在北京待5年，最多3年我就要回成都，而那些所谓的360成功人献身说法，说实话我并不感冒。</p><p>去其糟粕，取其精华，培训中有我收获的。今天刚看完严歌苓的《扶桑》，书中扶桑对困境的淡然并不麻木，接受并不反抗，但心中依旧有自己的爱，自己原则，以及自己对人生的认定，自己对生活的认知。可能是每看完一本书都有自己的一些感性认知，让自己情绪变的有点敏感，忽然就想写一些东西。</p><p>人生真的何其其妙，有时候真的有点一见钟情的感觉，理性的认知让我克制又克制，可能是那些所谓的自尊作祟，总能找到自己的自卑点，让自己失去追求的勇气，总是自己找些自己都认为可笑的理由，去逃避。怕失败，怕自己的一厢情愿。</p><p>人的情感真是其妙的东西，有些总是让人不由自主的去掩饰，总是以虚假的强势来掩饰脆弱的情感。忽然让我想到高中的时候一个非常好的哥们说的一句话：“衣服都是穿给别人看的”。</p><p>理性的人总是爱让自己陷入无休止的纠结当中，总是担心以后的路，知道自己这样的畏首畏脚，机会是不会等待着让我们做好一切准备的，完美主义者的通病。</p><p>尝试的不去多想，就这样慢慢的走过，不时的不甘心闪现，装着若无其事工作和路过。</p><p>慢慢的压制自己的负面情绪，慢慢的勇敢走向自己想要的结果，我还需要一个适应的过程，还需要一段漫漫摸索的经历。</p><p>就这样吧，继续我的人生。</p><p>我想我一定会过我想过的生活，走我想走的路，做我想做的人，完成我想完成的人生。我现在并没有偏离，我依旧正确的走着······</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;大学生活已经结束了，我加入了360攻防实验室，做安全研究。入职360的并没有让我去自己的岗位，而是参加了入职前的培训“飞扬培训营”，说实话，作为入职培训，本来我不是很抗拒的，课程也让我受益匪浅，但那些所谓的游戏环节，所谓的融合环节，本来让我还算可以接受，但那些游戏过后，le
-      
-    
-    </summary>
-    
-      <category term="琐碎杂事" scheme="https://tycx2ry.github.io/categories/%E7%90%90%E7%A2%8E%E6%9D%82%E4%BA%8B/"/>
     
     
   </entry>
