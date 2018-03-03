@@ -108,7 +108,7 @@
 
 
 
-  <meta name="keywords" content="Blog,L.N.,渗透测试,APT,代码审计,程序开发,网络安全,信息安全" />
+  <meta name="keywords" content="红队,red team,工具,OSX,木马,远程控制,远程管理," />
 
 
 
@@ -120,6 +120,7 @@
 
 
 <meta name="description" content="0x00 工具简述EvilOSX 是一个还算好用的Mac平台的远程管理工具。测试了下有一些小bug，我修复了bug并提交代码给作者。 下载地址：https://github.com/Marten4n6/EvilOSX 0x01 功能简介 简单命令终端 免杀 (OpenSSL AES-256 加密 payloads, HTTPS 传输) 多线程 client端无依耐库 (原生python) 持久化">
+<meta name="keywords" content="红队,red team,工具,OSX,木马,远程控制,远程管理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="EvilOSX一个Mac平台的远程管理工具">
 <meta property="og:url" content="https://tycx2ry.github.io/2018/03/03/EvilOSX一个Mac平台的远程管理工具/index.html">
@@ -128,7 +129,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://tycx2ry.github.io/2018/03/03/EvilOSX一个Mac平台的远程管理工具/1.png">
 <meta property="og:image" content="https://tycx2ry.github.io/2018/03/03/EvilOSX一个Mac平台的远程管理工具/2.png">
-<meta property="og:updated_time" content="2018-03-03T08:36:48.486Z">
+<meta property="og:updated_time" content="2018-03-03T08:52:33.439Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="EvilOSX一个Mac平台的远程管理工具">
 <meta name="twitter:description" content="0x00 工具简述EvilOSX 是一个还算好用的Mac平台的远程管理工具。测试了下有一些小bug，我修复了bug并提交代码给作者。 下载地址：https://github.com/Marten4n6/EvilOSX 0x01 功能简介 简单命令终端 免杀 (OpenSSL AES-256 加密 payloads, HTTPS 传输) 多线程 client端无依耐库 (原生python) 持久化">
@@ -340,12 +341,34 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-03-03T16:36:48+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2018-03-03T16:52:33+08:00">
                 2018-03-03
               </time>
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/红队工具集/" itemprop="url" rel="index">
+                    <span itemprop="name">红队工具集</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -416,8 +439,7 @@
 <li>尝试本地提权漏洞获取root权限</li>
 <li>闲时休眠功能(没有命令传输时候client进入60s休眠)</li>
 </ul>
-<p>###0x03 使用简介</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 urwid (required for the server GUI)</span></span><br><span class="line">$ sudo pip install urwid</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载工具</span></span><br><span class="line">$ git <span class="built_in">clone</span> https://github.com/Marten4n6/EvilOSX</span><br><span class="line"></span><br><span class="line"><span class="comment"># Go into the repository</span></span><br><span class="line">$ <span class="built_in">cd</span> EvilOSX</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成client</span></span><br><span class="line">$ python builder.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动监听</span></span><br><span class="line">$ python server/server.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># 最后在client端电脑上运行生成的程序</span></span><br></pre></td></tr></table></figure>
+<h3 id="0x03-使用简介"><a href="#0x03-使用简介" class="headerlink" title="0x03 使用简介"></a>0x03 使用简介</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 urwid (required for the server GUI)</span></span><br><span class="line">$ sudo pip install urwid</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载工具</span></span><br><span class="line">$ git <span class="built_in">clone</span> https://github.com/Marten4n6/EvilOSX</span><br><span class="line"></span><br><span class="line"><span class="comment"># Go into the repository</span></span><br><span class="line">$ <span class="built_in">cd</span> EvilOSX</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成client</span></span><br><span class="line">$ python builder.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动监听</span></span><br><span class="line">$ python server/server.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># 最后在client端电脑上运行生成的程序</span></span><br></pre></td></tr></table></figure>
 <p><img src="/2018/03/03/EvilOSX一个Mac平台的远程管理工具/2.png" alt=""></p>
 
       
@@ -480,6 +502,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/红队-red-team-工具-OSX-木马-远程控制-远程管理/" rel="tag"># 红队,red team,工具,OSX,木马,远程控制,远程管理</a>
+          
+        </div>
       
 
       
@@ -600,7 +628,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -611,7 +639,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">183</span>
+                  <span class="site-state-item-count">184</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
@@ -672,7 +700,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#0x00-工具简述"><span class="nav-number">1.</span> <span class="nav-text">0x00 工具简述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x01-功能简介"><span class="nav-number">2.</span> <span class="nav-text">0x01 功能简介</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#0x00-工具简述"><span class="nav-number">1.</span> <span class="nav-text">0x00 工具简述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x01-功能简介"><span class="nav-number">2.</span> <span class="nav-text">0x01 功能简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0x03-使用简介"><span class="nav-number">3.</span> <span class="nav-text">0x03 使用简介</span></a></li></ol></div>
             
 
           </div>

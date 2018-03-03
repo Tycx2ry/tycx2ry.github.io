@@ -3,7 +3,13 @@
   <entry>
     <title><![CDATA[EvilOSX一个Mac平台的远程管理工具]]></title>
     <url>%2F2018%2F03%2F03%2FEvilOSX%E4%B8%80%E4%B8%AAMac%E5%B9%B3%E5%8F%B0%E7%9A%84%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%2F</url>
-    <content type="text"><![CDATA[0x00 工具简述EvilOSX 是一个还算好用的Mac平台的远程管理工具。测试了下有一些小bug，我修复了bug并提交代码给作者。 下载地址：https://github.com/Marten4n6/EvilOSX 0x01 功能简介 简单命令终端 免杀 (OpenSSL AES-256 加密 payloads, HTTPS 传输) 多线程 client端无依耐库 (原生python) 持久化 功能模块化 Chrome密码偷取 iCloud tokens 和 contacts偷取 通过 iTunes钓鱼获取icloud密码 文件下载上传 摄像头拍照 枚举iTunes iOS 备份 浏览器历史偷取(Chrome and Safari) 尝试本地提权漏洞获取root权限 闲时休眠功能(没有命令传输时候client进入60s休眠) ###0x03 使用简介 12345678910111213141516# 安装 urwid (required for the server GUI)$ sudo pip install urwid# 下载工具$ git clone https://github.com/Marten4n6/EvilOSX# Go into the repository$ cd EvilOSX# 生成client$ python builder.py# 启动监听$ python server/server.py# 最后在client端电脑上运行生成的程序]]></content>
+    <content type="text"><![CDATA[0x00 工具简述EvilOSX 是一个还算好用的Mac平台的远程管理工具。测试了下有一些小bug，我修复了bug并提交代码给作者。 下载地址：https://github.com/Marten4n6/EvilOSX 0x01 功能简介 简单命令终端 免杀 (OpenSSL AES-256 加密 payloads, HTTPS 传输) 多线程 client端无依耐库 (原生python) 持久化 功能模块化 Chrome密码偷取 iCloud tokens 和 contacts偷取 通过 iTunes钓鱼获取icloud密码 文件下载上传 摄像头拍照 枚举iTunes iOS 备份 浏览器历史偷取(Chrome and Safari) 尝试本地提权漏洞获取root权限 闲时休眠功能(没有命令传输时候client进入60s休眠) 0x03 使用简介12345678910111213141516# 安装 urwid (required for the server GUI)$ sudo pip install urwid# 下载工具$ git clone https://github.com/Marten4n6/EvilOSX# Go into the repository$ cd EvilOSX# 生成client$ python builder.py# 启动监听$ python server/server.py# 最后在client端电脑上运行生成的程序]]></content>
+      <categories>
+        <category>红队工具集</category>
+      </categories>
+      <tags>
+        <tag>红队,red team,工具,OSX,木马,远程控制,远程管理</tag>
+      </tags>
   </entry>
   <entry>
     <title><![CDATA[Discuz!因memcached未授权访问导致的RCE]]></title>
